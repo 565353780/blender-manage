@@ -7,6 +7,7 @@ from copy import deepcopy
 
 from blender_manage.Config.color import COLOR_MAP_DICT
 from blender_manage.Config.collection import COLLECTION_NAME_LIST
+from blender_manage.Method.label import getLabelFromName
 from blender_manage.Module.object_manager import ObjectManager
 
 
@@ -62,12 +63,13 @@ class ShadingManager(object):
                 continue
 
             for collection_object_name in collection_object_name_list:
-                if '_' not in collection_object_name:
+                object_label = getLabelFromName(collection_object_name)
+
+                if object_label is None:
                     continue
 
-                object_label = int(collection_object_name.split('_')[0])
                 color_idx = object_label % len(color_map)
-                color_material_name = color_map_name + '_' + color_idx
+                color_material_name = color_map_name + '_' + str(color_idx)
 
                 bpy.data.objects[collection_object_name].data.materials.append(
                     bpy.data.materials[color_material_name])
