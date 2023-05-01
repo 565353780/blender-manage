@@ -17,7 +17,7 @@ class ShadingManager(object):
         self.collection_name_list = collection_name_list
         self.color_map_dict = color_map_dict
 
-        self.object_namager = ObjectManager()
+        self.object_manager = ObjectManager()
         return
 
     def getMaterialList(self):
