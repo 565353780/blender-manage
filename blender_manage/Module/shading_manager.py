@@ -50,6 +50,9 @@ class ShadingManager(object):
         return True
 
     def bindColorMaterialsForObjects(self, color_map_name='morandi'):
+        assert color_map_name in self.color_map_dict.keys()
+        color_map = COLOR_MAP_DICT[color_map_name]
+
         for collection_name in self.collection_name_list:
             collection_object_name_list = self.object_manager.getCollectionObjectNameList(
                 collection_name)
