@@ -7,11 +7,13 @@ from copy import deepcopy
 def toRGBA(color):
     if isinstance(color, str):
         h = color.lstrip('#')
-        rgb = [int(h[i:i + 2], 16) for i in (0, 2, 4)]
-    else:
-        rgb = deepcopy(color)
+        rgba = [int(h[i:i + 2], 16) for i in (0, 2, 4)]
+        rgba.append(255)
+        return rgba
 
-    rgba = rgb.append(255)
+    rgba = deepcopy(color)
+    if len(rgba) == 3:
+        rgba.append(255)
     return rgba
 
 
