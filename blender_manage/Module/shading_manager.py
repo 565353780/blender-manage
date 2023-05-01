@@ -38,6 +38,11 @@ class ShadingManager(object):
             if color_name not in material_name_list:
                 bpy.data.materials.new(color_name)
 
+            bpy.data.materials[color_name].use_nodes = True
+            if bpy.data.materials[color_name].node_tree:
+                bpy.data.materials[color_name].node_tree.links.clear()
+                bpy.data.materials[color_name].node_tree.nodes.clear()
+
             r, g, b, a = np.array(color, dtype=float) / 255.0
             bpy.data.materials[color_name].node_tree.nodes[
                 "Principled BSDF"].inputs[0].default_value = (r, g, b, a)
