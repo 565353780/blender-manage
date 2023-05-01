@@ -39,3 +39,18 @@ class ObjectManager(object):
             return None
 
         return collection_object_list.keys()
+
+    def isObjectExist(self, object_name):
+        return object_name in self.getObjectNameList()
+
+    def isCollectionExist(self, collection_name):
+        return collection_name in self.getCollectionNameList()
+
+    def isObjectInCollection(self, object_name, collection_name):
+        collection_object_name_list = self.getCollectionObjectNameList(collection_name)
+        if collection_object_name_list is None:
+            print('[WARN][ObjectManager::isObjectInCollection]')
+            print('\t getCollectionObjectNameList failed!')
+            return None
+
+        return object_name in collection_object_name_list
