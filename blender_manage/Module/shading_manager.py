@@ -41,9 +41,9 @@ class ShadingManager(object):
 
             bpy.data.materials[color_name].use_nodes = True
 
-            #  if bpy.data.materials[color_name].node_tree:
-            #  bpy.data.materials[color_name].node_tree.links.clear()
-            #  bpy.data.materials[color_name].node_tree.nodes.clear()
+            # if bpy.data.materials[color_name].node_tree:
+                # bpy.data.materials[color_name].node_tree.links.clear()
+                # bpy.data.materials[color_name].node_tree.nodes.clear()
 
             r, g, b, a = np.array(color, dtype=float) / 255.0
             bpy.data.materials[color_name].node_tree.nodes[
@@ -71,6 +71,7 @@ class ShadingManager(object):
                 color_idx = object_label % len(color_map)
                 color_material_name = color_map_name + '_' + str(color_idx)
 
+                bpy.data.objects[collection_object_name].data.materials.clear()
                 bpy.data.objects[collection_object_name].data.materials.append(
                     bpy.data.materials[color_material_name])
         return True
