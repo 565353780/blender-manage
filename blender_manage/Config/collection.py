@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-COLLECTION_NAME_LIST = [
+OFFLINE_COLLECTION_NAME_LIST = [
     'GT',
     'ISR+M',
     'VPP-S2C+M',
@@ -10,3 +10,13 @@ COLLECTION_NAME_LIST = [
     'VPP-S2C+A',
     'Ours',
 ]
+
+ONLINE_COLLECTION_NAME_LIST = [
+    'GT',
+    'ROCA+OurNBV',
+    'OurCAD+Guo',
+    'OurCAD+Schmid',
+    'Ours',
+]
+
+COLLECTION_NAME_LIST = ONLINE_COLLECTION_NAME_LIST
