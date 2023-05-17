@@ -14,7 +14,8 @@ class RenderManager(object):
         return
 
     def hideRenderCollection(self, collection_name):
-        if not self.shading_manager.object_manager.isCollectionExist(collection_name):
+        if not self.shading_manager.object_manager.isCollectionExist(
+                collection_name):
             print('[WARN][RenderManager::hideRenderCollection]')
             print('\t collection [' + collection_name + '] not found!')
             return True
@@ -23,7 +24,8 @@ class RenderManager(object):
         return True
 
     def activateRenderCollection(self, collection_name):
-        if not self.shading_manager.object_manager.isCollectionExist(collection_name):
+        if not self.shading_manager.object_manager.isCollectionExist(
+                collection_name):
             print('[ERROR][RenderManager::activateRenderCollection]')
             print('\t collection [' + collection_name + '] not found!')
             return False
@@ -45,7 +47,11 @@ class RenderManager(object):
             self.hideRenderCollection(render_name)
         return True
 
-    def renderCameraViews(self, camera_name, render_name_list=RENDER_NAME_LIST, color_map_name='morandi', save_folder_path='D:/github/blender-manage/output/'):
+    def renderCameraViews(self,
+                          camera_name,
+                          render_name_list=RENDER_NAME_LIST,
+                          color_map_name='morandi',
+                          save_folder_path='D:/github/blender-manage/output/'):
         if not self.activateCamera(camera_name):
             print('[ERROR][RenderManager::renderCameraViews]')
             print('\t camera [' + camera_name + '] not found!')
@@ -59,7 +65,8 @@ class RenderManager(object):
             self.deactivateAllMethods(render_name_list)
             if not self.activateRenderCollection(render_name):
                 print('[WARN][RenderManager::renderAllViews]')
-                print('\t activateRenderCollection [' + render_name + '] failed!')
+                print('\t activateRenderCollection [' + render_name +
+                      '] failed!')
                 continue
 
             view_name = camera_name + '_' + render_name
@@ -73,12 +80,20 @@ class RenderManager(object):
                 continue
 
             bpy.data.scenes["Scene"].render.image_settings.file_format = 'PNG'
-            bpy.data.scenes["Scene"].render.filepath = save_folder_path + view_name + '.png'
+            bpy.data.scenes[
+                "Scene"].render.filepath = save_folder_path + view_name + '.png'
             bpy.ops.render.render(write_still=True)
             print('\t >>> [SUCCESS]')
         return True
 
-    def renderAllViews(self, camera_name_list=CAMERA_NAME_LIST, render_name_list=RENDER_NAME_LIST, color_map_name='morandi', save_folder_path='D:/github/blender-manage/output/'):
+    def renderAllViews(self,
+                       camera_name_list=CAMERA_NAME_LIST,
+                       render_name_list=RENDER_NAME_LIST,
+                       color_map_name='morandi',
+                       save_folder_path='D:/github/blender-manage/output/'):
+        self.shading_manager.setCollectionNameList(render_name_list)
+
         for camera_name in camera_name_list:
-            self.renderCameraViews(camera_name, render_name_list, color_map_name, save_folder_path)
+            self.renderCameraViews(camera_name, render_name_list,
+                                   color_map_name, save_folder_path)
         return True
