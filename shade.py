@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 blender_manage_folder_path = 'D:/github/blender-manage'
-scene_name = 'scene0231_01'
 
 collection_name_list = [
     'GT',
@@ -19,27 +18,17 @@ collection_name_list = [
     'OurCAD+Schmid',
 ]
 
-camera_name_list = [
-    'TopView',
-    'Detail-1',
-    'Detail-2',
-    'Detail-3',
-]
-
 import sys
 
 sys.path.append(blender_manage_folder_path)
 
-from blender_manage.Module.render_manager import RenderManager
-
+from blender_manage.Module.shading_manager import ShadingManager
 
 def demo():
     color_map_name = 'morandi'
-    save_folder_path = blender_manage_folder_path + '/output/' + scene_name + '/'
 
-    render_manager = RenderManager()
-
-    render_manager.renderAllViews(camera_name_list, collection_name_list, color_map_name, save_folder_path)
+    shading_manager = ShadingManager(collection_name_list)
+    shading_manager.paintColorMapForObjects(color_map_name)
     return True
 
 if __name__ == '__main__':
