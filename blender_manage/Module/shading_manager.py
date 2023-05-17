@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import bpy
-import numpy as np
 from copy import deepcopy
 
-from blender_manage.Config.color import COLOR_MAP_DICT
+import bpy
+import numpy as np
+
 from blender_manage.Config.collection import COLLECTION_NAME_LIST
+from blender_manage.Config.color import COLOR_MAP_DICT
 from blender_manage.Method.label import getLabelFromName
 from blender_manage.Module.object_manager import ObjectManager
 
@@ -27,6 +28,14 @@ class ShadingManager(object):
     def getMaterialNameList(self):
         return bpy.data.materials.keys()
 
+    def setCollectionNameList(self, collection_name_list):
+        self.collection_name_list = collection_name_list
+        return True
+
+    def setColorMapDict(self, color_map_dict):
+        self.color_map_dict = color_map_dict
+        return True
+
     def createColorMaterials(self, color_map_name='morandi'):
         assert color_map_name in self.color_map_dict.keys()
         color_map = COLOR_MAP_DICT[color_map_name]
@@ -42,8 +51,8 @@ class ShadingManager(object):
             bpy.data.materials[color_name].use_nodes = True
 
             # if bpy.data.materials[color_name].node_tree:
-                # bpy.data.materials[color_name].node_tree.links.clear()
-                # bpy.data.materials[color_name].node_tree.nodes.clear()
+            # bpy.data.materials[color_name].node_tree.links.clear()
+            # bpy.data.materials[color_name].node_tree.nodes.clear()
 
             r, g, b, a = np.array(color, dtype=float) / 255.0
             bpy.data.materials[color_name].node_tree.nodes[

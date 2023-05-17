@@ -3,7 +3,7 @@
 
 from blender_manage.Method.color import getColorMap
 
-old_color_list = [
+macaron_color_list = [
     "#FBB5AF", "#FBE06F", "#B0E586", "#8AD4D5", "#718DD5", "#A38DDE",
     "#9ED68C", "#61abff", "#ffb056", '#A9CBFF', "#7a7579", "#a59b95",
     "#dcd7d9", "#cb9c7a", "#8a7b93", "#dcd2bd", "#755953", "#efedeb",
@@ -24,6 +24,6 @@ morandi_color_list = [
 ]
 
 COLOR_MAP_DICT = {
-    'old': getColorMap(old_color_list),
+    'macaron': getColorMap(macaron_color_list),
     'morandi': getColorMap(morandi_color_list),
 }
