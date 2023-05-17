@@ -34,7 +34,7 @@ from blender_manage.Module.render_manager import RenderManager
 
 
 def demo():
-    color_map_name = 'morandi'
+    color_map_name = 'fufu'
     save_folder_path = blender_manage_folder_path + '/output/' + scene_name + '/'
 
     render_manager = RenderManager()
