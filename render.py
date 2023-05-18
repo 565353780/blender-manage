@@ -34,12 +34,11 @@ from blender_manage.Module.render_manager import RenderManager
 
 
 def demo():
-    color_map_name = 'fufu'
     save_folder_path = blender_manage_folder_path + '/output/' + scene_name + '/'
 
     render_manager = RenderManager()
 
-    render_manager.renderAllViews(camera_name_list, collection_name_list, color_map_name, save_folder_path)
+    render_manager.renderAllViews(camera_name_list, collection_name_list, save_folder_path)
     return True
 
 if __name__ == '__main__':

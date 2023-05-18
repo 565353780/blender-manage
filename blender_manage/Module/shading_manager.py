@@ -12,14 +12,13 @@ from blender_manage.Method.label import getLabelFromName
 from blender_manage.Module.object_manager import ObjectManager
 
 
-class ShadingManager(object):
+class ShadingManager(ObjectManager):
     def __init__(self,
                  collection_name_list=COLLECTION_NAME_LIST,
                  color_map_dict=COLOR_MAP_DICT):
+        super().__init__()
         self.collection_name_list = collection_name_list
         self.color_map_dict = color_map_dict
-
-        self.object_manager = ObjectManager()
         return
 
     def getMaterialList(self):
@@ -73,8 +72,7 @@ class ShadingManager(object):
         color_map = COLOR_MAP_DICT[color_map_name]
 
         for collection_name in self.collection_name_list:
-            collection_object_name_list = self.object_manager.getCollectionObjectNameList(
-                collection_name)
+            collection_object_name_list = self.getCollectionObjectNameList(collection_name)
             if collection_object_name_list is None:
                 print('[WARN][ShadingManager::bindColorMaterialsForObjects]')
                 print('\t getCollectionObjectNameList failed!')
