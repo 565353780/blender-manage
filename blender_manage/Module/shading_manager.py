@@ -54,13 +54,14 @@ class ShadingManager(object):
             # bpy.data.materials[color_name].node_tree.links.clear()
             # bpy.data.materials[color_name].node_tree.nodes.clear()
 
+            rgba = tuple(deepcopy(color).astype(float) / 255.0)
             try:
                 bpy.data.materials[color_name].node_tree.nodes[
-                    "Principled BSDF"].inputs[0].default_value = tuple(color)
+                    "Principled BSDF"].inputs[0].default_value = tuple(rgba)
             except:
                 try:
                     bpy.data.materials[color_name].node_tree.nodes[
-                        "原理化BSDF"].inputs[0].default_value = tuple(color)
+                        "原理化BSDF"].inputs[0].default_value = tuple(rgba)
                 except:
                     print('[ERROR][ShadingManager::createColorMaterials]')
                     print('\t only support Chinese and English!')
