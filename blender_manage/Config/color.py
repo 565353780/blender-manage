@@ -71,7 +71,8 @@ fufu_color_list = [
 
 junfu_color_list = [
     '#61ABFF', '#6B5152', '#7A7281', '#FBE06F', '#B0E586', '#8AD4D5',
-    '#A9CBFF', '#FFB056', '#A38DDE', '#B5C4B1', '#9ED68C',
+    '#A9CBFF', '#FFB056', '#A38DDE', '#B5C4B1', '#9ED68C', '#FBB5AF',
+    '#718DD5', '#A38DDE', '#B5C4B1', '#A6A6A8',
 ]
 
 COLOR_MAP_DICT = {
