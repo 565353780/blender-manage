@@ -17,6 +17,10 @@ collection_name_list = [
     'ROCA+OurNBV',
     'OurCAD+Guo',
     'OurCAD+Schmid',
+    'ours',
+    'woop',
+    'worp',
+    'wither',
 ]
 
 camera_name_list = [
@@ -24,6 +28,7 @@ camera_name_list = [
     'Detail-1',
     'Detail-2',
     'Detail-3',
+    'TopView-Scan',
 ]
 
 import sys

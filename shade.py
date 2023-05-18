@@ -16,6 +16,10 @@ collection_name_list = [
     'ROCA+OurNBV',
     'OurCAD+Guo',
     'OurCAD+Schmid',
+    'ours',
+    'woop',
+    'worp',
+    'wither',
 ]
 
 import sys
@@ -25,7 +29,7 @@ sys.path.append(blender_manage_folder_path)
 from blender_manage.Module.shading_manager import ShadingManager
 
 def demo():
-    color_map_name = 'morandi'
+    color_map_name = 'fufu'
 
     shading_manager = ShadingManager(collection_name_list)
     shading_manager.paintColorMapForObjects(color_map_name)
