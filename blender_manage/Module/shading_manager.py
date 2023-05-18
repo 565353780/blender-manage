@@ -54,9 +54,18 @@ class ShadingManager(object):
             # bpy.data.materials[color_name].node_tree.links.clear()
             # bpy.data.materials[color_name].node_tree.nodes.clear()
 
-            r, g, b, a = np.array(color, dtype=float) / 255.0
-            bpy.data.materials[color_name].node_tree.nodes[
-                "Principled BSDF"].inputs[0].default_value = (r, g, b, a)
+            try:
+                bpy.data.materials[color_name].node_tree.nodes[
+                    "Principled BSDF"].inputs[0].default_value = tuple(color)
+            except:
+                try:
+                    bpy.data.materials[color_name].node_tree.nodes[
+                        "原理化BSDF"].inputs[0].default_value = tuple(color)
+                except:
+                    print('[ERROR][ShadingManager::createColorMaterials]')
+                    print('\t only support Chinese and English!')
+                    print('\t You need to edit the name of [Principled BSDF] into your language!')
+                    return False
         return True
 
     def bindColorMaterialsForObjects(self, color_map_name='morandi'):
