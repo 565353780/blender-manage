@@ -1,9 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from math import pow
 import numpy as np
-from copy import deepcopy
+from math import pow
+
 
 def isIntValue(value_list):
     for value in value_list:
@@ -16,13 +13,14 @@ def isIntValue(value_list):
 
     return True
 
+
 def toRGBA(color):
     if isinstance(color, str):
-        if color[0] == '#':
+        if color[0] == "#":
             hex_str = color[1:]
         else:
             hex_str = color
-        rgba = [int(hex_str[i:i + 2], 16) for i in [0, 2, 4]]
+        rgba = [int(hex_str[i : i + 2], 16) for i in [0, 2, 4]]
         rgba.append(255)
         rgba = np.array(rgba, dtype=np.uint8)
         return rgba
@@ -42,10 +40,12 @@ def toRGBA(color):
     rgba = np.array(rgba, dtype=np.uint8)
     return rgba
 
+
 def toLinearRGBValue(rgb_value):
     if rgb_value <= 0.0405:
         return rgb_value / 12.92
     return pow((rgb_value + 0.055) / 1.055, 2.4)
+
 
 def toLinearRGBA(color):
     rgba = toRGBA(color)
@@ -61,14 +61,16 @@ def toLinearRGBA(color):
     linear_rgba = np.array(linear_rgba, dtype=float)
     return linear_rgba
 
+
 def toHex(color):
     rgba = toRGBA(color)
 
-    hex_str = '#'
+    hex_str = "#"
     for i in range(3):
-        current_hex_str = '{:02X}'.format(rgba[i])
+        current_hex_str = "{:02X}".format(rgba[i])
         hex_str += current_hex_str
     return hex_str
+
 
 def getColorMap(color_list):
     color_map = {}
