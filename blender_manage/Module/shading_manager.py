@@ -16,6 +16,8 @@ class ShadingManager(ObjectManager):
         super().__init__()
         self.collection_name_list = collection_name_list
         self.color_map_dict = color_map_dict
+
+        self.object_manager = ObjectManager()
         return
 
     def getMaterialList(self):
@@ -64,10 +66,27 @@ class ShadingManager(ObjectManager):
                     return False
         return True
 
-    def bindColorMaterialsForObjects(self, color_map_name='morandi'):
+    def bindColorMaterialsForObject(self, object_name: str, color_map_name='morandi'):
+        if not self.object_manager.isObjectExist(object_name):
+            return False
+
         assert color_map_name in self.color_map_dict.keys()
         color_map = COLOR_MAP_DICT[color_map_name]
 
+        object_label = getLabelFromName(object_name)
+
+        if object_label is None:
+            return False
+
+        color_idx = object_label % len(color_map)
+        color_material_name = color_map_name + '_' + str(color_idx)
+
+        bpy.data.objects[object_name].data.materials.clear()
+        bpy.data.objects[object_name].data.materials.append(
+            bpy.data.materials[color_material_name])
+        return True
+
+    def bindColorMaterialsForObjects(self, color_map_name='morandi'):
         for collection_name in self.collection_name_list:
             collection_object_name_list = self.getCollectionObjectNameList(collection_name)
             if collection_object_name_list is None:
@@ -76,17 +95,12 @@ class ShadingManager(ObjectManager):
                 continue
 
             for collection_object_name in collection_object_name_list:
-                object_label = getLabelFromName(collection_object_name)
+                self.bindColorMaterialsForObject(collection_object_name, color_map)
+        return True
 
-                if object_label is None:
-                    continue
-
-                color_idx = object_label % len(color_map)
-                color_material_name = color_map_name + '_' + str(color_idx)
-
-                bpy.data.objects[collection_object_name].data.materials.clear()
-                bpy.data.objects[collection_object_name].data.materials.append(
-                    bpy.data.materials[color_material_name])
+    def paintColorMapForObject(self, object_name: str, color_map_name='morandi'):
+        self.createColorMaterials(color_map_name)
+        self.bindColorMaterialsForObject(object_name, color_map_name)
         return True
 
     def paintColorMapForObjects(self, color_map_name='morandi'):

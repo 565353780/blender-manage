@@ -1,6 +1,5 @@
 import os
 import bpy
-from typing import Union
 
 from blender_manage.Method.pcd import createColorFromFile
 from blender_manage.Module.object_manager import ObjectManager
@@ -11,8 +10,53 @@ class PointCloudManager(object):
         self.object_manager = ObjectManager()
         return
 
-    def createColor(self, object_name: str, color: Union[np.ndarray, list]) -> bool:
-        bpy.ops.node.new_geometry_nodes_modifier()
+    def createColor(self, object_name: str, point_radius: float, material_name: str, geometry_node_name: str) -> bool:
+        if not self.object_manager.isObjectExist(object_name):
+            return False
+
+        obj = bpy.data.objects[object_name]
+
+        if geometry_node_name not in obj.modifiers.keys():
+            geometry_node = obj.modifiers.new(geometry_node_name, 'NODES')
+            bpy.ops.node.new_geometry_node_group_assign()
+
+            try:
+                input = geometry_node.node_group.nodes['Group Input']
+            except:
+                try:
+                    input = geometry_node.node_group.nodes['组输入']
+                except:
+                    print('[ERROR][PointCloudManager::createColor]')
+                    print('\t only support Chinese and English!')
+                    print('\t You need to edit the name of [Group Input] into your language!')
+                    return False
+
+            input.location = (0,0)
+
+            try:
+                output = geometry_node.node_group.nodes['Group Output']
+            except:
+                try:
+                    output = geometry_node.node_group.nodes['组输出']
+                except:
+                    print('[ERROR][PointCloudManager::createColor]')
+                    print('\t only support Chinese and English!')
+                    print('\t You need to edit the name of [Group Output] into your language!')
+                    return False
+
+            output.location = (1000,0)
+
+            mesh_to_points = geometry_node.node_group.nodes.new('GeometryNodeMeshToPoints')
+            mesh_to_points.location = (300, 0)
+            mesh_to_points.inputs[3].default_value = point_radius
+
+            material_set = geometry_node.node_group.nodes.new('GeometryNodeSetMaterial')
+            material_set.location = (600, 0)
+            material_set.inputs[2].default_value = bpy.data.materials[material_name]
+
+            geometry_node.node_group.links.new(input.outputs[0], mesh_to_points.inputs[0])
+            geometry_node.node_group.links.new(mesh_to_points.outputs[0], material_set.inputs[0])
+            geometry_node.node_group.links.new(material_set.outputs[0], output.inputs[0])
         return True
 
     def createColorsForMethods(

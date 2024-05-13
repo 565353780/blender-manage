@@ -6,6 +6,7 @@ import bpy
 
 from blender_manage.Module.object_manager import ObjectManager
 from blender_manage.Module.shading_manager import ShadingManager
+from blender_manage.Module.pointcloud_manager import PointCloudManager
 
 def demo():
     datat_folder_path = '/Users/fufu/Downloads/Dataset/compare_result/metric_manifold_result_selected/ShapeNet/'
@@ -14,6 +15,7 @@ def demo():
 
     object_manager = ObjectManager()
     shading_manager = ShadingManager()
+    pointcloud_manager = PointCloudManager()
 
     category_folder_path = datat_folder_path + category_id + '/'
     model_id_list = os.listdir(category_folder_path)
@@ -34,13 +36,16 @@ def demo():
                 continue
 
             file_id = model_filename.split('.')[0]
+            object_name = model_id + '_' + file_id
 
             model_file_path = model_folder_path + model_filename
 
-            object_manager.loadObjectFile(model_file_path, model_id + '_' + file_id, collection_name)
+            object_manager.loadObjectFile(model_file_path, object_name, collection_name)
 
-        shading_manager.setCollectionNameList([collection_name])
-        shading_manager.paintColorMapForObjects('mash')
+            shading_manager.paintColorMapForObject(object_name, 'mash')
+
+            if 'pcd' in file_id:
+                pointcloud_manager.createColor(object_name, 0.004, 'mash_0', object_name)
 
         return True
         object_manager.removeCollection(model_id)
