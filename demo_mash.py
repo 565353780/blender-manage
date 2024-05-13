@@ -5,6 +5,7 @@ import os
 import bpy
 
 from blender_manage.Module.light_manager import LightManager
+from blender_manage.Module.camera_manager import CameraManager
 from blender_manage.Module.object_manager import ObjectManager
 from blender_manage.Module.shading_manager import ShadingManager
 from blender_manage.Module.pointcloud_manager import PointCloudManager
@@ -16,6 +17,7 @@ def demo():
     model_id_start = '1c75'
 
     light_manager = LightManager()
+    camera_manager = CameraManager()
     object_manager = ObjectManager()
     shading_manager = ShadingManager()
     pointcloud_manager = PointCloudManager()
@@ -26,6 +28,9 @@ def demo():
     object_manager.removeObject('Light')
 
     shading_manager.setRenderEngine('CYCLES')
+
+    render_manager.setUseBorder(True)
+    render_manager.setRenderResolution([1080, 1080])
 
     light_manager.addLight('light_top', 'AREA', 'Lights')
     light_manager.setLightPosition('light_top', [0, 0, 1])
@@ -41,6 +46,12 @@ def demo():
     light_manager.setLightData('light_front', 'size', 2)
 
     render_manager.setObjectVisible('light_front', False)
+
+    camera_manager.addCamera('camera_1', 'PERSP', 'Cameras')
+    camera_manager.setCameraPosition('camera_1', [-0.86324, 1.4553, 0.6352])
+    camera_manager.setCameraRotationEuler('camera_1', [68.8, 0, 211.2])
+
+    render_manager.setObjectVisible('camera_top', False)
 
     category_folder_path = datat_folder_path + category_id + '/'
     model_id_list = os.listdir(category_folder_path)

@@ -1,5 +1,7 @@
 import os
 import bpy
+import numpy as np
+from typing import Union
 
 from blender_manage.Config.render import RENDER_NAME_LIST, CAMERA_NAME_LIST
 from blender_manage.Module.object_manager import ObjectManager
@@ -9,6 +11,16 @@ class RenderManager(ObjectManager):
     def __init__(self):
         super().__init__()
         return
+
+    def setUseBorder(self, is_use_border: bool) -> bool:
+        bpy.context.scene.render.use_border = is_use_border
+        bpy.context.scene.render.use_crop_to_border = is_use_border
+        return True
+
+    def setRenderResolution(self, resolution: Union[np.ndarray, list]) -> bool:
+        bpy.context.scene.render.resolution_x = resolution[0]
+        bpy.context.scene.render.resolution_y = resolution[1]
+        return True
 
     def setObjectVisible(self, object_name: str, visible: bool) -> bool:
         if not self.isObjectExist(object_name):

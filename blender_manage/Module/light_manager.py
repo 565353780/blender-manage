@@ -13,7 +13,7 @@ class LightManager(object):
     def isLightExist(self, light_name: str) -> bool:
         return light_name in bpy.data.lights.keys()
 
-    def addLight(self, light_name: str, light_type: str, collection_name: Union[str, None] = None) -> bool:
+    def addLight(self, light_name: str, light_type: str = 'AREA', collection_name: Union[str, None] = None) -> bool:
         if self.isLightExist(light_name):
             return False
 
