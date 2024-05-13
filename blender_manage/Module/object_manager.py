@@ -6,14 +6,18 @@ class ObjectManager(object):
     def __init__(self):
         return
 
-    def loadObjFile(self, obj_file_path: str) -> bool:
-        if not os.path.exists(obj_file_path):
-            print("[ERROR][ObjectManager::loadObjFile]")
-            print("\t obj file not exist!")
-            print("\t obj_file_path:", obj_file_path)
+    def loadObjectFile(self, object_file_path: str) -> bool:
+        if not os.path.exists(object_file_path):
+            print("[ERROR][ObjectManager::loadObjectFile]")
+            print("\t object file not exist!")
+            print("\t object_file_path:", object_file_path)
             return False
 
-        bpy.ops.import_scene.obj(filepath=obj_file_path)
+        object_file_type = object_file_path.split('.')[-1]
+        if object_file_type == 'ply':
+            bpy.ops.wm.ply_import(filepath=object_file_path, forward_axis='NEGATIVE_Z', up_axis='Y')
+        elif object_file_type == 'obj':
+            bpy.ops.wm.obj_import(filepath=object_file_path)
         return True
 
     def getObjectList(self):
