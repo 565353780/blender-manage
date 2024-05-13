@@ -89,3 +89,30 @@ class ObjectManager(object):
             bpy.ops.object.select_all(action='DESELECT')
             bpy.data.objects[object_name].select = True
         return True
+
+    def removeObject(self, object_name: str, clear_data: bool = True) -> bool:
+        if not self.isObjectExist(object_name):
+            return True
+
+        obj = bpy.data.objects[object_name]
+
+        bpy.data.objects.remove(obj)
+
+        if clear_data:
+            bpy.ops.outliner.orphans_purge(do_recursive=True)
+        return True
+
+    def removeCollection(self, collection_name: str, clear_data: bool = True) -> bool:
+        if not self.isCollectionExist(collection_name):
+            return True
+
+        collection = bpy.data.collections[collection_name]
+
+        for obj in collection.objects:
+            self.removeObject(obj, clear_data)
+
+        bpy.data.collections.remove(collection)
+
+        if clear_data:
+            bpy.ops.outliner.orphans_purge(do_recursive=True)
+        return True

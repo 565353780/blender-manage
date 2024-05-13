@@ -35,6 +35,8 @@ def demo():
             model_file_path = model_folder_path + model_filename
 
             object_manager.loadObjectFile(model_file_path, model_id + '_' + file_id, model_id)
+
+        object_manager.removeCollection(model_id)
     return True
 
 if __name__ == "__main__":
