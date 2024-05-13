@@ -34,7 +34,7 @@ def demo():
 
     light_manager.addLight('light_top', 'AREA', 'Lights')
     light_manager.setLightPosition('light_top', [0, 0, 1])
-    light_manager.setLightData('light_top', 'energy', 150)
+    light_manager.setLightData('light_top', 'energy', 50)
     light_manager.setLightData('light_top', 'size', 2)
 
     render_manager.setObjectVisible('light_top', False)
@@ -42,7 +42,7 @@ def demo():
     light_manager.addLight('light_front', 'AREA', 'Lights')
     light_manager.setLightPosition('light_front', [0, 1, 0])
     light_manager.setLightRotationEuler('light_front', [-90, 0, 0])
-    light_manager.setLightData('light_front', 'energy', 150)
+    light_manager.setLightData('light_front', 'energy', 50)
     light_manager.setLightData('light_front', 'size', 2)
 
     render_manager.setObjectVisible('light_front', False)

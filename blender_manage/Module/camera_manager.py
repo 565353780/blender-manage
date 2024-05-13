@@ -20,6 +20,7 @@ class CameraManager(object):
         assert camera_type in ['PERSP', 'ORTHO', 'PANO']
 
         camera = bpy.data.cameras.new(name=camera_name)
+        camera.type = camera_type
 
         camera_object = bpy.data.objects.new(camera_name, camera)
 
