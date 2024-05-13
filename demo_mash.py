@@ -2,6 +2,7 @@ import sys
 sys.path.append('/Users/fufu/github/blender-manage')
 
 import os
+import bpy
 
 from blender_manage.Module.object_manager import ObjectManager
 
@@ -29,8 +30,11 @@ def demo():
             if model_filename.split('.')[-1] not in ['ply', 'obj']:
                 continue
 
+            file_id = model_filename.split('.')[0]
+
             model_file_path = model_folder_path + model_filename
-            object_manager.loadObjectFile(model_file_path)
+
+            object_manager.loadObjectFile(model_file_path, model_id + '_' + file_id, model_id)
     return True
 
 if __name__ == "__main__":

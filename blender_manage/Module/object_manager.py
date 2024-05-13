@@ -1,12 +1,13 @@
 import os
 import bpy
+from typing import Union
 
 
 class ObjectManager(object):
     def __init__(self):
         return
 
-    def loadObjectFile(self, object_file_path: str) -> bool:
+    def loadObjectFile(self, object_file_path: str, object_name: str, collection_name: Union[str, None]=None) -> bool:
         if not os.path.exists(object_file_path):
             print("[ERROR][ObjectManager::loadObjectFile]")
             print("\t object file not exist!")
@@ -18,6 +19,14 @@ class ObjectManager(object):
             bpy.ops.wm.ply_import(filepath=object_file_path, forward_axis='NEGATIVE_Z', up_axis='Y')
         elif object_file_type == 'obj':
             bpy.ops.wm.obj_import(filepath=object_file_path)
+
+        obj = bpy.context.selected_objects[0]
+        obj.name = object_name
+
+        self.createNewCollection(collection_name)
+
+        bpy.data.collections['Collection'].objects.unlink(obj)
+        bpy.data.collections[collection_name].objects.link(obj)
         return True
 
     def getObjectList(self):
@@ -25,6 +34,14 @@ class ObjectManager(object):
 
     def getObjectNameList(self):
         return bpy.data.objects.keys()
+
+    def createNewCollection(self, collection_name: str) -> bool:
+        if self.isCollectionExist(collection_name):
+            return True
+
+        collection = bpy.data.collections.new(collection_name)
+        bpy.context.scene.collection.children.link(collection)
+        return True
 
     def getCollectionNameList(self):
         return bpy.data.collections.keys()
@@ -66,3 +83,9 @@ class ObjectManager(object):
             return None
 
         return object_name in collection_object_name_list
+
+    def selectObject(self, object_name: str, additive: bool = False) -> bool:
+        if not additive:
+            bpy.ops.object.select_all(action='DESELECT')
+            bpy.data.objects[object_name].select = True
+        return True
