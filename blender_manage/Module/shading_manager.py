@@ -109,8 +109,7 @@ class ShadingManager(ObjectManager):
         return True
 
     def setRenderEngine(self, engine_name: str) -> bool:
-        if engine_name not in ['BLENDER_EEVEE', 'CYCLES']:
-            return False
+        assert engine_name in ['BLENDER_EEVEE', 'CYCLES']
 
         bpy.context.scene.render.engine = engine_name
         return True

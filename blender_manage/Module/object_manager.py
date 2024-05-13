@@ -23,10 +23,12 @@ class ObjectManager(object):
         obj = bpy.context.selected_objects[0]
         obj.name = object_name
 
-        self.createNewCollection(collection_name)
+        if collection_name is not None:
+            self.createNewCollection(collection_name)
 
-        bpy.data.collections['Collection'].objects.unlink(obj)
-        bpy.data.collections[collection_name].objects.link(obj)
+            if object_name in bpy.data.collections['Collection'].objects.keys():
+                bpy.data.collections['Collection'].objects.unlink(obj)
+            bpy.data.collections[collection_name].objects.link(obj)
         return True
 
     def getObjectList(self):

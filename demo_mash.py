@@ -4,6 +4,7 @@ sys.path.append('/Users/fufu/github/blender-manage')
 import os
 import bpy
 
+from blender_manage.Module.light_manager import LightManager
 from blender_manage.Module.object_manager import ObjectManager
 from blender_manage.Module.shading_manager import ShadingManager
 from blender_manage.Module.pointcloud_manager import PointCloudManager
@@ -13,9 +14,23 @@ def demo():
     category_id = '03001627'
     model_id_start = '1c75'
 
+    light_manager = LightManager()
     object_manager = ObjectManager()
     shading_manager = ShadingManager()
     pointcloud_manager = PointCloudManager()
+
+    shading_manager.setRenderEngine('CYCLES')
+
+    light_manager.addLight('light_top', 'AREA', 'Lights')
+    light_manager.setLightPosition('light_top', [0, 0, 1])
+    light_manager.setLightData('light_top', 'energy', 150)
+    light_manager.setLightData('light_top', 'size', 2)
+
+    light_manager.addLight('light_front', 'AREA', 'Lights')
+    light_manager.setLightPosition('light_front', [0, 1, 0])
+    light_manager.setLightRotationEuler('light_front', [-90, 0, 0])
+    light_manager.setLightData('light_front', 'energy', 150)
+    light_manager.setLightData('light_front', 'size', 2)
 
     category_folder_path = datat_folder_path + category_id + '/'
     model_id_list = os.listdir(category_folder_path)
@@ -46,8 +61,6 @@ def demo():
 
             if 'pcd' in file_id:
                 pointcloud_manager.createColor(object_name, 0.004, 'mash_0', object_name)
-
-            shading_manager.setRenderEngine('CYCLES')
 
         return True
         object_manager.removeCollection(model_id)
