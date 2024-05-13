@@ -15,6 +15,8 @@ def demo():
     datat_folder_path = '/Users/fufu/Downloads/Dataset/compare_result/metric_manifold_result_selected/ShapeNet/'
     category_id = '03001627'
     model_id_start = '1c75'
+    save_image_folder_path = '/Users/fufu/Downloads/Dataset/compare_result/rendered/' + category_id + '/'
+    overwrite = False
 
     light_manager = LightManager()
     camera_manager = CameraManager()
@@ -35,21 +37,21 @@ def demo():
     light_manager.setLightData('light_top', 'energy', 50)
     light_manager.setLightData('light_top', 'size', 2)
 
-    render_manager.setObjectVisible('light_top', False)
-
     light_manager.addLight('light_front', 'AREA', 'Lights')
     light_manager.setLightPosition('light_front', [0, 1, 0])
     light_manager.setLightRotationEuler('light_front', [-90, 0, 0])
     light_manager.setLightData('light_front', 'energy', 50)
     light_manager.setLightData('light_front', 'size', 2)
 
-    render_manager.setObjectVisible('light_front', False)
+    render_manager.setCollectionVisible('Lights', False)
 
     camera_manager.addCamera('camera_1', 'PERSP', 'Cameras')
     camera_manager.setCameraPosition('camera_1', [-0.86324, 1.4553, 0.6352])
     camera_manager.setCameraRotationEuler('camera_1', [68.8, 0, 211.2])
 
-    render_manager.setObjectVisible('camera_top', False)
+    render_manager.setCollectionVisible('Cameras', False)
+
+    camera_name_list = object_manager.getCollectionObjectNameList('Cameras')
 
     category_folder_path = datat_folder_path + category_id + '/'
     model_id_list = os.listdir(category_folder_path)
@@ -64,6 +66,8 @@ def demo():
         model_folder_path = category_folder_path + model_id + '/'
         model_filename_list = os.listdir(model_folder_path)
         model_filename_list.sort()
+
+        object_name_list = []
 
         for model_filename in model_filename_list:
             if model_filename.split('.')[-1] not in ['ply', 'obj']:
@@ -81,10 +85,23 @@ def demo():
             if 'pcd' in file_id:
                 pointcloud_manager.createColor(object_name, 0.004, 'mash_0', object_name)
 
-            render_manager.setObjectVisible(object_name, False)
+            object_name_list.append(object_name)
+
+        render_manager.setCollectionVisible(collection_name, False)
+        render_manager.setCollectionRenderable(collection_name, False)
+
+        save_image_file_basepath = save_image_folder_path + model_id + '/' + file_id
+
+        for object_name in object_name_list:
+            if 'mash_pcd' in object_name:
+                continue
+
+            render_manager.setObjectRenderable(object_name, True)
+
+            render_manager.renderImages(camera_name_list, save_image_file_basepath, overwrite)
+
             render_manager.setObjectRenderable(object_name, False)
 
-        return True
         object_manager.removeCollection(model_id)
     return True
 
