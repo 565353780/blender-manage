@@ -13,9 +13,7 @@ from blender_manage.Module.render_manager import RenderManager
 
 def demo():
     datat_folder_path = '/Users/fufu/Downloads/Dataset/compare_result/metric_manifold_result_selected/ShapeNet/'
-    category_id = '03001627'
-    model_id_start = '1c75'
-    save_image_folder_path = '/Users/fufu/Downloads/Dataset/compare_result/rendered/' + category_id + '/'
+    save_image_folder_path = '/Users/fufu/Downloads/Dataset/compare_result/rendered/'
     overwrite = False
 
     light_manager = LightManager()
@@ -53,56 +51,62 @@ def demo():
 
     camera_name_list = object_manager.getCollectionObjectNameList('Cameras')
 
-    category_folder_path = datat_folder_path + category_id + '/'
-    model_id_list = os.listdir(category_folder_path)
-    model_id_list.sort()
+    category_id_list = os.listdir(datat_folder_path)
+    category_id_list.sort()
 
-    for model_id in model_id_list:
-        if model_id[:len(model_id_start)] != model_id_start:
-            continue
+    for category_id in category_id_list:
+        category_save_image_folder_path = save_image_folder_path + category_id + '/'
 
-        collection_name = model_id
+        category_folder_path = datat_folder_path + category_id + '/'
+        model_id_list = os.listdir(category_folder_path)
+        model_id_list.sort()
 
-        model_folder_path = category_folder_path + model_id + '/'
-        model_filename_list = os.listdir(model_folder_path)
-        model_filename_list.sort()
+        for model_id in model_id_list:
+            model_save_image_folder_path = category_save_image_folder_path + model_id + '/'
 
-        object_name_list = []
+            collection_name = model_id
 
-        for model_filename in model_filename_list:
-            if model_filename.split('.')[-1] not in ['ply', 'obj']:
-                continue
+            model_folder_path = category_folder_path + model_id + '/'
+            model_filename_list = os.listdir(model_folder_path)
+            model_filename_list.sort()
 
-            file_id = model_filename.split('.')[0]
-            object_name = model_id + '_' + file_id
+            object_name_list = []
 
-            model_file_path = model_folder_path + model_filename
+            for model_filename in model_filename_list:
+                if model_filename.split('.')[-1] not in ['ply', 'obj']:
+                    continue
 
-            object_manager.loadObjectFile(model_file_path, object_name, collection_name)
+                file_id = model_filename.split('.')[0]
+                object_name = model_id + '_' + file_id
 
-            shading_manager.paintColorMapForObject(object_name, 'mash')
+                model_file_path = model_folder_path + model_filename
 
-            if 'pcd' in file_id:
-                pointcloud_manager.createColor(object_name, 0.004, 'mash_0', object_name)
+                object_manager.loadObjectFile(model_file_path, object_name, collection_name)
 
-            object_name_list.append(object_name)
+                shading_manager.paintColorMapForObject(object_name, 'mash')
 
-        render_manager.setCollectionVisible(collection_name, False)
-        render_manager.setCollectionRenderable(collection_name, False)
+                if 'pcd' in file_id:
+                    pointcloud_manager.createColor(object_name, 0.004, 'mash_0', object_name)
 
-        save_image_file_basepath = save_image_folder_path + model_id + '/' + file_id
+                object_name_list.append(object_name)
 
-        for object_name in object_name_list:
-            if 'mash_pcd' in object_name:
-                continue
+            render_manager.setCollectionVisible(collection_name, False)
+            render_manager.setCollectionRenderable(collection_name, False)
 
-            render_manager.setObjectRenderable(object_name, True)
 
-            render_manager.renderImages(camera_name_list, save_image_file_basepath, overwrite)
+            for object_name in object_name_list:
+                if 'mash_pcd' in object_name:
+                    continue
 
-            render_manager.setObjectRenderable(object_name, False)
+                save_image_file_basepath = model_save_image_folder_path + object_name
 
-        object_manager.removeCollection(model_id)
+                render_manager.setObjectRenderable(object_name, True)
+
+                render_manager.renderImages(camera_name_list, save_image_file_basepath, overwrite)
+
+                render_manager.setObjectRenderable(object_name, False)
+
+            object_manager.removeCollection(model_id)
     return True
 
 if __name__ == "__main__":
