@@ -47,6 +47,8 @@ def demo():
             if 'pcd' in file_id:
                 pointcloud_manager.createColor(object_name, 0.004, 'mash_0', object_name)
 
+            shading_manager.setRenderEngine('CYCLES')
+
         return True
         object_manager.removeCollection(model_id)
     return True

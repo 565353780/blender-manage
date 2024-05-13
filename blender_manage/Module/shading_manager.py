@@ -107,3 +107,10 @@ class ShadingManager(ObjectManager):
         self.createColorMaterials(color_map_name)
         self.bindColorMaterialsForObjects(color_map_name)
         return True
+
+    def setRenderEngine(self, engine_name: str) -> bool:
+        if engine_name not in ['BLENDER_EEVEE', 'CYCLES']:
+            return False
+
+        bpy.context.scene.render.engine = engine_name
+        return True
