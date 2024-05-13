@@ -10,22 +10,34 @@ class RenderManager(ObjectManager):
         super().__init__()
         return
 
-    def hideRenderCollection(self, collection_name):
-        if not self.isCollectionExist(collection_name):
-            print('[WARN][RenderManager::hideRenderCollection]')
-            print('\t collection [' + collection_name + '] not found!')
-            return True
-
-        bpy.data.collections[collection_name].hide_render = True
-        return True
-
-    def activateRenderCollection(self, collection_name):
-        if not self.isCollectionExist(collection_name):
-            print('[ERROR][RenderManager::activateRenderCollection]')
-            print('\t collection [' + collection_name + '] not found!')
+    def setObjectVisible(self, object_name: str, visible: bool) -> bool:
+        if not self.isObjectExist(object_name):
             return False
 
-        bpy.data.collections[collection_name].hide_render = False
+        bpy.data.objects[object_name].hide_set(not visible)
+        return True
+
+    def setCollectionVisible(self, collection_name: str, visible: bool) -> bool:
+        if not self.isCollectionExist(collection_name):
+            return False
+
+        for object_name in bpy.data.collections[collection_name].objects.keys():
+            self.setObjectVisible(object_name, visible)
+        return True
+
+    def setObjectRenderable(self, object_name: str, renderable: bool) -> bool:
+        if not self.isObjectExist(object_name):
+            return False
+
+        bpy.data.objects[object_name].hide_render = not renderable
+        return True
+
+    def setCollectionVisible(self, collection_name: str, renderable: bool) -> bool:
+        if not self.isCollectionExist(collection_name):
+            return False
+
+        for object_name in bpy.data.collections[collection_name].objects.keys():
+            self.setObjectRenderable(object_name, renderable)
         return True
 
     def activateCamera(self, camera_name):

@@ -8,6 +8,7 @@ from blender_manage.Module.light_manager import LightManager
 from blender_manage.Module.object_manager import ObjectManager
 from blender_manage.Module.shading_manager import ShadingManager
 from blender_manage.Module.pointcloud_manager import PointCloudManager
+from blender_manage.Module.render_manager import RenderManager
 
 def demo():
     datat_folder_path = '/Users/fufu/Downloads/Dataset/compare_result/metric_manifold_result_selected/ShapeNet/'
@@ -18,6 +19,11 @@ def demo():
     object_manager = ObjectManager()
     shading_manager = ShadingManager()
     pointcloud_manager = PointCloudManager()
+    render_manager = RenderManager()
+
+    object_manager.removeObject('Cube')
+    object_manager.removeObject('Camera')
+    object_manager.removeObject('Light')
 
     shading_manager.setRenderEngine('CYCLES')
 
@@ -26,11 +32,15 @@ def demo():
     light_manager.setLightData('light_top', 'energy', 150)
     light_manager.setLightData('light_top', 'size', 2)
 
+    render_manager.setObjectVisible('light_top', False)
+
     light_manager.addLight('light_front', 'AREA', 'Lights')
     light_manager.setLightPosition('light_front', [0, 1, 0])
     light_manager.setLightRotationEuler('light_front', [-90, 0, 0])
     light_manager.setLightData('light_front', 'energy', 150)
     light_manager.setLightData('light_front', 'size', 2)
+
+    render_manager.setObjectVisible('light_front', False)
 
     category_folder_path = datat_folder_path + category_id + '/'
     model_id_list = os.listdir(category_folder_path)
@@ -61,6 +71,9 @@ def demo():
 
             if 'pcd' in file_id:
                 pointcloud_manager.createColor(object_name, 0.004, 'mash_0', object_name)
+
+            render_manager.setObjectVisible(object_name, False)
+            render_manager.setObjectRenderable(object_name, False)
 
         return True
         object_manager.removeCollection(model_id)
