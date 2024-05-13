@@ -26,8 +26,6 @@ class LightManager(object):
         if collection_name is not None:
             self.object_manager.createNewCollection(collection_name)
 
-            if light_name in bpy.data.collections['Collection'].objects.keys():
-                bpy.data.collections['Collection'].objects.unlink(light_object)
             bpy.data.collections[collection_name].objects.link(light_object)
         return True
 

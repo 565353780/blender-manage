@@ -27,8 +27,6 @@ class CameraManager(object):
         if collection_name is not None:
             self.object_manager.createNewCollection(collection_name)
 
-            if camera_name in bpy.data.collections['Collection'].objects.keys():
-                bpy.data.collections['Collection'].objects.unlink(camera_object)
             bpy.data.collections[collection_name].objects.link(camera_object)
         return True
 

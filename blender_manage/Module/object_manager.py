@@ -26,8 +26,6 @@ class ObjectManager(object):
         if collection_name is not None:
             self.createNewCollection(collection_name)
 
-            if object_name in bpy.data.collections['Collection'].objects.keys():
-                bpy.data.collections['Collection'].objects.unlink(obj)
             bpy.data.collections[collection_name].objects.link(obj)
         return True
 
@@ -117,4 +115,12 @@ class ObjectManager(object):
 
         if clear_data:
             bpy.ops.outliner.orphans_purge(do_recursive=True)
+        return True
+
+    def removeAll(self, clear_data: bool = True) -> bool:
+        for collection_name in bpy.data.collections.keys():
+            self.removeCollection(collection_name)
+
+        for object_name in bpy.data.objects.keys():
+            self.removeObject(object_name)
         return True

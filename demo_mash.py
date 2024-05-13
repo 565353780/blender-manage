@@ -23,9 +23,7 @@ def demo():
     pointcloud_manager = PointCloudManager()
     render_manager = RenderManager()
 
-    object_manager.removeObject('Cube')
-    object_manager.removeObject('Camera')
-    object_manager.removeObject('Light')
+    object_manager.removeAll()
 
     shading_manager.setRenderEngine('CYCLES')
 
