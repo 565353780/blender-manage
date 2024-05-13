@@ -106,7 +106,7 @@ def demo():
 
                 render_manager.setObjectRenderable(object_name, False)
 
-            object_manager.removeCollection(model_id)
+            object_manager.removeCollection(collection_name)
     return True
 
 if __name__ == "__main__":

@@ -76,8 +76,12 @@ class RenderManager(object):
 
         print('[INFO][RenderManager::renderImage]')
         print('\t start render image...')
-        bpy.data.scenes["Scene"].render.image_settings.file_format = 'PNG'
-        bpy.data.scenes["Scene"].render.filepath = save_image_file_path
+        bpy.context.scene.render.film_transparent = True
+        bpy.context.scene.render.image_settings.file_format = 'PNG'
+        bpy.context.scene.render.image_settings.color_mode = 'RGBA'
+        bpy.context.scene.render.image_settings.color_depth = '16'
+        bpy.context.scene.render.filepath = save_image_file_path
+        bpy.context.scene.render.image_settings.compression = 0
         bpy.ops.render.render(write_still=True)
         print('\t >>> [SUCCESS]')
         return True

@@ -16,9 +16,22 @@ class ObjectManager(object):
 
         object_file_type = object_file_path.split('.')[-1]
         if object_file_type == 'ply':
-            bpy.ops.wm.ply_import(filepath=object_file_path, forward_axis='NEGATIVE_Z', up_axis='Y')
+            try:
+                bpy.ops.wm.ply_import(filepath=object_file_path, forward_axis='NEGATIVE_Z', up_axis='Y')
+            except:
+                print('[ERROR][ObjectManager::loadObjectFile]')
+                print('\t ply_import failed!')
+                print('\t object_file_path:', object_file_path)
+                return False
+
         elif object_file_type == 'obj':
-            bpy.ops.wm.obj_import(filepath=object_file_path)
+            try:
+                bpy.ops.wm.obj_import(filepath=object_file_path)
+            except:
+                print('[ERROR][ObjectManager::loadObjectFile]')
+                print('\t obj_import failed!')
+                print('\t object_file_path:', object_file_path)
+                return False
 
         obj = bpy.context.selected_objects[0]
         obj.name = object_name
@@ -26,6 +39,8 @@ class ObjectManager(object):
         if collection_name is not None:
             self.createNewCollection(collection_name)
 
+            if object_name in bpy.context.collection.objects.keys():
+                bpy.context.collection.objects.unlink(obj)
             bpy.data.collections[collection_name].objects.link(obj)
         return True
 
@@ -69,10 +84,10 @@ class ObjectManager(object):
 
         return collection_object_list.keys()
 
-    def isObjectExist(self, object_name):
+    def isObjectExist(self, object_name: str) -> bool:
         return object_name in self.getObjectNameList()
 
-    def isCollectionExist(self, collection_name):
+    def isCollectionExist(self, collection_name: str) -> bool:
         return collection_name in self.getCollectionNameList()
 
     def isObjectInCollection(self, object_name, collection_name):
