@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from blender_manage.Method.color import getColorMap
 
 old_macaron_color_list = [
@@ -75,6 +72,10 @@ junfu_color_list = [
     '#718DD5', '#A38DDE', '#B5C4B1', '#A6A6A8',
 ]
 
+mash_color_list = [
+    '#23A0B4',
+]
+
 COLOR_MAP_DICT = {
     'old_macaron': getColorMap(old_macaron_color_list),
     'macaron': getColorMap(macaron_color_list),
@@ -83,4 +84,5 @@ COLOR_MAP_DICT = {
     'source': getColorMap(source_color_list),
     'fufu': getColorMap(fufu_color_list),
     'junfu': getColorMap(junfu_color_list),
+    'mash': getColorMap(mash_color_list),
 }

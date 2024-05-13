@@ -1,14 +1,11 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from copy import deepcopy
-
 import bpy
 import numpy as np
+from copy import deepcopy
 
 from blender_manage.Config.collection import COLLECTION_NAME_LIST
 from blender_manage.Config.color import COLOR_MAP_DICT
 from blender_manage.Method.label import getLabelFromName
+from blender_manage.Method.pcd import createColor
 from blender_manage.Module.object_manager import ObjectManager
 
 

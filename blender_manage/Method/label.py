@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-
 def getLabelFromName(name):
     if '_' in name:
         try:
@@ -21,6 +17,4 @@ def getLabelFromName(name):
         object_label = int(name)
         return object_label
     except:
-        pass
-
-    return None
+        return 0

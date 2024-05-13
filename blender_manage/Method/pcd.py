@@ -19,10 +19,7 @@ def set_vertex_attr(
     mesh.attributes[name].data.foreach_set("vector", v)
     return True
 
-
-def createColor(ply_file_path: str, object_name: str, color_name: str = "Col") -> bool:
-    assert os.path.exists(ply_file_path)
-
+def createColor(object_name: str, colors: np.ndarray, color_name: str = "Col") -> bool:
     if object_name not in bpy.data.objects.keys():
         print("[WARN][PointCloudManager::createColor]")
         print("\t object not found in blender for object : " + object_name)
@@ -30,18 +27,26 @@ def createColor(ply_file_path: str, object_name: str, color_name: str = "Col") -
 
     obj = bpy.data.objects[object_name]
 
-    point_clouds = o3d.io.read_point_cloud(ply_file_path)
-    colors = np.asarray(point_clouds.colors)[:, :3]
-
     set_vertex_attr(obj, colors, color_name)
     print("[INFO][PointCloudManager::createColor]")
     print("\t Success for object : " + object_name)
     return True
 
+def createColorFromFile(object_name: str, ply_file_path: str, color_name: str = "Col") -> bool:
+    assert os.path.exists(ply_file_path)
+
+    point_clouds = o3d.io.read_point_cloud(ply_file_path)
+    colors = np.asarray(point_clouds.colors)[:, :3]
+
+    createColor(object_name, colors, color_name)
+    print("[INFO][PointCloudManager::createColorFromFile]")
+    print("\t Success for object : " + object_name)
+    return True
+
 
 def createColors(
-    ply_file_path_list: str, object_name_list: list, color_name: str = "Col"
+    object_name_list: list, ply_file_path_list: str, color_name: str = "Col"
 ) -> bool:
-    for ply_file_path, object_name in zip(ply_file_path_list, object_name_list):
-        createColor(ply_file_path, object_name, color_name)
+    for object_name, ply_file_path in zip(object_name_list, ply_file_path_list):
+        createColor(object_name, ply_file_path, color_name)
     return True

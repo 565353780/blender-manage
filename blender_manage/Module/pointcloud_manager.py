@@ -1,6 +1,8 @@
 import os
+import bpy
+from typing import Union
 
-from blender_manage.Method.pcd import createColor
+from blender_manage.Method.pcd import createColorFromFile
 from blender_manage.Module.object_manager import ObjectManager
 
 
@@ -8,6 +10,10 @@ class PointCloudManager(object):
     def __init__(self):
         self.object_manager = ObjectManager()
         return
+
+    def createColor(self, object_name: str, color: Union[np.ndarray, list]) -> bool:
+        bpy.ops.node.new_geometry_nodes_modifier()
+        return True
 
     def createColorsForMethods(
         self,
@@ -33,11 +39,11 @@ class PointCloudManager(object):
                     latest_ply_filename = ply_filename
 
             if max_idx == -1:
-                print("[WARN][PointCloudManager::createColor]")
+                print("[WARN][PointCloudManager::createColorsForMethods]")
                 print("\t ply not found for object : " + object_name)
                 continue
 
             latest_ply_file_path = ply_folder_path + latest_ply_filename
 
-            createColor(latest_ply_file_path, object_name, color_name)
+            createColorFromFile(latest_ply_file_path, object_name, color_name)
         return True
