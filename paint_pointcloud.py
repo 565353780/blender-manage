@@ -1,13 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-blender_manage_folder_path = 'D:/github/blender-manage'
+import sys
+sys.path.append('/Users/fufu/github/blender-manage')
 
 import os
-import sys
-
-sys.path.append(blender_manage_folder_path)
-
 from blender_manage.Module.pointcloud_manager import PointCloudManager
 
 def demo():

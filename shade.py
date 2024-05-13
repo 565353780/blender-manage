@@ -1,7 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+import sys
+sys.path.append('/Users/fufu/github/blender-manage')
 
-blender_manage_folder_path = 'D:/github/blender-manage'
+from blender_manage.Module.shading_manager import ShadingManager
 
 collection_name_list = [
     'GT',
@@ -22,11 +22,6 @@ collection_name_list = [
     'wither',
 ]
 
-import sys
-
-sys.path.append(blender_manage_folder_path)
-
-from blender_manage.Module.shading_manager import ShadingManager
 
 def demo():
     color_map_name = 'fufu'
