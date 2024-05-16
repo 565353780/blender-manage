@@ -30,26 +30,6 @@ class CameraManager(object):
             bpy.data.collections[collection_name].objects.link(camera_object)
         return True
 
-    def setCameraPosition(self, camera_name: str, camera_position: Union[np.ndarray, list]) -> bool:
-        if not self.object_manager.isObjectExist(camera_name):
-            return False
-
-        camera_object = bpy.data.objects[camera_name]
-
-        for i in range(3):
-            camera_object.location[i] = camera_position[i]
-        return True
-
-    def setCameraRotationEuler(self, camera_name: str, camera_rotation_euler: Union[np.ndarray, list]) -> bool:
-        if not self.isCameraExist(camera_name):
-            return False
-
-        camera_object = bpy.data.objects[camera_name]
-
-        for i in range(3):
-            camera_object.rotation_euler[i] = camera_rotation_euler[i] * np.pi / 180.0
-        return True
-
     def setCameraData(self, camera_name: str, camera_key: str, camera_value) -> bool:
         if not self.isCameraExist(camera_name):
             return False

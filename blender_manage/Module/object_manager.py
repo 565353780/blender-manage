@@ -1,5 +1,6 @@
 import os
 import bpy
+import numpy as np
 from typing import Union
 
 
@@ -103,6 +104,26 @@ class ObjectManager(object):
         if not additive:
             bpy.ops.object.select_all(action='DESELECT')
             bpy.data.objects[object_name].select = True
+        return True
+
+    def setObjectPosition(self, object_name: str, object_position: Union[np.ndarray, list]) -> bool:
+        if not self.isObjectExist(object_name):
+            return False
+
+        obj = bpy.data.objects[object_name]
+
+        for i in range(3):
+            obj.location[i] = object_position[i]
+        return True
+
+    def setObjectRotationEuler(self, object_name: str, object_rotation_euler: Union[np.ndarray, list]) -> bool:
+        if not self.isObjectExist(object_name):
+            return False
+
+        obj = bpy.data.objects[object_name]
+
+        for i in range(3):
+            obj.rotation_euler[i] = object_rotation_euler[i] * np.pi / 180.0
         return True
 
     def removeObject(self, object_name: str, clear_data: bool = True) -> bool:

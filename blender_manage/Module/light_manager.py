@@ -29,26 +29,6 @@ class LightManager(object):
             bpy.data.collections[collection_name].objects.link(light_object)
         return True
 
-    def setLightPosition(self, light_name: str, light_position: Union[np.ndarray, list]) -> bool:
-        if not self.object_manager.isObjectExist(light_name):
-            return False
-
-        light_object = bpy.data.objects[light_name]
-
-        for i in range(3):
-            light_object.location[i] = light_position[i]
-        return True
-
-    def setLightRotationEuler(self, light_name: str, light_rotation_euler: Union[np.ndarray, list]) -> bool:
-        if not self.isLightExist(light_name):
-            return False
-
-        light_object = bpy.data.objects[light_name]
-
-        for i in range(3):
-            light_object.rotation_euler[i] = light_rotation_euler[i] * np.pi / 180.0
-        return True
-
     def setLightData(self, light_name: str, light_key: str, light_value) -> bool:
         if not self.isLightExist(light_name):
             return False

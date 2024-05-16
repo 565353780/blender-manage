@@ -31,21 +31,21 @@ def demo():
     render_manager.setRenderResolution([1080, 1080])
 
     light_manager.addLight('light_top', 'AREA', 'Lights')
-    light_manager.setLightPosition('light_top', [0, 0, 1])
+    object_manager.setObjectPosition('light_top', [0, 0, 1])
     light_manager.setLightData('light_top', 'energy', 50)
     light_manager.setLightData('light_top', 'size', 2)
 
     light_manager.addLight('light_front', 'AREA', 'Lights')
-    light_manager.setLightPosition('light_front', [0, 1, 0])
-    light_manager.setLightRotationEuler('light_front', [-90, 0, 0])
+    object_manager.setObjectPosition('light_front', [0, 1, 0])
+    object_manager.setObjectRotationEuler('light_front', [-90, 0, 0])
     light_manager.setLightData('light_front', 'energy', 50)
     light_manager.setLightData('light_front', 'size', 2)
 
     render_manager.setCollectionVisible('Lights', False)
 
     camera_manager.addCamera('camera_1', 'PERSP', 'Cameras')
-    camera_manager.setCameraPosition('camera_1', [-0.86324, 1.4553, 0.6352])
-    camera_manager.setCameraRotationEuler('camera_1', [68.8, 0, 211.2])
+    object_manager.setObjectPosition('camera_1', [-0.86324, 1.4553, 0.6352])
+    object_manager.setObjectRotationEuler('camera_1', [68.8, 0, 211.2])
 
     render_manager.setCollectionVisible('Cameras', False)
 
@@ -58,6 +58,9 @@ def demo():
         category_save_image_folder_path = save_image_folder_path + category_id + '/'
 
         category_folder_path = datat_folder_path + category_id + '/'
+        if not os.path.exists(category_folder_path):
+            continue
+
         model_id_list = os.listdir(category_folder_path)
         model_id_list.sort()
 
@@ -67,6 +70,9 @@ def demo():
             collection_name = model_id
 
             model_folder_path = category_folder_path + model_id + '/'
+            if not os.path.exists(model_folder_path):
+                continue
+
             model_filename_list = os.listdir(model_folder_path)
             model_filename_list.sort()
 
