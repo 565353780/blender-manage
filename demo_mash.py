@@ -47,6 +47,9 @@ def demo():
     object_manager.setObjectPosition('camera_1', [-0.86324, 1.4553, 0.6352])
     object_manager.setObjectRotationEuler('camera_1', [68.8, 0, 211.2])
 
+    camera_manager.addCamera('camera_2', 'PERSP', 'Cameras')
+    camera_manager.addCamera('camera_3', 'PERSP', 'Cameras')
+
     render_manager.setCollectionVisible('Cameras', False)
 
     camera_name_list = object_manager.getCollectionObjectNameList('Cameras')
@@ -99,6 +102,19 @@ def demo():
             render_manager.setCollectionVisible(collection_name, False)
             render_manager.setCollectionRenderable(collection_name, False)
 
+            if model_id[:4] == '10c7':
+                object_manager.setObjectPosition('camera_2', [-0.86324, 1.4553, 0.6352])
+                object_manager.setObjectRotationEuler('camera_2', [68.8, 0, 211.2])
+                object_manager.setObjectPosition('camera_3', [-0.86324, 1.4553, 0.6352])
+                object_manager.setObjectRotationEuler('camera_3', [68.8, 0, 211.2])
+            elif model_id[:4] == '17ac':
+                object_manager.setObjectPosition('camera_2', [-0.86324, 1.4553, 0.6352])
+                object_manager.setObjectRotationEuler('camera_2', [68.8, 0, 211.2])
+                object_manager.setObjectPosition('camera_3', [-0.86324, 1.4553, 0.6352])
+                object_manager.setObjectRotationEuler('camera_3', [68.8, 0, 211.2])
+
+            # use return to check camera pose here
+            return
 
             for object_name in object_name_list:
                 if 'mash_pcd' in object_name:

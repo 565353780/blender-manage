@@ -84,6 +84,9 @@ def demo():
             elif nerf_name == 'hotdog':
                 object_manager.setObjectPosition(object_name, [0.4, 0.3, 3.05])
                 object_manager.setObjectRotationEuler(object_name, [204, 0, 80])
+            elif nerf_name == 'mic':
+                object_manager.setObjectPosition(object_name, [1.01, -0.18, 3.22])
+                object_manager.setObjectRotationEuler(object_name, [174, 0, 0])
 
             shading_manager.paintColorMapForObject(object_name, 'mash')
 
@@ -101,6 +104,9 @@ def demo():
         elif nerf_name == 'hotdog':
             object_manager.setObjectPosition('camera_1', [-2.2476, 4.6444, 4.523])
             object_manager.setObjectRotationEuler('camera_1', [47.159, 0, -154.11])
+        elif nerf_name == 'mic':
+            object_manager.setObjectPosition('camera_1', [-4.5313, 3.3218, 4.0034])
+            object_manager.setObjectRotationEuler('camera_1', [55.159, 0, -126.91])
 
         for object_name in object_name_list:
             save_image_file_basepath = nerf_save_image_folder_path + object_name
