@@ -3,6 +3,7 @@ sys.path.append('/Users/fufu/github/blender-manage')
 
 import os
 import bpy
+from typing import Union
 
 from blender_manage.Module.light_manager import LightManager
 from blender_manage.Module.camera_manager import CameraManager
@@ -11,10 +12,13 @@ from blender_manage.Module.shading_manager import ShadingManager
 from blender_manage.Module.pointcloud_manager import PointCloudManager
 from blender_manage.Module.render_manager import RenderManager
 
-def demo():
-    pcd_folder_path = '/Users/fufu/Downloads/Dataset/MashCFM/24depth/20241103_23:44:05/iter-9/ema/category/'
-    save_image_folder_path = '/Users/fufu/Downloads/Dataset/MashCFM/24depth/rendered/'
-    overwrite = False
+def demoRenderFolder(
+    pcd_folder_path: str,
+    save_image_folder_path: Union[str, None] = None,
+    overwrite: bool = False) -> bool:
+    if save_image_folder_path is None:
+        save_image_folder_path = pcd_folder_path + 'rendered/'
+        os.makedirs(save_image_folder_path, exist_ok=True)
 
     light_manager = LightManager()
     camera_manager = CameraManager()
@@ -54,9 +58,6 @@ def demo():
     pcd_filename_list = os.listdir(pcd_folder_path)
     pcd_filename_list.sort()
 
-    if not os.path.exists(save_image_folder_path):
-        os.makedirs(save_image_folder_path, exist_ok=True)
-
     collection_name = 'pointclouds'
     object_name_list = []
     for pcd_filename in pcd_filename_list:
@@ -91,4 +92,8 @@ def demo():
     return True
 
 if __name__ == "__main__":
-    demo()
+    pcd_folder_path = '/Users/fufu/Downloads/Dataset/MashCFM/24depth/20241103_23:44:05/iter-9/'
+    demoRenderFolder(pcd_folder_path + 'ema/category/')
+    demoRenderFolder(pcd_folder_path + 'ema/image/')
+    demoRenderFolder(pcd_folder_path + 'normal/category/')
+    demoRenderFolder(pcd_folder_path + 'normal/image/')
