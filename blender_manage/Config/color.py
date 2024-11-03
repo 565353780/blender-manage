@@ -76,6 +76,10 @@ mash_color_list = [
     '#23A0B4',
 ]
 
+pcd_color_list = [
+    '#18D2E7',
+]
+
 COLOR_MAP_DICT = {
     'old_macaron': getColorMap(old_macaron_color_list),
     'macaron': getColorMap(macaron_color_list),
@@ -85,4 +89,5 @@ COLOR_MAP_DICT = {
     'fufu': getColorMap(fufu_color_list),
     'junfu': getColorMap(junfu_color_list),
     'mash': getColorMap(mash_color_list),
+    'pcd': getColorMap(pcd_color_list),
 }
