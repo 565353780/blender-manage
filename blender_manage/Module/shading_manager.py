@@ -58,7 +58,7 @@ class ShadingManager(ObjectManager):
             except:
                 try:
                     bpy.data.materials[color_name].node_tree.nodes[
-                        "原理化BSDF"].inputs[0].default_value = tuple(color)
+                        "原理化 BSDF"].inputs[0].default_value = tuple(color)
                 except:
                     print('[ERROR][ShadingManager::createColorMaterials]')
                     print('\t only support Chinese and English!')
