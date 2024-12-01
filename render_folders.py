@@ -120,10 +120,9 @@ def renderFolders(root_folder_path: str, save_image_root_folder_path: Union[str,
             if save_image_root_folder_path is None:
                 save_image_folder_path = root + '/rendered/'
             else:
-                full_path = os.path.join(root, file)
-                rel_shape_file_path = os.path.relpath(full_path, root_folder_path)
+                rel_shape_folder_path = os.path.relpath(root, root_folder_path)
 
-                save_image_folder_path = save_image_root_folder_path + rel_shape_file_path[:-4] + '/'
+                save_image_folder_path = save_image_root_folder_path + rel_shape_folder_path + '/'
 
             shape_folder_path_list.append(root + '/')
             save_image_folder_path_list.append(save_image_folder_path)
