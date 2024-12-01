@@ -108,31 +108,39 @@ def renderFolder(
     object_manager.removeCollection(collection_name)
     return True
 
-def renderFolders(root_folder_path: str, overwrite: bool = False) -> bool:
+def renderFolders(root_folder_path: str, save_image_root_folder_path: Union[str, None]=None, overwrite: bool = False) -> bool:
     shape_folder_path_list = []
+    save_image_folder_path_list = []
     for root, _, files in os.walk(root_folder_path):
         for file in files:
-            if not file.endswith('.ply'):
+            file_extension = os.path.splitext(file)[-1]
+            if file_extension not in ['.ply']:
                 continue
 
+            if save_image_root_folder_path is None:
+                save_image_folder_path = root + '/rendered/'
+            else:
+                full_path = os.path.join(root, file)
+                rel_shape_file_path = os.path.relpath(full_path, root_folder_path)
+
+                save_image_folder_path = save_image_root_folder_path + rel_shape_file_path[:-4] + '/'
+
             shape_folder_path_list.append(root + '/')
+            save_image_folder_path_list.append(save_image_folder_path)
             break
 
-    shape_folder_path_list.sort()
-
-    for shape_folder_path in shape_folder_path_list:
-        renderFolder(shape_folder_path, overwrite=overwrite)
+    for shape_folder_path, save_image_folder_path in zip(shape_folder_path_list, save_image_folder_path_list):
+        renderFolder(shape_folder_path, save_image_folder_path, overwrite)
 
     return True
 
 if __name__ == "__main__":
     shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/recon/20241201_21:02:42/'
+    save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render/20241201_21:02:42/'
     overwrite = False
 
     # removeFolders(shape_folder_path, 'rendered')
 
-    # renderFolder(shape_folder_path + 'iter-9/category/1/pcd/')
-
     while True:
-        renderFolders(shape_folder_path, overwrite)
+        renderFolders(shape_folder_path, save_image_folder_path, overwrite)
         sleep(10)
