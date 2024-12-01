@@ -1,7 +1,8 @@
-import sys
-sys.path.append('/Users/fufu/github/blender-manage')
-
 import os
+
+import sys
+sys.path.append(os.environ['HOME'] + '/github/blender-manage')
+
 import bpy
 from typing import Union
 from shutil import rmtree
@@ -124,7 +125,7 @@ def renderFolders(root_folder_path: str, overwrite: bool = False) -> bool:
     return True
 
 if __name__ == "__main__":
-    shape_folder_path = '/Users/fufu/Downloads/Dataset/MashCFM/recon/20241201_18:15:47/'
+    shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/recon/20241201_21:02:42/'
     overwrite = False
 
     # removeFolders(shape_folder_path, 'rendered')
