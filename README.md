@@ -8,14 +8,10 @@
 
 ## Run
 
-run
+### macOS
 
 ```bash
-shade.py
-render.py
-paint_pointcloud.py
+/Applications/Blender.app/Contents/MacOS/Blender --background --python render_folders.py
 ```
-
-in blender
 
 ## Enjoy it~

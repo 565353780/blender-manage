@@ -12,12 +12,12 @@ from blender_manage.Module.shading_manager import ShadingManager
 from blender_manage.Module.pointcloud_manager import PointCloudManager
 from blender_manage.Module.render_manager import RenderManager
 
-def demoRenderFolder(
-    pcd_folder_path: str,
+def renderFolder(
+    shape_folder_path: str,
     save_image_folder_path: Union[str, None] = None,
     overwrite: bool = False) -> bool:
     if save_image_folder_path is None:
-        save_image_folder_path = pcd_folder_path + 'rendered/'
+        save_image_folder_path = shape_folder_path + 'rendered/'
         os.makedirs(save_image_folder_path, exist_ok=True)
 
     light_manager = LightManager()
@@ -48,31 +48,32 @@ def demoRenderFolder(
     render_manager.setCollectionVisible('Lights', False)
 
     camera_manager.addCamera('camera_1', 'PERSP', 'Cameras')
-    object_manager.setObjectPosition('camera_1', [-2.28952, 3.48527, 1.61018])
-    object_manager.setObjectRotationEuler('camera_1', [68.3606, 0, -146.509])
+    object_manager.setObjectPosition('camera_1', [-0.76007, 1.2522, 0.49354])
+    object_manager.setObjectRotationEuler('camera_1', [71.561, 0, -150.51])
 
     render_manager.setCollectionVisible('Cameras', False)
 
     camera_name_list = object_manager.getCollectionObjectNameList('Cameras')
 
-    pcd_filename_list = os.listdir(pcd_folder_path)
-    pcd_filename_list.sort()
+    shape_filename_list = os.listdir(shape_folder_path)
+    shape_filename_list.sort()
 
-    collection_name = 'pointclouds'
+    collection_name = 'shapes'
     object_name_list = []
-    for pcd_filename in pcd_filename_list:
-        if pcd_filename.split('.')[-1] not in ['ply', 'obj']:
+    for shape_filename in shape_filename_list:
+        if shape_filename.split('.')[-1] not in ['ply', 'obj']:
             continue
 
-        object_name = pcd_filename.split('.')[0]
+        object_name = shape_filename.split('.')[0]
 
-        pcd_file_path = pcd_folder_path + pcd_filename
+        shape_file_path = shape_folder_path + shape_filename
 
-        object_manager.loadObjectFile(pcd_file_path, object_name, collection_name)
+        object_manager.loadObjectFile(shape_file_path, object_name, collection_name)
 
         shading_manager.paintColorMapForObject(object_name, 'pcd')
 
-        pointcloud_manager.createColor(object_name, 0.004, 'pcd_0', object_name)
+        if 'pcd' in object_name:
+            pointcloud_manager.createColor(object_name, 0.004, 'shape_0', object_name)
 
         object_name_list.append(object_name)
 
@@ -91,23 +92,27 @@ def demoRenderFolder(
     object_manager.removeCollection(collection_name)
     return True
 
-def demoRenderFolders(root_folder_path: str, overwrite: bool = False) -> bool:
-    pcd_folder_path_list = []
+def renderFolders(root_folder_path: str, overwrite: bool = False) -> bool:
+    shape_folder_path_list = []
     for root, _, files in os.walk(root_folder_path):
         for file in files:
             if not file.endswith('.ply'):
                 continue
 
-            pcd_folder_path_list.append(root + '/')
+            shape_folder_path_list.append(root + '/')
             break
 
-    for pcd_folder_path in pcd_folder_path_list:
-        demoRenderFolder(pcd_folder_path, overwrite=overwrite)
+    shape_folder_path_list.sort()
+
+    for shape_folder_path in shape_folder_path_list:
+        renderFolder(shape_folder_path, overwrite=overwrite)
 
     return True
 
 if __name__ == "__main__":
-    pcd_folder_path = '/Users/fufu/Downloads/Dataset/MashCFM/recon/20241201_18:15:47/'
+    shape_folder_path = '/Users/fufu/Downloads/Dataset/MashCFM/recon/20241201_18:15:47/'
     overwrite = False
 
-    demoRenderFolders(pcd_folder_path, overwrite)
+    # renderFolder(shape_folder_path + 'iter-9/category/0/pcd/')
+
+    renderFolders(shape_folder_path, overwrite)
