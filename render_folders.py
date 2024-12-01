@@ -4,6 +4,7 @@ import sys
 sys.path.append(os.environ['HOME'] + '/github/blender-manage')
 
 import bpy
+from time import sleep
 from typing import Union
 from shutil import rmtree
 
@@ -132,4 +133,6 @@ if __name__ == "__main__":
 
     # renderFolder(shape_folder_path + 'iter-9/category/1/pcd/')
 
-    renderFolders(shape_folder_path, overwrite)
+    while True:
+        renderFolders(shape_folder_path, overwrite)
+        sleep(10)
