@@ -89,7 +89,7 @@ def renderFolder(
         shading_manager.paintColorMapForObject(object_name, 'pcd')
 
         if 'pcd' in object_name:
-            pointcloud_manager.createColor(object_name, 0.004, 'shape_0', object_name)
+            pointcloud_manager.createColor(object_name, 0.004, 'pcd_0', object_name)
 
         object_name_list.append(object_name)
 
