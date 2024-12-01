@@ -4,6 +4,7 @@ sys.path.append('/Users/fufu/github/blender-manage')
 import os
 import bpy
 from typing import Union
+from shutil import rmtree
 
 from blender_manage.Module.light_manager import LightManager
 from blender_manage.Module.camera_manager import CameraManager
@@ -11,6 +12,19 @@ from blender_manage.Module.object_manager import ObjectManager
 from blender_manage.Module.shading_manager import ShadingManager
 from blender_manage.Module.pointcloud_manager import PointCloudManager
 from blender_manage.Module.render_manager import RenderManager
+
+def removeFolders(root_folder_path: str, folder_name: str) -> bool:
+    if not os.path.exists(root_folder_path):
+        return True
+
+    for root, dirs, _ in os.walk(root_folder_path):
+        for dir in dirs:
+            if dir != folder_name:
+                continue
+
+            rmtree(root + '/' + dir)
+
+    return True
 
 def renderFolder(
     shape_folder_path: str,
@@ -48,8 +62,8 @@ def renderFolder(
     render_manager.setCollectionVisible('Lights', False)
 
     camera_manager.addCamera('camera_1', 'PERSP', 'Cameras')
-    object_manager.setObjectPosition('camera_1', [-0.76007, 1.2522, 0.49354])
-    object_manager.setObjectRotationEuler('camera_1', [71.561, 0, -150.51])
+    object_manager.setObjectPosition('camera_1', [-1.0581, 1.7608, 0.83803])
+    object_manager.setObjectRotationEuler('camera_1', [65.161, 0, -148.51])
 
     render_manager.setCollectionVisible('Cameras', False)
 
@@ -113,6 +127,8 @@ if __name__ == "__main__":
     shape_folder_path = '/Users/fufu/Downloads/Dataset/MashCFM/recon/20241201_18:15:47/'
     overwrite = False
 
-    # renderFolder(shape_folder_path + 'iter-9/category/0/pcd/')
+    # removeFolders(shape_folder_path, 'rendered')
+
+    # renderFolder(shape_folder_path + 'iter-9/category/1/pcd/')
 
     renderFolders(shape_folder_path, overwrite)
