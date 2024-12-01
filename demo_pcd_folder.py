@@ -91,9 +91,23 @@ def demoRenderFolder(
     object_manager.removeCollection(collection_name)
     return True
 
+def demoRenderFolders(root_folder_path: str, overwrite: bool = False) -> bool:
+    pcd_folder_path_list = []
+    for root, _, files in os.walk(root_folder_path):
+        for file in files:
+            if not file.endswith('.ply'):
+                continue
+
+            pcd_folder_path_list.append(root + '/')
+            break
+
+    for pcd_folder_path in pcd_folder_path_list:
+        demoRenderFolder(pcd_folder_path, overwrite=overwrite)
+
+    return True
+
 if __name__ == "__main__":
-    pcd_folder_path = '/Users/fufu/Downloads/Dataset/MashCFM/24depth/20241103_23:44:05/iter-9/'
-    demoRenderFolder(pcd_folder_path + 'ema/category/')
-    demoRenderFolder(pcd_folder_path + 'ema/image/')
-    demoRenderFolder(pcd_folder_path + 'normal/category/')
-    demoRenderFolder(pcd_folder_path + 'normal/image/')
+    pcd_folder_path = '/Users/fufu/Downloads/Dataset/MashCFM/recon/20241201_18:15:47/'
+    overwrite = False
+
+    demoRenderFolders(pcd_folder_path, overwrite)

@@ -63,14 +63,11 @@ class RenderManager(object):
         return True
 
     def renderImage(self, save_image_file_path: str, overwrite: bool = False) -> bool:
-        if os.path.exists(save_image_file_path):
-            if overwrite:
-                removeFile(save_image_file_path)
-            else:
-                print('[WARN][RenderManager::renderImage]')
-                print('\t save image file already exist!')
-                print('\t save_image_file_path:', save_image_file_path)
+        if not overwrite:
+            if os.path.exists(save_image_file_path):
                 return True
+
+            removeFile(save_image_file_path)
 
         createFileFolder(save_image_file_path)
 
