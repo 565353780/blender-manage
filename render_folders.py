@@ -134,8 +134,9 @@ def renderFolders(root_folder_path: str, save_image_root_folder_path: Union[str,
     return True
 
 if __name__ == "__main__":
-    shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/recon/20241201_21:02:42/'
-    save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render/20241201_21:02:42/'
+    timestamp = '20241201_13:03:51'
+    shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/recon/' + timestamp + '/'
+    save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render/' + timestamp + '/'
     overwrite = False
 
     # removeFolders(shape_folder_path, 'rendered')
