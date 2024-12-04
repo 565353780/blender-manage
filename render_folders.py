@@ -49,7 +49,7 @@ def renderFolder(
     shading_manager.setRenderEngine('CYCLES', use_gpu)
 
     render_manager.setUseBorder(True)
-    render_manager.setRenderResolution([1080, 1080])
+    render_manager.setRenderResolution([540, 540])
 
     light_manager.addLight('light_top', 'AREA', 'Lights')
     object_manager.setObjectPosition('light_top', [0, 0, 2])
@@ -148,16 +148,17 @@ if __name__ == "__main__":
     # removeFolders(shape_folder_path, 'rendered')
 
     while True:
-        shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/sample/' + timestamp + '/'
-        save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render_sample/' + timestamp + '/'
+        for i in range(99, -1, -1):
+            shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/sample/' + timestamp + '/iter_' + str(i) + '/'
+            save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render_sample/' + timestamp + '/iter_' + str(i) + '/'
+            renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
+
+        shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/recon/' + timestamp + '/iter_99/'
+        save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render_recon/' + timestamp + '/iter_99/'
         renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
 
-        shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/recon/' + timestamp + '/'
-        save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render_recon/' + timestamp + '/'
-        renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
-
-        shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/recon_smooth/' + timestamp + '/'
-        save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render_recon_smooth/' + timestamp + '/'
+        shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/recon_smooth/' + timestamp + '/iter_99/'
+        save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render_recon_smooth/' + timestamp + '/iter_99/'
         renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
 
         sleep(10)
