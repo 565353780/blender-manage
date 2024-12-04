@@ -31,6 +31,7 @@ def removeFolders(root_folder_path: str, folder_name: str) -> bool:
 def renderFolder(
     shape_folder_path: str,
     save_image_folder_path: Union[str, None] = None,
+    use_gpu: bool = False,
     overwrite: bool = False) -> bool:
     if save_image_folder_path is None:
         save_image_folder_path = shape_folder_path + 'rendered/'
@@ -45,7 +46,7 @@ def renderFolder(
 
     object_manager.removeAll()
 
-    shading_manager.setRenderEngine('CYCLES')
+    shading_manager.setRenderEngine('CYCLES', use_gpu)
 
     render_manager.setUseBorder(True)
     render_manager.setRenderResolution([1080, 1080])
@@ -108,7 +109,11 @@ def renderFolder(
     object_manager.removeCollection(collection_name)
     return True
 
-def renderFolders(root_folder_path: str, save_image_root_folder_path: Union[str, None]=None, overwrite: bool = False) -> bool:
+def renderFolders(
+        root_folder_path: str,
+        save_image_root_folder_path: Union[str, None]=None,
+        use_gpu: bool = False,
+        overwrite: bool = False) -> bool:
     shape_folder_path_list = []
     save_image_folder_path_list = []
     for root, _, files in os.walk(root_folder_path):
@@ -129,18 +134,30 @@ def renderFolders(root_folder_path: str, save_image_root_folder_path: Union[str,
             break
 
     for shape_folder_path, save_image_folder_path in zip(shape_folder_path_list, save_image_folder_path_list):
-        renderFolder(shape_folder_path, save_image_folder_path, overwrite)
+        renderFolder(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
 
     return True
 
 if __name__ == "__main__":
-    timestamp = '20241201_13:03:51'
-    shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/recon/' + timestamp + '/'
-    save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render/' + timestamp + '/'
+    timestamp = '20241204_18:06:56'
+    shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/sample/' + timestamp + '/'
+    save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render_sample/' + timestamp + '/'
+    use_gpu = True
     overwrite = False
 
     # removeFolders(shape_folder_path, 'rendered')
 
     while True:
-        renderFolders(shape_folder_path, save_image_folder_path, overwrite)
+        shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/sample/' + timestamp + '/'
+        save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render_sample/' + timestamp + '/'
+        renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
+
+        shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/recon/' + timestamp + '/'
+        save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render_recon/' + timestamp + '/'
+        renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
+
+        shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/recon_smooth/' + timestamp + '/'
+        save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render_recon_smooth/' + timestamp + '/'
+        renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
+
         sleep(10)

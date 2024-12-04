@@ -1,5 +1,4 @@
 import bpy
-import numpy as np
 from copy import deepcopy
 
 from blender_manage.Config.collection import COLLECTION_NAME_LIST
@@ -108,8 +107,18 @@ class ShadingManager(ObjectManager):
         self.bindColorMaterialsForObjects(color_map_name)
         return True
 
-    def setRenderEngine(self, engine_name: str) -> bool:
+    def setRenderEngine(self, engine_name: str, use_gpu: bool = False) -> bool:
         assert engine_name in ['BLENDER_EEVEE', 'CYCLES']
 
         bpy.context.scene.render.engine = engine_name
+
+        if engine_name == 'CYCLES' and use_gpu:
+            bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'
+
+            bpy.context.preferences.addons['cycles'].preferences.get_devices()
+            for device in bpy.context.preferences.addons['cycles'].preferences.devices:
+                device.use = True
+
+            bpy.context.scene.cycles.device = 'GPU'
+
         return True
