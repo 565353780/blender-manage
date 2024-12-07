@@ -145,11 +145,11 @@ def renderFolders(
     return True
 
 if __name__ == "__main__":
-    timestamp = '20241204_18:06:56'
+    timestamp = '20241207_01:53:47'
     root_folder_path = os.environ['HOME'] + '/github/conditional-flow-matching/output/'
     shape_folder_path = root_folder_path + 'sample/' + timestamp + '/'
     save_image_folder_path = root_folder_path + 'render_sample/' + timestamp + '/'
-    use_gpu = True
+    use_gpu = False
     overwrite = False
 
     sample_t_num = 1000
