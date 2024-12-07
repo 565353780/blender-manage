@@ -1,4 +1,4 @@
-BLENDER_VERSION=4.2
+BLENDER_VERSION=4.3
 PYTHON_VERSION=3.11
 
 PYTHON_MACOS=/Applications/Blender.app/Contents/Resources/${BLENDER_VERSION}/python/bin/python${PYTHON_VERSION}
