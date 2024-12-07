@@ -114,6 +114,12 @@ def renderFolders(
         save_image_root_folder_path: Union[str, None]=None,
         use_gpu: bool = False,
         overwrite: bool = False) -> bool:
+    if not os.path.exists(root_folder_path):
+        print('[ERROR][render_folders::renderFolders]')
+        print('\t root folder not exist!')
+        print('\t root_folder_path:', root_folder_path)
+        return False
+
     shape_folder_path_list = []
     save_image_folder_path_list = []
     for root, _, files in os.walk(root_folder_path):
@@ -140,25 +146,28 @@ def renderFolders(
 
 if __name__ == "__main__":
     timestamp = '20241204_18:06:56'
-    shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/sample/' + timestamp + '/'
-    save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render_sample/' + timestamp + '/'
+    root_folder_path = os.environ['HOME'] + '/github/conditional-flow-matching/output/'
+    shape_folder_path = root_folder_path + 'sample/' + timestamp + '/'
+    save_image_folder_path = root_folder_path + 'render_sample/' + timestamp + '/'
     use_gpu = True
     overwrite = False
+
+    sample_t_num = 1000
 
     # removeFolders(shape_folder_path, 'rendered')
 
     while True:
-        for i in range(99, -1, -1):
-            shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/sample/' + timestamp + '/iter_' + str(i) + '/'
-            save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render_sample/' + timestamp + '/iter_' + str(i) + '/'
+        for i in range(sample_t_num - 1, -1, -1):
+            shape_folder_path = root_folder_path + 'sample/' + timestamp + '/iter_' + str(i) + '/'
+            save_image_folder_path = root_folder_path + 'render_sample/' + timestamp + '/iter_' + str(i) + '/'
             renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
 
-        shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/recon/' + timestamp + '/iter_99/'
-        save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render_recon/' + timestamp + '/iter_99/'
+        shape_folder_path = root_folder_path + 'recon/' + timestamp + '/iter_' + str(sample_t_num - 1) + '/'
+        save_image_folder_path = root_folder_path + 'render_recon/' + timestamp + '/iter_' + str(sample_t_num - 1) + '/'
         renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
 
-        shape_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/recon_smooth/' + timestamp + '/iter_99/'
-        save_image_folder_path = '/home/chli/github/ASDF/conditional-flow-matching/output/render_recon_smooth/' + timestamp + '/iter_99/'
+        shape_folder_path = root_folder_path + 'recon_smooth/' + timestamp + '/iter_' + str(sample_t_num - 1) + '/'
+        save_image_folder_path = root_folder_path + 'render_recon_smooth/' + timestamp + '/iter_' + str(sample_t_num - 1) + '/'
         renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
 
         sleep(10)
