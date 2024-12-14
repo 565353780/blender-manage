@@ -4,7 +4,6 @@ from copy import deepcopy
 from blender_manage.Config.collection import COLLECTION_NAME_LIST
 from blender_manage.Config.color import COLOR_MAP_DICT
 from blender_manage.Method.label import getLabelFromName
-from blender_manage.Method.pcd import createColor
 from blender_manage.Module.object_manager import ObjectManager
 
 
@@ -108,7 +107,12 @@ class ShadingManager(ObjectManager):
         return True
 
     def setRenderEngine(self, engine_name: str, use_gpu: bool = False) -> bool:
-        assert engine_name in ['BLENDER_EEVEE', 'CYCLES']
+        assert engine_name in ['EEVEE', 'WORKBENCH', 'CYCLES']
+
+        if engine_name == 'EEVEE':
+            engine_name = 'BLENDER_EEVEE_NEXT'
+        elif engine_name == 'WORKBENCH':
+            engine_name = 'BLENDER_WORKBENCH'
 
         bpy.context.scene.render.engine = engine_name
 
