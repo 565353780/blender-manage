@@ -5,8 +5,7 @@ sys.path.append(os.environ['HOME'] + '/github/blender-manage')
 
 import bpy
 import math
-import json
-from time import sleep
+import argparse
 from typing import Union
 from shutil import rmtree
 
@@ -121,37 +120,46 @@ def renderShape(
         render_manager.renderImage(save_image_file_path, overwrite)
     return True
 
-def renderJson(
-    json_file_path: str,
-    render_image_num: int,
-    save_image_root_folder_path: Union[str, None]=None,
-    use_gpu: bool = False,
-    overwrite: bool = False) -> bool:
-    if not os.path.exists(json_file_path):
-        print('[ERROR][render_folders::renderJson]')
-        print('\t json not exist!')
-        print('\t json_file_path:', json_file_path)
-        return False
-
-    with open(json_file_path, 'r') as f:
-        model_dict = json.load(f)
-
-    for shape_id, shape_file_path in model_dict.items():
-        renderShape(shape_file_path, shape_id, render_image_num, save_image_root_folder_path, use_gpu, overwrite)
-
-    return True
-
 if __name__ == "__main__":
-    json_file_path = os.environ['HOME'] + '~/github/objaverse-rendering/output/summary.json'.replace('~', '')
-    render_image_num = 12
-    save_image_folder_path = os.environ['HOME'] + '/chLi/Dataset/Objaverse_82K/render/'
-    use_gpu = True
-    overwrite = False
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--shape_file_path",
+        type=str,
+        required=True,
+    )
+    parser.add_argument(
+        "--shape_id",
+        type=str,
+        required=True,
+    )
+    parser.add_argument(
+        "--render_image_num",
+        type=int,
+        required=True,
+    )
+    parser.add_argument(
+        "--save_image_folder_path",
+        type=str,
+        required=True,
+    )
+    parser.add_argument(
+        "--use_gpu",
+        type=bool,
+        default=False,
+    )
+    parser.add_argument(
+        "--overwrite",
+        type=bool,
+        default=False,
+    )
 
-    # removeFolders(shape_folder_path, 'rendered')
+    argv = sys.argv[sys.argv.index("--") + 1 :]
+    args = parser.parse_args(argv)
 
-    while True:
-        renderJson(json_file_path, render_image_num, save_image_folder_path, use_gpu, overwrite)
-        break
-
-        sleep(10)
+    renderShape(
+        args.shape_file_path,
+        args.shape_id,
+        args.render_image_num,
+        args.save_image_folder_path,
+        args.use_gpu,
+        args.overwrite)
