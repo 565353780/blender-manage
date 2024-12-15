@@ -3,10 +3,25 @@ import bpy
 import numpy as np
 from typing import Union
 
+from blender_manage.Method.bound import scene_bbox
+
 
 class ObjectManager(object):
     def __init__(self):
         return
+
+    def addEmptyObject(self, object_name: str, collection_name: Union[str, None]=None) -> bool:
+        obj = bpy.data.objects.new(object_name, None)
+
+        if collection_name is None:
+            bpy.context.scene.collection.objects.link(obj)
+        else:
+            self.createNewCollection(collection_name)
+
+            if object_name in bpy.context.collection.objects.keys():
+                bpy.context.collection.objects.unlink(obj)
+            bpy.data.collections[collection_name].objects.link(obj)
+        return True
 
     def loadObjectFile(self, object_file_path: str, object_name: str, collection_name: Union[str, None]=None) -> bool:
         if not os.path.exists(object_file_path):
@@ -31,6 +46,24 @@ class ObjectManager(object):
             except:
                 print('[ERROR][ObjectManager::loadObjectFile]')
                 print('\t obj_import failed!')
+                print('\t object_file_path:', object_file_path)
+                return False
+
+        elif object_file_type == 'glb':
+            try:
+                bpy.ops.import_scene.gltf(filepath=object_file_path, merge_vertices=True)
+            except:
+                print('[ERROR][ObjectManager::loadObjectFile]')
+                print('\t gltf failed!')
+                print('\t object_file_path:', object_file_path)
+                return False
+
+        elif object_file_type == 'fbx':
+            try:
+                bpy.ops.import_scene.fbx(filepath=object_file_path)
+            except:
+                print('[ERROR][ObjectManager::loadObjectFile]')
+                print('\t fbx failed!')
                 print('\t object_file_path:', object_file_path)
                 return False
 
@@ -124,6 +157,70 @@ class ObjectManager(object):
 
         for i in range(3):
             obj.rotation_euler[i] = object_rotation_euler[i] * np.pi / 180.0
+        return True
+
+    def normalizeObject(self, object_name: str) -> bool:
+        if not self.isObjectExist(object_name):
+            return True
+
+        obj = bpy.data.objects[object_name]
+
+        bbox_min, bbox_max = scene_bbox(obj)
+
+        scale = 1.0 / max(bbox_max - bbox_min)
+
+        obj.scale = obj.scale * scale
+        bpy.context.view_layer.update()
+
+        bbox_min, bbox_max = scene_bbox()
+        offset = -(bbox_min + bbox_max) / 2.0
+
+        obj.matrix_world.translation += offset
+
+        return True
+
+    def normalizeCollection(self, collection_name: str) -> bool:
+        if not self.isCollectionExist(collection_name):
+            return True
+
+        collection_objects = bpy.data.collections[collection_name].objects
+
+        bbox_min, bbox_max = scene_bbox(collection_objects)
+
+        scale = 1.0 / max(bbox_max - bbox_min)
+        for obj in collection_objects:
+            obj.scale = obj.scale * scale
+        bpy.context.view_layer.update()
+
+        bbox_min, bbox_max = scene_bbox(collection_objects)
+        offset = -(bbox_min + bbox_max) / 2.0
+
+        for obj in collection_objects:
+            obj.matrix_world.translation += offset
+
+        return True
+
+    def normalizeAllObjects(self) -> bool:
+        if len(list(self.getObjectNameList())) == 0:
+            return True
+
+        bbox_min, bbox_max = scene_bbox()
+
+        scale = 1.0 / max(bbox_max - bbox_min)
+        for obj in bpy.context.scene.objects.values():
+            if obj.parent:
+                continue
+            obj.scale = obj.scale * scale
+        bpy.context.view_layer.update()
+
+        bbox_min, bbox_max = scene_bbox()
+        offset = -(bbox_min + bbox_max) / 2.0
+
+        for obj in bpy.context.scene.objects.values():
+            if obj.parent:
+                continue
+            obj.matrix_world.translation += offset
+
         return True
 
     def removeObject(self, object_name: str, clear_data: bool = True) -> bool:

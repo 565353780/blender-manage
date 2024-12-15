@@ -3,7 +3,6 @@ import bpy
 import numpy as np
 from typing import Union
 
-from blender_manage.Config.render import RENDER_NAME_LIST, CAMERA_NAME_LIST
 from blender_manage.Method.path import createFileFolder, removeFile
 from blender_manage.Module.object_manager import ObjectManager
 
@@ -79,6 +78,7 @@ class RenderManager(object):
         bpy.context.scene.render.image_settings.color_depth = '16'
         bpy.context.scene.render.filepath = save_image_file_path
         bpy.context.scene.render.image_settings.compression = 0
+        bpy.context.scene.render.resolution_percentage = 100
         bpy.ops.render.render(write_still=True)
         print('\t >>> [SUCCESS]')
         return True

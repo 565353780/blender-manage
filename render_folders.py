@@ -49,7 +49,7 @@ def renderFolder(
     shading_manager.setRenderEngine('CYCLES', use_gpu)
 
     render_manager.setUseBorder(True)
-    render_manager.setRenderResolution([540, 540])
+    render_manager.setRenderResolution([518, 518])
 
     light_manager.addLight('light_top', 'AREA', 'Lights')
     object_manager.setObjectPosition('light_top', [0, 0, 2])
@@ -145,14 +145,14 @@ def renderFolders(
     return True
 
 if __name__ == "__main__":
-    timestamp = '20241207_01:53:47'
-    root_folder_path = os.environ['HOME'] + '/github/conditional-flow-matching/output/'
+    timestamp = '20241213_19:57:03'
+    root_folder_path = os.environ['HOME'] + '/github/ASDF/conditional-flow-matching/output/'
     shape_folder_path = root_folder_path + 'sample/' + timestamp + '/'
     save_image_folder_path = root_folder_path + 'render_sample/' + timestamp + '/'
     use_gpu = False
     overwrite = False
 
-    sample_t_num = 1000
+    sample_t_num = 20
 
     # removeFolders(shape_folder_path, 'rendered')
 

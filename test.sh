@@ -9,5 +9,4 @@ elif [ "$os_type" = "Darwin" ]; then
   BLENDER_BIN=${BLENDER_BIN_MACOS}
 fi
 
-${BLENDER_BIN} --python \
-  render_folders.py
+${BLENDER_BIN} --python $1

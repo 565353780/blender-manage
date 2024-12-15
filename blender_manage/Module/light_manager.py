@@ -1,6 +1,4 @@
-import os
 import bpy
-import numpy as np
 from typing import Union
 
 from blender_manage.Module.object_manager import ObjectManager
