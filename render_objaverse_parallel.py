@@ -37,9 +37,25 @@ def worker(
 
 
 if __name__ == "__main__":
+    root_list = [
+        '/mnt/data/jintian/chLi/Dataset/',
+        os.environ['HOME'] + '/chLi/Dataset/',
+    ]
+
+    dataset_folder_path = None
+    for root in root_list:
+        if os.path.exists(root):
+            dataset_folder_path = root
+            break
+
+    if dataset_folder_path is None:
+        print('[ERROR][render_objaverse_parallel::__main__]')
+        print('\t dataset not found!')
+        exit()
+
     json_file_path = os.environ['HOME'] + '~/github/objaverse-rendering/output/summary.json'.replace('~', '')
     render_image_num = 12
-    save_image_folder_path = os.environ['HOME'] + '/chLi/Dataset/Objaverse_82K/render/'
+    save_image_folder_path = dataset_folder_path + 'Objaverse_82K/render/'
     use_gpu = True
     num_gpus = 1
     workers_per_gpu = 8
