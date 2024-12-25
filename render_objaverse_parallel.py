@@ -38,7 +38,7 @@ def worker(
 
 if __name__ == "__main__":
     root_list = [
-        '/mnt/data/jintian/chLi/Dataset/',
+        '/mnt/d/chLi/Dataset/',
         os.environ['HOME'] + '/chLi/Dataset/',
     ]
 
@@ -53,25 +53,22 @@ if __name__ == "__main__":
         print('\t dataset not found!')
         exit()
 
-    json_file_path = os.environ['HOME'] + '~/github/objaverse-rendering/output/summary.json'.replace('~', '')
+    dataset_root_folder_path = dataset_folder_path + 'Objaverse_82K/glbs/'
+    assert os.path.exists(dataset_root_folder_path)
+
     render_image_num = 12
     save_image_folder_path = dataset_folder_path + 'Objaverse_82K/render/'
     use_gpu = True
-    num_gpus = 1
+    gpu_idx_list = [1, 2, 3, 4, 5, 6, 7]
+    gpu_idx_list = [0]
     workers_per_gpu = 8
     overwrite = False
-
-    if not os.path.exists(json_file_path):
-        print('[ERROR][render_objaverse_parallel::__main__]')
-        print('\t json not exist!')
-        print('\t json_file_path:', json_file_path)
-        exit()
 
     queue = JoinableQueue()
     count = Value("i", 0)
 
     # Start worker processes on each of the GPUs
-    for gpu_i in range(num_gpus):
+    for gpu_i in gpu_idx_list:
         for worker_i in range(workers_per_gpu):
             worker_i = gpu_i * workers_per_gpu + worker_i
             process = Process(
@@ -81,11 +78,18 @@ if __name__ == "__main__":
             process.start()
 
     # Add items to the queue
-    with open(json_file_path, 'r') as f:
-        model_dict = json.load(f)
+    for root, _, files in os.walk(dataset_root_folder_path):
+        for file in files:
+            if not file.endswith('.glb'):
+                continue
 
-    for shape_id, shape_file_path in model_dict.items():
-        queue.put([shape_file_path, shape_id, render_image_num, save_image_folder_path, use_gpu, overwrite])
+            rel_folder_path = os.path.relpath(root, dataset_root_folder_path)
+
+            shape_file_path = dataset_root_folder_path + rel_folder_path + '/' + file
+
+            shape_id = rel_folder_path + '/' + file[:-4]
+
+            queue.put([shape_file_path, shape_id, render_image_num, save_image_folder_path, use_gpu, overwrite])
 
     # Wait for all tasks to be completed
     queue.join()

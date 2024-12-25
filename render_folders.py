@@ -145,14 +145,17 @@ def renderFolders(
     return True
 
 if __name__ == "__main__":
-    timestamp = '20241213_19:57:03'
+    timestamp = '20241218_15:08:27'
     root_folder_path = os.environ['HOME'] + '/github/ASDF/conditional-flow-matching/output/'
-    shape_folder_path = root_folder_path + 'sample/' + timestamp + '/'
-    save_image_folder_path = root_folder_path + 'render_sample/' + timestamp + '/'
-    use_gpu = False
+    shape_folder_path = root_folder_path + 'recon_smooth/' + timestamp + '/'
+    save_image_folder_path = root_folder_path + 'render_recon_smooth/' + timestamp + '/'
+    use_gpu = True
     overwrite = False
 
-    sample_t_num = 20
+    renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
+    exit()
+
+    sample_t_num = 2
 
     # removeFolders(shape_folder_path, 'rendered')
 
