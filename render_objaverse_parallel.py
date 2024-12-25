@@ -59,9 +59,9 @@ if __name__ == "__main__":
     render_image_num = 12
     save_image_folder_path = dataset_folder_path + 'Objaverse_82K/render/'
     use_gpu = True
-    gpu_idx_list = [1, 2, 3, 4, 5, 6, 7]
-    gpu_idx_list = [0]
-    workers_per_gpu = 8
+    gpu_idx_list = [0, 1, 2, 3]
+    # gpu_idx_list = [0]
+    workers_per_gpu = 2
     overwrite = False
 
     queue = JoinableQueue()
