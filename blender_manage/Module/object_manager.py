@@ -98,25 +98,25 @@ class ObjectManager(object):
     def getCollectionList(self):
         return bpy.data.collections
 
-    def getCollectionObjectList(self, collection_name):
+    def getCollectionObjectList(self, collection_name) -> dict:
         collection_name_list = self.getCollectionNameList()
 
         if collection_name not in collection_name_list:
             print("[ERROR][ObjectManager::getCollectionObjectList]")
             print("\t collection [" + collection_name + "] not found!")
-            return None
+            return {}
 
         return bpy.data.collections[collection_name].objects
 
-    def getCollectionObjectNameList(self, collection_name):
+    def getCollectionObjectNameList(self, collection_name) -> list:
         collection_object_list = self.getCollectionObjectList(collection_name)
 
         if collection_object_list is None:
             print("[ERROR][ObjectManager::getCollectionObjectNameList]")
             print("\t getCollectionObjectList failed!")
-            return None
+            return []
 
-        return collection_object_list.keys()
+        return list(collection_object_list.keys())
 
     def isObjectExist(self, object_name: str) -> bool:
         return object_name in self.getObjectNameList()

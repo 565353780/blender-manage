@@ -8,6 +8,7 @@ from time import sleep
 from typing import Union
 from shutil import rmtree
 
+from blender_manage.Method.path import removeFile
 from blender_manage.Module.light_manager import LightManager
 from blender_manage.Module.camera_manager import CameraManager
 from blender_manage.Module.object_manager import ObjectManager
@@ -28,14 +29,16 @@ def removeFolders(root_folder_path: str, folder_name: str) -> bool:
 
     return True
 
-def renderFolder(
-    shape_folder_path: str,
-    save_image_folder_path: Union[str, None] = None,
+def renderFile(
+    shape_file_path: str,
+    save_image_file_basepath: str,
     use_gpu: bool = False,
     overwrite: bool = False) -> bool:
-    if save_image_folder_path is None:
-        save_image_folder_path = shape_folder_path + 'rendered/'
-        os.makedirs(save_image_folder_path, exist_ok=True)
+    if shape_file_path.split('.')[-1] not in ['ply', 'obj']:
+        print('[ERROR][render_folders::renderFile]')
+        print('\t shape file not valid!')
+        print('\t shape_file_path:', shape_file_path)
+        return False
 
     light_manager = LightManager()
     camera_manager = CameraManager()
@@ -72,41 +75,54 @@ def renderFolder(
 
     camera_name_list = object_manager.getCollectionObjectNameList('Cameras')
 
+    collection_name = 'shapes'
+    object_name = shape_file_path.split('/')[-1].split('.')[0]
+
+    object_manager.loadObjectFile(shape_file_path, object_name, collection_name)
+
+    shading_manager.paintColorMapForObject(object_name, 'pcd')
+
+    if 'pcd' in object_name:
+        pointcloud_manager.createColor(object_name, 0.004, 'pcd_0', object_name)
+
+    render_manager.setCollectionVisible(collection_name, False)
+    render_manager.setCollectionRenderable(collection_name, False)
+
+    render_manager.setObjectRenderable(object_name, True)
+
+    if save_image_file_basepath[-1] == '/':
+        save_image_file_basepath += object_name
+
+    render_manager.renderImages(camera_name_list, save_image_file_basepath, overwrite)
+
+    render_manager.setObjectRenderable(object_name, False)
+
+    object_manager.removeCollection(collection_name)
+    return True
+
+def renderFolder(
+    shape_folder_path: str,
+    save_image_folder_path: Union[str, None] = None,
+    use_gpu: bool = False,
+    overwrite: bool = False) -> bool:
+    if save_image_folder_path is None:
+        save_image_folder_path = shape_folder_path + 'rendered/'
+        os.makedirs(save_image_folder_path, exist_ok=True)
+
     shape_filename_list = os.listdir(shape_folder_path)
     shape_filename_list.sort()
 
-    collection_name = 'shapes'
-    object_name_list = []
     for shape_filename in shape_filename_list:
         if shape_filename.split('.')[-1] not in ['ply', 'obj']:
             continue
 
-        object_name = shape_filename.split('.')[0]
-
         shape_file_path = shape_folder_path + shape_filename
 
-        object_manager.loadObjectFile(shape_file_path, object_name, collection_name)
+        if not renderFile(shape_file_path, save_image_folder_path, use_gpu, overwrite):
+            print('[ERROR][render_folders::renderFolder]')
+            print('\t renderFile failed!')
+            continue
 
-        shading_manager.paintColorMapForObject(object_name, 'pcd')
-
-        if 'pcd' in object_name:
-            pointcloud_manager.createColor(object_name, 0.004, 'pcd_0', object_name)
-
-        object_name_list.append(object_name)
-
-        render_manager.setCollectionVisible(collection_name, False)
-        render_manager.setCollectionRenderable(collection_name, False)
-
-    for object_name in object_name_list:
-        save_image_file_basepath = save_image_folder_path + object_name
-
-        render_manager.setObjectRenderable(object_name, True)
-
-        render_manager.renderImages(camera_name_list, save_image_file_basepath, overwrite)
-
-        render_manager.setObjectRenderable(object_name, False)
-
-    object_manager.removeCollection(collection_name)
     return True
 
 def renderFolders(
@@ -149,8 +165,11 @@ if __name__ == "__main__":
     root_folder_path = os.environ['HOME'] + '/github/ASDF/conditional-flow-matching/output/'
     shape_folder_path = root_folder_path + 'recon_smooth/' + timestamp + '/'
     save_image_folder_path = root_folder_path + 'render_recon_smooth/' + timestamp + '/'
-    use_gpu = True
+    use_gpu = False
     overwrite = False
+
+    shape_folder_path = '/home/chli/github/ASDF/ma-sh/output/fit/'
+    save_image_folder_path = '/home/chli/github/ASDF/ma-sh/output/fit_render/'
 
     renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
     exit()

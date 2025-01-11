@@ -90,8 +90,8 @@ class RenderManager(object):
 
             if save_image_file_basepath[-1] == '/':
                 save_image_file_path = save_image_file_basepath + camera_name + '.png'
-            elif save_image_file_basepath[-4:] == '.png':
-                save_image_file_path = save_image_file_basepath[:-4] + '_' + camera_name + '.png'
+            elif save_image_file_basepath[-4:] in ['.png', '.jpg']:
+                save_image_file_path = save_image_file_basepath[:-4] + '_' + camera_name + save_image_file_basepath[-4:]
             else:
                 save_image_file_path = save_image_file_basepath + '_' + camera_name + '.png'
 
