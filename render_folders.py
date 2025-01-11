@@ -167,11 +167,17 @@ if __name__ == "__main__":
     save_image_folder_path = root_folder_path + 'render_recon_smooth/' + timestamp + '/'
     use_gpu = False
     overwrite = False
+    keep_alive = True
 
     shape_folder_path = '/home/chli/github/ASDF/ma-sh/output/fit/'
     save_image_folder_path = '/home/chli/github/ASDF/ma-sh/output/fit_render/'
 
-    renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
+    while True:
+        renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
+        if not keep_alive:
+            break
+        sleep(1)
+
     exit()
 
     sample_t_num = 2
