@@ -59,7 +59,7 @@ def smart_uv_project(obj_file_path: str,
         filepath=save_uv_map_file_path,
         export_all=True,
         size=(uv_map_resolution, uv_map_resolution),
-        opacity=0.5
+        opacity=0.0
     )
 
     bpy.ops.wm.obj_export(filepath=save_obj_file_path)
