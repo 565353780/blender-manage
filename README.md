@@ -5,13 +5,13 @@
 ### Darwin
 
 ```bash
-/Applications/Blender.app/Contents/Resources/<blender-version>/python/bin/python<python-version> -m pip install open3d
+/Applications/Blender.app/Contents/Resources/<blender-version>/python/bin/python<python-version> -m pip install open3d gradio-client opencv-python
 ```
 
 ### Linux
 
 ```bash
-$HOME/Install/blender/<blender-version>/python/bin/python<python-version> -m pip install open3d
+$HOME/Install/blender/<blender-version>/python/bin/python<python-version> -m pip install open3d gradio-client opencv-python
 ```
 
 ## Run

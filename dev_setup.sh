@@ -14,4 +14,4 @@ elif [ "$os_type" = "Darwin" ]; then
   PYTHON_BIN=${PYTHON_MACOS}
 fi
 
-${PYTHON_BIN} -m pip install open3d
+${PYTHON_BIN} -m pip install open3d gradio-client opencv-python
