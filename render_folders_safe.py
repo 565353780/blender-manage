@@ -15,9 +15,7 @@ if __name__ == "__main__":
     save_image_folder_path = '/home/chli/chLi/Results/mash-diffusion/output/render/' + time_stamp + '/'
     use_gpu = False
     overwrite = False
-    is_background = True
-    gpu_id = 0
-    keep_alive = True
+    keep_alive = False
 
     '''
     shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/adaptive/'
