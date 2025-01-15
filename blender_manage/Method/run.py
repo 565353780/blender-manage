@@ -1,6 +1,7 @@
 import os
+import subprocess
 from typing import Union
-from subprocess import Popen
+from multiprocessing import Process
 
 from blender_manage.Config.path import (
     GIT_ROOT_FOLDER_PATH,
@@ -9,11 +10,26 @@ from blender_manage.Config.path import (
     BLENDER_BIN
 )
 
+def runCMD(command: str) -> bool:
+    try:
+        process = subprocess.run(command,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                shell=True,
+                                cwd=GIT_ROOT_FOLDER_PATH)
+    except:
+        print('[ERROR][run::runCMD]')
+        print('\t run command failed!')
+        print('\t command:', command)
+        return False
+
+    return True
+
 def runBlender(python_file_path: str,
                python_args_dict: dict={},
                is_background: bool = True,
                gpu_id: int = 0,
-               ) -> Union[Popen, None]:
+               ) -> Union[Process, None]:
     if BLENDER_BIN is None:
         print('[ERROR][run::runBlender]')
         print('\t blender bin not found!')
@@ -50,10 +66,11 @@ def runBlender(python_file_path: str,
             else:
                 command += ' --' + key + ' ' + value
 
-    with open(os.devnull, 'wb') as devnull:
-        process = Popen(command,
-                        stdout=devnull,
-                        shell=True,
-                        cwd=GIT_ROOT_FOLDER_PATH)
+    print('[INFO][run::runBlender]')
+    print('\t start run command:')
+    print('\t\t', command)
+    process = Process(target=runCMD,
+                      args=(command,),
+                      daemon=True)
 
     return process

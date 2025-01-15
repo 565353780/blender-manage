@@ -29,7 +29,8 @@ def demo():
         )
 
         if process is not None:
-            process.wait()
+            process.start()
+            process.join()
 
         if not keep_alive:
             break

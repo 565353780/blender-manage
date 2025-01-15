@@ -1,6 +1,6 @@
 import os
 from typing import Union
-from subprocess import Popen
+from multiprocessing import Process
 
 from blender_manage.Config.path import GIT_ROOT_FOLDER_PATH, BLENDER_BIN
 from blender_manage.Method.run import runBlender
@@ -21,7 +21,7 @@ class BlenderRenderer(object):
                    overwrite: bool = False,
                    is_background: bool = True,
                    gpu_id: int = 0,
-                   ) -> Union[Popen, None]:
+                   ) -> Union[Process, None]:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderFile]')
             print('\t git package not found!')
@@ -57,7 +57,7 @@ class BlenderRenderer(object):
                      overwrite: bool = False,
                      is_background: bool = True,
                      gpu_id: int = 0,
-                     ) -> Union[Popen, None]:
+                     ) -> Union[Process, None]:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderFolder]')
             print('\t git package not found!')
@@ -93,7 +93,7 @@ class BlenderRenderer(object):
                       overwrite: bool = False,
                       is_background: bool = True,
                       gpu_id: int = 0,
-                      ) -> Union[Popen, None]:
+                      ) -> Union[Process, None]:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderFolders]')
             print('\t git package not found!')
