@@ -82,8 +82,8 @@ class BlenderRenderer(object):
 
         return True
 
-    def renderFolders(self,
-                      shape_folder_path: str,
+    @staticmethod
+    def renderFolders(shape_folder_path: str,
                       save_image_folder_path: str,
                       use_gpu: bool = False,
                       overwrite: bool = False,
