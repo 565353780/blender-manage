@@ -1,6 +1,3 @@
-import os
-from typing import Union
-
 from blender_manage.Module.light_manager import LightManager
 from blender_manage.Module.camera_manager import CameraManager
 from blender_manage.Module.object_manager import ObjectManager
@@ -9,7 +6,7 @@ from blender_manage.Module.pointcloud_manager import PointCloudManager
 from blender_manage.Module.render_manager import RenderManager
 
 
-def renderFile(
+def test(
     shape_file_path: str,
     save_image_file_basepath: str,
     use_gpu: bool = False,
@@ -73,6 +70,8 @@ def renderFile(
 
     render_manager.setObjectRenderable(object_name, True)
 
+    return True
+
     if save_image_file_basepath[-1] == '/':
         save_image_file_basepath += object_name
 
@@ -81,62 +80,4 @@ def renderFile(
     render_manager.setObjectRenderable(object_name, False)
 
     object_manager.removeCollection(collection_name)
-    return True
-
-def renderFolder(shape_folder_path: str,
-                 save_image_folder_path: Union[str, None] = None,
-                 use_gpu: bool = False,
-                 overwrite: bool = False) -> bool:
-    if save_image_folder_path is None:
-        save_image_folder_path = shape_folder_path + 'rendered/'
-        os.makedirs(save_image_folder_path, exist_ok=True)
-
-    shape_filename_list = os.listdir(shape_folder_path)
-    shape_filename_list.sort()
-
-    for shape_filename in shape_filename_list:
-        if shape_filename.split('.')[-1] not in ['ply', 'obj']:
-            continue
-
-        shape_file_path = shape_folder_path + shape_filename
-
-        if not renderFile(shape_file_path, save_image_folder_path, use_gpu, overwrite):
-            print('[ERROR][render::renderFolder]')
-            print('\t renderFile failed!')
-            continue
-
-    return True
-
-def renderFolders(root_folder_path: str,
-                  save_image_root_folder_path: Union[str, None]=None,
-                  use_gpu: bool = False,
-                  overwrite: bool = False) -> bool:
-    if not os.path.exists(root_folder_path):
-        print('[ERROR][render::renderFolders]')
-        print('\t root folder not exist!')
-        print('\t root_folder_path:', root_folder_path)
-        return False
-
-    shape_folder_path_list = []
-    save_image_folder_path_list = []
-    for root, _, files in os.walk(root_folder_path):
-        for file in files:
-            file_extension = os.path.splitext(file)[-1]
-            if file_extension not in ['.ply']:
-                continue
-
-            if save_image_root_folder_path is None:
-                save_image_folder_path = root + '/rendered/'
-            else:
-                rel_shape_folder_path = os.path.relpath(root, root_folder_path)
-
-                save_image_folder_path = save_image_root_folder_path + rel_shape_folder_path + '/'
-
-            shape_folder_path_list.append(root + '/')
-            save_image_folder_path_list.append(save_image_folder_path)
-            break
-
-    for shape_folder_path, save_image_folder_path in zip(shape_folder_path_list, save_image_folder_path_list):
-        renderFolder(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
-
     return True

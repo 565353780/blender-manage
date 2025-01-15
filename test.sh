@@ -9,4 +9,4 @@ elif [ "$os_type" = "Darwin" ]; then
   BLENDER_BIN=${BLENDER_BIN_MACOS}
 fi
 
-${BLENDER_BIN} --python $1
+${BLENDER_BIN} --python ./test.py
