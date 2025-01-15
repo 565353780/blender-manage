@@ -8,6 +8,8 @@ def demo():
     save_image_folder_path = '/home/chli/chLi/Results/mash-diffusion/output/render/' + time_stamp + '/'
     use_gpu = False
     overwrite = False
+    is_background = True
+    gpu_id = 0
     keep_alive = True
 
     '''
@@ -17,7 +19,14 @@ def demo():
 
     while True:
         assert BlenderRenderer.isValid()
-        BlenderRenderer.renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
+        BlenderRenderer.renderFolders(
+            shape_folder_path,
+            save_image_folder_path,
+            use_gpu,
+            overwrite,
+            is_background,
+            gpu_id,
+        )
 
         if not keep_alive:
             break
