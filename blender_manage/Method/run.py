@@ -1,10 +1,14 @@
 import os
 import subprocess
 
-from blender_manage.Config.path import BLENDER_BIN_MACOS, BLENDER_BIN_LINUX, BLENDER_BIN
+from blender_manage.Config.path import (
+    GIT_ROOT_FOLDER_PATH,
+    BLENDER_BIN_MACOS,
+    BLENDER_BIN_LINUX,
+    BLENDER_BIN
+)
 
-def runBlender(git_root_folder_path: str,
-               python_file_path: str,
+def runBlender(python_file_path: str,
                python_args_dict: dict={},
                is_background: bool = True,
                gpu_id: int = 0,
@@ -16,10 +20,10 @@ def runBlender(git_root_folder_path: str,
         print('\t BLENDER_BIN_LINUX:', BLENDER_BIN_LINUX)
         return False
 
-    if not os.path.exists(git_root_folder_path):
+    if not os.path.exists(GIT_ROOT_FOLDER_PATH):
         print('[ERROR][run::runBlender]')
         print('\t git root folder not found!')
-        print('\t git_root_folder_path:', git_root_folder_path)
+        print('\t GIT_ROOT_FOLDER_PATH:', GIT_ROOT_FOLDER_PATH)
         return False
 
     if not os.path.exists(python_file_path):
@@ -45,6 +49,6 @@ def runBlender(git_root_folder_path: str,
             else:
                 command += ' --' + key + ' ' + value
 
-    subprocess.run([command], shell=True, cwd=git_root_folder_path)
+    subprocess.run([command], shell=True, cwd=GIT_ROOT_FOLDER_PATH)
 
     return True

@@ -1,31 +1,28 @@
 import os
 
+from blender_manage.Config.path import GIT_ROOT_FOLDER_PATH
 from blender_manage.Method.run import runBlender
 
 
 class BlenderRenderer(object):
     def __init__(self) -> None:
-        self.git_root_folder_path = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + '/../../')
-
-        if self.git_root_folder_path[-1] != '/':
-            self.git_root_folder_path += '/'
         return
 
-    def renderFile(self,
-                   shape_file_path: str,
+    @staticmethod
+    def renderFile(shape_file_path: str,
                    save_image_file_path: str,
                    use_gpu: bool = False,
                    overwrite: bool = False,
                    is_background: bool = True,
                    gpu_id: int = 0,
                    ) -> bool:
-        if not os.path.exists(self.git_root_folder_path):
+        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderFile]')
             print('\t git package not found!')
-            print('\t git_root_folder_path:', self.git_root_folder_path)
+            print('\t GIT_ROOT_FOLDER_PATH:', GIT_ROOT_FOLDER_PATH)
             return False
 
-        python_file_path = self.git_root_folder_path + 'blender_manage/Script/render_file.py'
+        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_file.py'
 
         python_args_dict = {
             'shape_file_path': shape_file_path,
@@ -35,7 +32,6 @@ class BlenderRenderer(object):
         }
 
         if not runBlender(
-            self.git_root_folder_path,
             python_file_path,
             python_args_dict,
             is_background=is_background,
@@ -47,21 +43,21 @@ class BlenderRenderer(object):
 
         return True
 
-    def renderFolder(self,
-                     shape_folder_path: str,
+    @staticmethod
+    def renderFolder(shape_folder_path: str,
                      save_image_folder_path: str,
                      use_gpu: bool = False,
                      overwrite: bool = False,
                      is_background: bool = True,
                      gpu_id: int = 0,
                      ) -> bool:
-        if not os.path.exists(self.git_root_folder_path):
+        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderFolder]')
             print('\t git package not found!')
-            print('\t git_root_folder_path:', self.git_root_folder_path)
+            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
             return False
 
-        python_file_path = self.git_root_folder_path + 'blender_manage/Script/render_folder.py'
+        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_folder.py'
 
         python_args_dict = {
             'shape_folder_path': shape_folder_path,
@@ -71,7 +67,6 @@ class BlenderRenderer(object):
         }
 
         if not runBlender(
-            self.git_root_folder_path,
             python_file_path,
             python_args_dict,
             is_background=is_background,
@@ -91,13 +86,13 @@ class BlenderRenderer(object):
                       is_background: bool = True,
                       gpu_id: int = 0,
                       ) -> bool:
-        if not os.path.exists(self.git_root_folder_path):
+        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderFolders]')
             print('\t git package not found!')
-            print('\t git_root_folder_path:', self.git_root_folder_path)
+            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
             return False
 
-        python_file_path = self.git_root_folder_path + 'blender_manage/Script/render_folders.py'
+        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_folders.py'
 
         python_args_dict = {
             'shape_folder_path': shape_folder_path,
@@ -107,7 +102,6 @@ class BlenderRenderer(object):
         }
 
         if not runBlender(
-            self.git_root_folder_path,
             python_file_path,
             python_args_dict,
             is_background=is_background,
