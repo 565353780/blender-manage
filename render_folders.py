@@ -17,8 +17,8 @@ if __name__ == "__main__":
     '''
 
     while True:
-        blender_renderer = BlenderRenderer()
-        blender_renderer.renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
+        assert BlenderRenderer.isValid()
+        BlenderRenderer.renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
 
         if not keep_alive:
             break

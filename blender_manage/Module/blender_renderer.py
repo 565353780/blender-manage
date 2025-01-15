@@ -1,12 +1,16 @@
 import os
 
-from blender_manage.Config.path import GIT_ROOT_FOLDER_PATH
+from blender_manage.Config.path import GIT_ROOT_FOLDER_PATH, BLENDER_BIN
 from blender_manage.Method.run import runBlender
 
 
 class BlenderRenderer(object):
     def __init__(self) -> None:
         return
+
+    @staticmethod
+    def isValid() -> bool:
+        return BLENDER_BIN is not None
 
     @staticmethod
     def renderFile(shape_file_path: str,
