@@ -19,7 +19,7 @@ def demo():
 
     while True:
         assert BlenderRenderer.isValid()
-        BlenderRenderer.renderFolders(
+        process = BlenderRenderer.renderFolders(
             shape_folder_path,
             save_image_folder_path,
             use_gpu,
@@ -27,6 +27,9 @@ def demo():
             is_background,
             gpu_id,
         )
+
+        if process is not None:
+            process.wait()
 
         if not keep_alive:
             break

@@ -1,4 +1,6 @@
 import os
+from typing import Union
+from subprocess import Popen
 
 from blender_manage.Config.path import GIT_ROOT_FOLDER_PATH, BLENDER_BIN
 from blender_manage.Method.run import runBlender
@@ -19,12 +21,12 @@ class BlenderRenderer(object):
                    overwrite: bool = False,
                    is_background: bool = True,
                    gpu_id: int = 0,
-                   ) -> bool:
+                   ) -> Union[Popen, None]:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderFile]')
             print('\t git package not found!')
             print('\t GIT_ROOT_FOLDER_PATH:', GIT_ROOT_FOLDER_PATH)
-            return False
+            return None
 
         python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_file.py'
 
@@ -35,17 +37,18 @@ class BlenderRenderer(object):
             'overwrite': overwrite,
         }
 
-        if not runBlender(
+        process = runBlender(
             python_file_path,
             python_args_dict,
             is_background=is_background,
             gpu_id=gpu_id,
-        ):
+        )
+        if process is None:
             print('[ERROR][BlenderRenderer::renderFile]')
             print('\t runBlender failed!')
-            return False
+            return None
 
-        return True
+        return process
 
     @staticmethod
     def renderFolder(shape_folder_path: str,
@@ -54,12 +57,12 @@ class BlenderRenderer(object):
                      overwrite: bool = False,
                      is_background: bool = True,
                      gpu_id: int = 0,
-                     ) -> bool:
+                     ) -> Union[Popen, None]:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderFolder]')
             print('\t git package not found!')
             print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
-            return False
+            return None
 
         python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_folder.py'
 
@@ -70,17 +73,18 @@ class BlenderRenderer(object):
             'overwrite': overwrite,
         }
 
-        if not runBlender(
+        process = runBlender(
             python_file_path,
             python_args_dict,
             is_background=is_background,
             gpu_id=gpu_id,
-        ):
+        )
+        if process is None:
             print('[ERROR][BlenderRenderer::renderFolder]')
             print('\t runBlender failed!')
-            return False
+            return None
 
-        return True
+        return process
 
     @staticmethod
     def renderFolders(shape_folder_path: str,
@@ -89,12 +93,12 @@ class BlenderRenderer(object):
                       overwrite: bool = False,
                       is_background: bool = True,
                       gpu_id: int = 0,
-                      ) -> bool:
+                      ) -> Union[Popen, None]:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderFolders]')
             print('\t git package not found!')
             print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
-            return False
+            return None
 
         python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_folders.py'
 
@@ -105,14 +109,15 @@ class BlenderRenderer(object):
             'overwrite': overwrite,
         }
 
-        if not runBlender(
+        process = runBlender(
             python_file_path,
             python_args_dict,
             is_background=is_background,
             gpu_id=gpu_id,
-        ):
+        )
+        if process is None:
             print('[ERROR][BlenderRenderer::renderFolders]')
             print('\t runBlender failed!')
-            return False
+            return None
 
-        return True
+        return process
