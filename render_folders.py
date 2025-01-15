@@ -1,8 +1,3 @@
-import os
-
-import sys
-sys.path.append(os.environ['HOME'] + '/github/blender-manage')
-
 from time import sleep
 
 from blender_manage.Module.blender_renderer import BlenderRenderer
@@ -22,7 +17,8 @@ if __name__ == "__main__":
     '''
 
     while True:
-        BlenderRenderer.renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
+        blender_renderer = BlenderRenderer()
+        blender_renderer.renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
 
         if not keep_alive:
             break
