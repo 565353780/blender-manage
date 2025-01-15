@@ -161,19 +161,21 @@ def renderFolders(
     return True
 
 if __name__ == "__main__":
-    timestamp = '20241218_15:08:27'
-    root_folder_path = os.environ['HOME'] + '/github/ASDF/conditional-flow-matching/output/'
-    shape_folder_path = root_folder_path + 'recon_smooth/' + timestamp + '/'
-    save_image_folder_path = root_folder_path + 'render_recon_smooth/' + timestamp + '/'
+    time_stamp = '20250115_19:44:22'
+    shape_folder_path = '/home/chli/chLi/Results/mash-diffusion/output/sample/' + time_stamp + '/'
+    save_image_folder_path = '/home/chli/chLi/Results/mash-diffusion/output/render/' + time_stamp + '/'
     use_gpu = False
     overwrite = False
     keep_alive = True
 
-    shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/'
-    save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_render/'
+    '''
+    shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/adaptive/'
+    save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_render/adaptive/'
+    '''
 
     while True:
         renderFolders(shape_folder_path, save_image_folder_path, use_gpu, overwrite)
+
         if not keep_alive:
             break
         sleep(1)
