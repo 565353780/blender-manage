@@ -7,8 +7,7 @@ from time import sleep
 
 from blender_manage.Module.blender_renderer import BlenderRenderer
 
-
-if __name__ == "__main__":
+def demo():
     time_stamp = '20250115_19:44:22'
     shape_folder_path = '/home/chli/chLi/Results/mash-diffusion/output/sample/' + time_stamp + '/'
     save_image_folder_path = '/home/chli/chLi/Results/mash-diffusion/output/render/' + time_stamp + '/'
@@ -27,3 +26,5 @@ if __name__ == "__main__":
         if not keep_alive:
             break
         sleep(1)
+
+    return True
