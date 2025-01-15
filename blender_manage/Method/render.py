@@ -122,7 +122,7 @@ def renderFolders(root_folder_path: str,
     for root, _, files in os.walk(root_folder_path):
         for file in files:
             file_extension = os.path.splitext(file)[-1]
-            if file_extension not in ['.ply']:
+            if file_extension not in ['.ply', '.obj']:
                 continue
 
             if save_image_root_folder_path is None:
