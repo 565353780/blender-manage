@@ -64,7 +64,7 @@ def runBlender(python_file_path: str,
                 if value:
                     command += ' --' + key
             else:
-                command += ' --' + key + ' ' + value
+                command += ' --' + key + ' ' + str(value)
 
     print('[INFO][run::runBlender]')
     print('\t start run command:')
