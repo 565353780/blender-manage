@@ -177,7 +177,7 @@ class BlenderRenderer(object):
             print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
             return None
 
-        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_arount_folder.py'
+        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_around_folder.py'
 
         python_args_dict = {
             'shape_folder_path': shape_folder_path,
