@@ -1,6 +1,7 @@
 import os
 from typing import Union
 
+from blender_manage.Method.format import isFileTypeValid
 from blender_manage.Module.light_manager import LightManager
 from blender_manage.Module.camera_manager import CameraManager
 from blender_manage.Module.object_manager import ObjectManager
@@ -14,7 +15,7 @@ def renderFile(
     save_image_file_basepath: str,
     use_gpu: bool = False,
     overwrite: bool = False) -> bool:
-    if shape_file_path.split('.')[-1] not in ['ply', 'obj']:
+    if not isFileTypeValid(shape_file_path):
         print('[ERROR][render::renderFile]')
         print('\t shape file not valid!')
         print('\t shape_file_path:', shape_file_path)
@@ -95,7 +96,7 @@ def renderFolder(shape_folder_path: str,
     shape_filename_list.sort()
 
     for shape_filename in shape_filename_list:
-        if shape_filename.split('.')[-1] not in ['ply', 'obj']:
+        if not isFileTypeValid(shape_filename):
             continue
 
         shape_file_path = shape_folder_path + shape_filename
@@ -121,8 +122,7 @@ def renderFolders(root_folder_path: str,
     save_image_folder_path_list = []
     for root, _, files in os.walk(root_folder_path):
         for file in files:
-            file_extension = os.path.splitext(file)[-1]
-            if file_extension not in ['.ply', '.obj']:
+            if not isFileTypeValid(file):
                 continue
 
             if save_image_root_folder_path is None:
