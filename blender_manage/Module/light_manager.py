@@ -1,6 +1,7 @@
 import bpy
 from typing import Union
 
+from blender_manage.Config.config import VALID_LIGHT_TYPES
 from blender_manage.Module.object_manager import ObjectManager
 
 class LightManager(object):
@@ -15,7 +16,11 @@ class LightManager(object):
         if self.isLightExist(light_name):
             return False
 
-        assert light_type in ['POINT', 'SUN', 'SPOT', 'AREA']
+        if light_type not in VALID_LIGHT_TYPES:
+            print('[ERROR][LightManager::addLight]')
+            print('\t light type not valid!')
+            print('\t light_type:', light_type)
+            print('\t VALID_LIGHT_TYPES:', VALID_LIGHT_TYPES)
 
         light = bpy.data.lights.new(name=light_name, type=light_type)
 
