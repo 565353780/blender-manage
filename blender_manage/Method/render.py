@@ -13,7 +13,9 @@ def renderFile(
     shape_file_path: str,
     save_image_file_basepath: str,
     use_gpu: bool = False,
-    overwrite: bool = False) -> bool:
+    overwrite: bool = False,
+    early_stop: bool = False,
+) -> bool:
     if not isFileTypeValid(shape_file_path):
         print('[ERROR][render::renderFile]')
         print('\t shape file not valid!')
@@ -65,7 +67,10 @@ def renderFile(
     collection_name = 'shapes'
     object_name = shape_file_path.split('/')[-1].split('.')[0]
 
-    blender_manager.loadObject(shape_file_path, object_name, collection_name)
+    blender_manager.loadObject(
+        shape_file_path=shape_file_path,
+        name=object_name,
+        collection_name=collection_name)
 
     if 'LN3Diff' in shape_file_path:
         object_manager.setObjectRotationEuler(object_name, [180, 0, 0])
@@ -79,6 +84,9 @@ def renderFile(
     blender_manager.setCollectionRenderable(collection_name, False)
 
     blender_manager.setObjectRenderable(object_name, True)
+
+    if early_stop:
+        return True
 
     if save_image_file_basepath[-1] == '/':
         save_image_file_basepath += object_name

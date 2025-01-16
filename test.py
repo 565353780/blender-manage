@@ -1,4 +1,5 @@
 import os
+
 GIT_ROOT_FOLDER_PATH = os.path.dirname(os.path.abspath(__file__))
 
 if GIT_ROOT_FOLDER_PATH[-1] != '/':
@@ -7,17 +8,29 @@ if GIT_ROOT_FOLDER_PATH[-1] != '/':
 import sys
 sys.path.append(GIT_ROOT_FOLDER_PATH)
 
-from blender_manage.Test.render_file import test as test_render_file
+from blender_manage.Method.format import isFileTypeValid
+from blender_manage.Method.render import renderFile
 
 if __name__ == '__main__':
-    shape_file_path = '/home/chli/chLi/Results/LN3Diff/2030000_0.obj'
-    save_image_file_path = '/home/chli/chLi/Results/render_LN3Diff/2030000_0.obj'
+    shape_folder_path = '/home/chli/chLi/Results/mash-diffusion/output/sample/20250116_18:27:04/'
+    save_image_file_path = '/home/chli/chLi/Results/test/test_render.png'
     use_gpu = False
     overwrite = True
+    early_stop = False
 
-    test_render_file(
-        shape_file_path,
-        save_image_file_path,
-        use_gpu,
-        overwrite,
-    )
+    for root, _, files in os.walk(shape_folder_path):
+        for file in files:
+            if not isFileTypeValid(file):
+                continue
+
+            shape_file_path = root + '/' + file
+
+            renderFile(
+                shape_file_path,
+                save_image_file_path,
+                use_gpu,
+                overwrite,
+                early_stop,
+            )
+
+            exit()

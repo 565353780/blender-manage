@@ -136,23 +136,25 @@ class BlenderManager(object):
                    shape_file_path: str,
                    name: str,
                    collection_name: str,
-                   position: list = [0, 0, 0],
-                   rotation_euler: list = [0, 0, 0],
+                   position: Union[list, None] = None,
+                   rotation_euler: Union[list, None] = None,
                    ) -> bool:
         if not self.object_manager.loadObjectFile(shape_file_path, name, collection_name):
             print('[ERROR][BlenderManager::loadObject]')
             print('\t loadObjectFile failed!')
             return False
 
-        if not self.object_manager.setObjectPosition(name, position):
-            print('[ERROR][BlenderManager::loadObject]')
-            print('\t setObjectPosition failed!')
-            return False
+        if position is not None:
+            if not self.object_manager.setObjectPosition(name, position):
+                print('[ERROR][BlenderManager::loadObject]')
+                print('\t setObjectPosition failed!')
+                return False
 
-        if not self.object_manager.setObjectRotationEuler(name, rotation_euler):
-            print('[ERROR][BlenderManager::loadObject]')
-            print('\t setObjectRotationEuler failed!')
-            return False
+        if rotation_euler is not None:
+            if not self.object_manager.setObjectRotationEuler(name, rotation_euler):
+                print('[ERROR][BlenderManager::loadObject]')
+                print('\t setObjectRotationEuler failed!')
+                return False
 
         return True
 
