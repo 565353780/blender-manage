@@ -1,8 +1,10 @@
 import os
 import bpy
 import numpy as np
+import open3d as o3d
 from typing import Union
 
+from blender_manage.Method.path import removeFile, createFileFolder
 from blender_manage.Method.bound import scene_bbox
 
 
@@ -31,6 +33,15 @@ class ObjectManager(object):
             return False
 
         object_file_type = object_file_path.split('.')[-1]
+        if object_file_type == 'xyz':
+            tmp_obj_file_path = './output/tmp_xyz.obj'
+            removeFile(tmp_obj_file_path)
+            createFileFolder(tmp_obj_file_path)
+            pcd = o3d.io.read_point_cloud(object_file_path)
+            o3d.io.write_point_cloud(tmp_obj_file_path, pcd, write_ascii=True)
+
+            return self.loadObjectFile(tmp_obj_file_path, object_name, collection_name)
+
         if object_file_type == 'ply':
             try:
                 bpy.ops.wm.ply_import(filepath=object_file_path, forward_axis='NEGATIVE_Z', up_axis='Y')
