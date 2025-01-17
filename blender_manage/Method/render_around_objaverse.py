@@ -6,17 +6,30 @@ from typing import Union
 from blender_manage.Method.format import isFileTypeValid
 from blender_manage.Module.blender_manager import BlenderManager
 
-def renderAroundFile(
+def renderAroundObjaverseFile(
     shape_file_path: str,
     render_image_num: int,
     save_image_folder_path: str,
     use_gpu: bool = False,
     overwrite: bool = False,
 ) -> bool:
+    object_name = shape_file_path.split('/')[-1].split('.')[0]
+
+    new_save_image_folder_path = save_image_folder_path + object_name + '/'
+
+    start_tag_file_path = new_save_image_folder_path + 'start.txt'
+
+    if os.path.exists(start_tag_file_path):
+        return True
+
+    os.makedirs(new_save_image_folder_path, exist_ok=True)
+    with open(start_tag_file_path, 'w') as f:
+        f.write('\n')
+
     camera_dist = 1.5
 
     if not isFileTypeValid(shape_file_path):
-        print('[ERROR][render::renderAroundFile]')
+        print('[ERROR][render::renderAroundObjaverseFile]')
         print('\t shape file not valid!')
         print('\t shape_file_path:', shape_file_path)
         return False
@@ -30,22 +43,55 @@ def renderAroundFile(
         engine_name='CYCLES',
         use_gpu=use_gpu)
 
+    bpy.context.scene.cycles.samples = 32
+    bpy.context.scene.cycles.diffuse_bounces = 1
+    bpy.context.scene.cycles.glossy_bounces = 1
+    bpy.context.scene.cycles.transparent_max_bounces = 3
+    bpy.context.scene.cycles.transmission_bounces = 3
+    bpy.context.scene.cycles.filter_width = 0.01
+    bpy.context.scene.cycles.use_denoising = True
+    bpy.context.scene.render.film_transparent = True
+
     blender_manager.createLight(
         name='light_top',
         light_type='AREA',
         collection_name='Lights',
-        position=[0, 0, 2],
+        position=[0, 0, 10],
         rotation_euler=[0, 0, 0],
-        energy=50,
-        size=5)
+        energy=30000,
+        size=100)
     blender_manager.createLight(
         name='light_front',
         light_type='AREA',
         collection_name='Lights',
-        position=[0, 2, 0],
+        position=[0, 10, 0],
         rotation_euler=[-90, 0, 0],
-        energy=50,
-        size=5)
+        energy=3000,
+        size=100)
+    blender_manager.createLight(
+        name='light_back',
+        light_type='AREA',
+        collection_name='Lights',
+        position=[0, -10, 0],
+        rotation_euler=[90, 0, 0],
+        energy=3000,
+        size=100)
+    blender_manager.createLight(
+        name='light_left',
+        light_type='AREA',
+        collection_name='Lights',
+        position=[10, 0, 0],
+        rotation_euler=[0, 90, 0],
+        energy=3000,
+        size=100)
+    blender_manager.createLight(
+        name='light_right',
+        light_type='AREA',
+        collection_name='Lights',
+        position=[-10, 0, 0],
+        rotation_euler=[0, -90, 0],
+        energy=3000,
+        size=100)
     blender_manager.setCollectionVisible('Lights', False)
 
     blender_manager.createCamera(
@@ -54,6 +100,10 @@ def renderAroundFile(
         collection_name='Cameras',
         position=[0, 1.2, 0],
         rotation_euler=[0, 0, 0])
+
+    blender_manager.camera_manager.setCameraData('camera_1', 'lens', 35)
+    blender_manager.camera_manager.setCameraData('camera_1', 'sensor_width', 32)
+
     blender_manager.setCollectionVisible('Cameras', False)
 
     cam = bpy.context.scene.objects['camera_1']
@@ -62,27 +112,12 @@ def renderAroundFile(
     cam_constraint.up_axis = "UP_Y"
 
     collection_name = 'shapes'
-    object_name = shape_file_path.split('/')[-1].split('.')[0]
 
     blender_manager.loadObject(shape_file_path, object_name, collection_name)
-
-    blender_manager.shading_manager.paintColorMapForObject(object_name, 'pcd')
-
-    if 'pcd' in object_name:
-        blender_manager.pointcloud_manager.createColor(object_name, 0.004, 'pcd_0', object_name)
-
-    if 'LN3Diff' in shape_file_path:
-        blender_manager.object_manager.setObjectRotationEuler(object_name, [180, 0, 0])
-
     blender_manager.object_manager.normalizeAllObjects()
 
     blender_manager.object_manager.addEmptyObject('Empty', collection_name)
     cam_constraint.target = bpy.data.objects['Empty']
-
-    blender_manager.setCollectionVisible(collection_name, False)
-    blender_manager.setCollectionRenderable(collection_name, False)
-
-    blender_manager.setObjectRenderable(object_name, True)
 
     blender_manager.render_manager.activateCamera('camera_1')
 
@@ -96,22 +131,22 @@ def renderAroundFile(
         ]
         blender_manager.object_manager.setObjectPosition('camera_1', point)
 
-        save_image_file_path = save_image_folder_path + object_name + f"/{i:03d}.png"
+        save_image_file_path = new_save_image_folder_path + f"{i:03d}.jpg"
         if os.path.exists(save_image_file_path):
             continue
 
         blender_manager.render_manager.renderImage(save_image_file_path, overwrite)
 
-    blender_manager.setObjectRenderable(object_name, False)
-
     # blender_manager.removeCollection(collection_name)
     return True
 
-def renderAroundFolder(shape_folder_path: str,
-                       render_image_num: int,
-                       save_image_folder_path: Union[str, None] = None,
-                       use_gpu: bool = False,
-                       overwrite: bool = False) -> bool:
+def renderAroundObjaverseFolder(
+    shape_folder_path: str,
+    render_image_num: int,
+    save_image_folder_path: Union[str, None] = None,
+    use_gpu: bool = False,
+    overwrite: bool = False,
+) -> bool:
     if save_image_folder_path is None:
         save_image_folder_path = shape_folder_path + 'rendered/'
         os.makedirs(save_image_folder_path, exist_ok=True)
@@ -125,24 +160,27 @@ def renderAroundFolder(shape_folder_path: str,
 
         shape_file_path = shape_folder_path + shape_filename
 
-        if not renderAroundFile(shape_file_path,
-                                render_image_num,
-                                save_image_folder_path,
-                                use_gpu,
-                                overwrite):
-            print('[ERROR][render::renderAroundFolder]')
+        if not renderAroundObjaverseFile(
+            shape_file_path,
+            render_image_num,
+            save_image_folder_path,
+            use_gpu,
+            overwrite):
+            print('[ERROR][render::renderAroundObjaverseFolder]')
             print('\t renderAroundFile failed!')
             continue
 
     return True
 
-def renderAroundFolders(root_folder_path: str,
-                        render_image_num: int,
-                        save_image_root_folder_path: Union[str, None]=None,
-                        use_gpu: bool = False,
-                        overwrite: bool = False) -> bool:
+def renderAroundObjaverseFolders(
+    root_folder_path: str,
+    render_image_num: int,
+    save_image_root_folder_path: Union[str, None]=None,
+    use_gpu: bool = False,
+    overwrite: bool = False,
+) -> bool:
     if not os.path.exists(root_folder_path):
-        print('[ERROR][render::renderAroundFolders]')
+        print('[ERROR][render::renderAroundObjaverseFolders]')
         print('\t root folder not exist!')
         print('\t root_folder_path:', root_folder_path)
         return False
@@ -166,10 +204,11 @@ def renderAroundFolders(root_folder_path: str,
             break
 
     for shape_folder_path, save_image_folder_path in zip(shape_folder_path_list, save_image_folder_path_list):
-        renderAroundFolder(shape_folder_path,
-                           render_image_num,
-                           save_image_folder_path,
-                           use_gpu,
-                           overwrite)
+        renderAroundObjaverseFolder(
+            shape_folder_path,
+            render_image_num,
+            save_image_folder_path,
+            use_gpu,
+            overwrite)
 
     return True

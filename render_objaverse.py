@@ -98,9 +98,6 @@ def renderShape(
     object_manager.addEmptyObject('Empty', collection_name)
     cam_constraint.target = bpy.data.objects['Empty']
 
-    render_manager.setCollectionVisible(collection_name, False)
-    render_manager.setCollectionRenderable(collection_name, True)
-
     render_manager.activateCamera('camera_1')
 
     for i in range(render_image_num):

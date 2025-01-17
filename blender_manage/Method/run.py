@@ -10,13 +10,24 @@ from blender_manage.Config.path import (
     BLENDER_BIN
 )
 
-def runCMD(command: str) -> bool:
+def runCMD(command: str, mute: bool = False) -> bool:
     try:
-        process = subprocess.run(command,
-                                stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE,
-                                shell=True,
-                                cwd=GIT_ROOT_FOLDER_PATH)
+        if mute:
+            process = subprocess.run(
+                command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                shell=True,
+                cwd=GIT_ROOT_FOLDER_PATH,
+                text=True,
+            )
+        else:
+            process = subprocess.run(
+                command,
+                shell=True,
+                cwd=GIT_ROOT_FOLDER_PATH,
+                text=True,
+            )
     except:
         print('[ERROR][run::runCMD]')
         print('\t run command failed!')
@@ -29,6 +40,7 @@ def runBlender(python_file_path: str,
                python_args_dict: dict={},
                is_background: bool = True,
                gpu_id: int = 0,
+               mute: bool = False,
                ) -> Union[Process, None]:
     if BLENDER_BIN is None:
         print('[ERROR][run::runBlender]')
@@ -70,7 +82,7 @@ def runBlender(python_file_path: str,
     print('\t start run command:')
     print('\t\t', command)
     process = Process(target=runCMD,
-                      args=(command,),
+                      args=(command, mute,),
                       daemon=True)
 
     return process

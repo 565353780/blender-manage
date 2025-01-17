@@ -2,10 +2,6 @@ import os
 from typing import Union
 
 from blender_manage.Method.format import isFileTypeValid
-from blender_manage.Module.object_manager import ObjectManager
-from blender_manage.Module.shading_manager import ShadingManager
-from blender_manage.Module.pointcloud_manager import PointCloudManager
-from blender_manage.Module.render_manager import RenderManager
 from blender_manage.Module.blender_manager import BlenderManager
 
 
@@ -23,11 +19,6 @@ def renderFile(
         return False
 
     blender_manager = BlenderManager()
-
-    object_manager = ObjectManager()
-    shading_manager = ShadingManager()
-    pointcloud_manager = PointCloudManager()
-    render_manager = RenderManager()
 
     blender_manager.removeAll()
 
@@ -62,7 +53,7 @@ def renderFile(
         rotation_euler=[65.161, 0, -148.51])
     blender_manager.setCollectionVisible('Cameras', False)
 
-    camera_name_list = object_manager.getCollectionObjectNameList('Cameras')
+    camera_name_list = blender_manager.object_manager.getCollectionObjectNameList('Cameras')
 
     collection_name = 'shapes'
     object_name = shape_file_path.split('/')[-1].split('.')[0]
@@ -73,12 +64,12 @@ def renderFile(
         collection_name=collection_name)
 
     if 'LN3Diff' in shape_file_path:
-        object_manager.setObjectRotationEuler(object_name, [180, 0, 0])
+        blender_manager.object_manager.setObjectRotationEuler(object_name, [180, 0, 0])
 
-    shading_manager.paintColorMapForObject(object_name, 'pcd')
+    blender_manager.shading_manager.paintColorMapForObject(object_name, 'pcd')
 
     if 'pcd' in object_name:
-        pointcloud_manager.createColor(object_name, 0.004, 'pcd_0', object_name)
+        blender_manager.pointcloud_manager.createColor(object_name, 0.004, 'pcd_0', object_name)
 
     blender_manager.setCollectionVisible(collection_name, False)
     blender_manager.setCollectionRenderable(collection_name, False)
@@ -91,11 +82,11 @@ def renderFile(
     if save_image_file_basepath[-1] == '/':
         save_image_file_basepath += object_name
 
-    render_manager.renderImages(camera_name_list, save_image_file_basepath, overwrite)
+    blender_manager.render_manager.renderImages(camera_name_list, save_image_file_basepath, overwrite)
 
     blender_manager.setObjectRenderable(object_name, False)
 
-    blender_manager.removeCollection(collection_name)
+    # blender_manager.removeCollection(collection_name)
     return True
 
 def renderFolder(shape_folder_path: str,
