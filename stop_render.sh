@@ -1,2 +1,3 @@
-pkill -f "python render_objaverse_parallel.py"
-pkill -f "blender"
+pkill -f "python render_objaverse_folders.py"
+
+./stop_blender.sh

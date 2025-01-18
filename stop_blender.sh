@@ -10,3 +10,5 @@ elif [ "$os_type" = "Darwin" ]; then
 fi
 
 pkill -f "$BLENDER_BIN"
+
+pkill -f "blender"
