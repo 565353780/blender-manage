@@ -28,7 +28,7 @@ if __name__ == "__main__":
     overwrite = False
     is_background = True
     gpu_id_list = [1, 2, 3]
-    workers_per_gpu = 8
+    workers_per_gpu = 6
     mute = True
     keep_alive = False
 
