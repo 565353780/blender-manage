@@ -10,6 +10,7 @@ from blender_manage.Config.path import (
     BLENDER_BIN
 )
 
+
 def runCMD(command: str, mute: bool = False) -> bool:
     try:
         if mute:
@@ -36,27 +37,27 @@ def runCMD(command: str, mute: bool = False) -> bool:
 
     return True
 
-def runBlender(python_file_path: str,
-               python_args_dict: dict={},
-               is_background: bool = True,
-               gpu_id: int = 0,
-               mute: bool = False,
-               ) -> Union[Process, None]:
+def getRunCMD(
+    python_file_path: str,
+    python_args_dict: dict={},
+    is_background: bool = True,
+    gpu_id: int = 0,
+) -> Union[str, None]:
     if BLENDER_BIN is None:
-        print('[ERROR][run::runBlender]')
+        print('[ERROR][run::getRunCMD]')
         print('\t blender bin not found!')
         print('\t BLENDER_BIN_MACOS:', BLENDER_BIN_MACOS)
         print('\t BLENDER_BIN_LINUX:', BLENDER_BIN_LINUX)
         return None
 
     if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-        print('[ERROR][run::runBlender]')
+        print('[ERROR][run::getRunCMD]')
         print('\t git root folder not found!')
         print('\t GIT_ROOT_FOLDER_PATH:', GIT_ROOT_FOLDER_PATH)
         return None
 
     if not os.path.exists(python_file_path):
-        print('[ERROR][run::runBlender]')
+        print('[ERROR][run::getRunCMD]')
         print('\t python file not found!')
         print('\t python_file_path:', python_file_path)
         return None
@@ -78,11 +79,44 @@ def runBlender(python_file_path: str,
             else:
                 command += ' --' + key + ' ' + str(value)
 
-    print('[INFO][run::runBlender]')
+    return command
+
+def runBlender(
+    python_file_path: str,
+    python_args_dict: dict={},
+    is_background: bool = True,
+    gpu_id: int = 0,
+    mute: bool = False,
+    with_daemon: bool = True,
+) -> Union[Process, None]: 
+    command = getRunCMD(
+        python_file_path,
+        python_args_dict,
+        is_background,
+        gpu_id,
+    )
+    if command is None:
+        print('[ERROR][run::runBlender]')
+        print('\t getRunCMD failed!')
+        return None
+
+    if with_daemon:
+        print('[INFO][parallel_run::runBlender]')
+        print('\t start run command with daemon:')
+        print('\t\t', command)
+        process = Process(target=runCMD,
+                        args=(command, mute,),
+                        daemon=True)
+
+        return process
+
+    print('[INFO][parallel_run::runBlender]')
     print('\t start run command:')
     print('\t\t', command)
-    process = Process(target=runCMD,
-                      args=(command, mute,),
-                      daemon=True)
+    if not runCMD(command, mute):
+        print('[ERROR][parallel_run::runBlender]')
+        print('\t runCMD failed!')
+        print('\t command:', command)
+        return None
 
-    return process
+    return None

@@ -4,6 +4,7 @@ from multiprocessing import Process
 
 from blender_manage.Config.path import GIT_ROOT_FOLDER_PATH, BLENDER_BIN
 from blender_manage.Method.run import runBlender
+from blender_manage.Method.parallel_run import parallelRunBlender
 
 
 class BlenderRenderer(object):
@@ -23,6 +24,7 @@ class BlenderRenderer(object):
         is_background: bool = True,
         gpu_id: int = 0,
         mute: bool = False,
+        with_daemon: bool = True,
     ) -> Union[Process, None]:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderFile]')
@@ -41,11 +43,12 @@ class BlenderRenderer(object):
         }
 
         process = runBlender(
-            python_file_path,
-            python_args_dict,
+            python_file_path=python_file_path,
+            python_args_dict=python_args_dict,
             is_background=is_background,
             gpu_id=gpu_id,
             mute=mute,
+            with_daemon=with_daemon,
         )
         if process is None:
             print('[ERROR][BlenderRenderer::renderFile]')
@@ -63,6 +66,7 @@ class BlenderRenderer(object):
         is_background: bool = True,
         gpu_id: int = 0,
         mute: bool = False,
+        with_daemon: bool = True,
     ) -> Union[Process, None]:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderFolder]')
@@ -80,11 +84,12 @@ class BlenderRenderer(object):
         }
 
         process = runBlender(
-            python_file_path,
-            python_args_dict,
+            python_file_path=python_file_path,
+            python_args_dict=python_args_dict,
             is_background=is_background,
             gpu_id=gpu_id,
             mute=mute,
+            with_daemon=with_daemon,
         )
         if process is None:
             print('[ERROR][BlenderRenderer::renderFolder]')
@@ -102,6 +107,7 @@ class BlenderRenderer(object):
         is_background: bool = True,
         gpu_id: int = 0,
         mute: bool = False,
+        with_daemon: bool = True,
     ) -> Union[Process, None]:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderFolders]')
@@ -119,11 +125,12 @@ class BlenderRenderer(object):
         }
 
         process = runBlender(
-            python_file_path,
-            python_args_dict,
+            python_file_path=python_file_path,
+            python_args_dict=python_args_dict,
             is_background=is_background,
             gpu_id=gpu_id,
             mute=mute,
+            with_daemon=with_daemon,
         )
         if process is None:
             print('[ERROR][BlenderRenderer::renderFolders]')
@@ -131,6 +138,46 @@ class BlenderRenderer(object):
             return None
 
         return process
+
+    @staticmethod
+    def parallelRenderFolders(
+        shape_folder_path: str,
+        save_image_folder_path: str,
+        use_gpu: bool = False,
+        overwrite: bool = False,
+        is_background: bool = True,
+        gpu_id_list: list = [0],
+        workers_per_gpu: int = 8,
+        mute: bool = False,
+    ) -> bool:
+        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
+            print('[ERROR][BlenderRenderer::parallelRenderFolders]')
+            print('\t git package not found!')
+            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
+            return False
+
+        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_folders.py'
+
+        python_args_dict = {
+            'shape_folder_path': shape_folder_path,
+            'save_image_folder_path': save_image_folder_path,
+            'use_gpu': use_gpu,
+            'overwrite': overwrite,
+        }
+
+        if not parallelRunBlender(
+            python_file_path=python_file_path,
+            python_args_dict=python_args_dict,
+            is_background=is_background,
+            gpu_id_list=gpu_id_list,
+            workers_per_gpu=workers_per_gpu,
+            mute=mute,
+        ):
+            print('[ERROR][BlenderRenderer::parallelRenderFolders]')
+            print('\t parallelRunBlender failed!')
+            return False
+
+        return True
 
     @staticmethod
     def renderAroundFile(
@@ -142,6 +189,7 @@ class BlenderRenderer(object):
         is_background: bool = True,
         gpu_id: int = 0,
         mute: bool = False,
+        with_daemon: bool = True,
     ) -> Union[Process, None]:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderAroundFile]')
@@ -160,11 +208,12 @@ class BlenderRenderer(object):
         }
 
         process = runBlender(
-            python_file_path,
-            python_args_dict,
+            python_file_path=python_file_path,
+            python_args_dict=python_args_dict,
             is_background=is_background,
             gpu_id=gpu_id,
             mute=mute,
+            with_daemon=with_daemon,
         )
         if process is None:
             print('[ERROR][BlenderRenderer::renderAroundFile]')
@@ -183,6 +232,7 @@ class BlenderRenderer(object):
         is_background: bool = True,
         gpu_id: int = 0,
         mute: bool = False,
+        with_daemon: bool = True,
     ) -> Union[Process, None]:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderAroundFolder]')
@@ -201,11 +251,12 @@ class BlenderRenderer(object):
         }
 
         process = runBlender(
-            python_file_path,
-            python_args_dict,
+            python_file_path=python_file_path,
+            python_args_dict=python_args_dict,
             is_background=is_background,
             gpu_id=gpu_id,
             mute=mute,
+            with_daemon=with_daemon,
         )
         if process is None:
             print('[ERROR][BlenderRenderer::renderAroundFolder]')
@@ -224,6 +275,7 @@ class BlenderRenderer(object):
         is_background: bool = True,
         gpu_id: int = 0,
         mute: bool = False,
+        with_daemon: bool = True,
     ) -> Union[Process, None]:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderAroundFolders]')
@@ -242,11 +294,12 @@ class BlenderRenderer(object):
         }
 
         process = runBlender(
-            python_file_path,
-            python_args_dict,
+            python_file_path=python_file_path,
+            python_args_dict=python_args_dict,
             is_background=is_background,
             gpu_id=gpu_id,
             mute=mute,
+            with_daemon=with_daemon,
         )
         if process is None:
             print('[ERROR][BlenderRenderer::renderAroundFolders]')
@@ -254,6 +307,48 @@ class BlenderRenderer(object):
             return None
 
         return process
+
+    @staticmethod
+    def parallelRenderAroundFolders(
+        shape_folder_path: str,
+        render_image_num: int,
+        save_image_folder_path: str,
+        use_gpu: bool = False,
+        overwrite: bool = False,
+        is_background: bool = True,
+        gpu_id_list: list = [0],
+        workers_per_gpu: int = 8,
+        mute: bool = False,
+    ) -> bool:
+        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
+            print('[ERROR][BlenderRenderer::parallelRenderAroundFolders]')
+            print('\t git package not found!')
+            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
+            return False
+
+        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_around_folders.py'
+
+        python_args_dict = {
+            'shape_folder_path': shape_folder_path,
+            'render_image_num': render_image_num,
+            'save_image_folder_path': save_image_folder_path,
+            'use_gpu': use_gpu,
+            'overwrite': overwrite,
+        }
+
+        if not parallelRunBlender(
+            python_file_path=python_file_path,
+            python_args_dict=python_args_dict,
+            is_background=is_background,
+            gpu_id_list=gpu_id_list,
+            workers_per_gpu=workers_per_gpu,
+            mute=mute,
+        ):
+            print('[ERROR][BlenderRenderer::parallelRenderAroundFolders]')
+            print('\t parallelRunBlender failed!')
+            return False
+
+        return True
 
     @staticmethod
     def renderAroundObjaverseFile(
@@ -265,6 +360,7 @@ class BlenderRenderer(object):
         is_background: bool = True,
         gpu_id: int = 0,
         mute: bool = False,
+        with_daemon: bool = True,
     ) -> Union[Process, None]:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderAroundObjaverseFile]')
@@ -283,11 +379,12 @@ class BlenderRenderer(object):
         }
 
         process = runBlender(
-            python_file_path,
-            python_args_dict,
+            python_file_path=python_file_path,
+            python_args_dict=python_args_dict,
             is_background=is_background,
             gpu_id=gpu_id,
             mute=mute,
+            with_daemon=with_daemon,
         )
         if process is None:
             print('[ERROR][BlenderRenderer::renderAroundObjaverseFile]')
@@ -306,6 +403,7 @@ class BlenderRenderer(object):
         is_background: bool = True,
         gpu_id: int = 0,
         mute: bool = False,
+        with_daemon: bool = True,
     ) -> Union[Process, None]:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderAroundObjaverseFolder]')
@@ -324,11 +422,12 @@ class BlenderRenderer(object):
         }
 
         process = runBlender(
-            python_file_path,
-            python_args_dict,
+            python_file_path=python_file_path,
+            python_args_dict=python_args_dict,
             is_background=is_background,
             gpu_id=gpu_id,
             mute=mute,
+            with_daemon=with_daemon,
         )
         if process is None:
             print('[ERROR][BlenderRenderer::renderAroundObjaverseFolder]')
@@ -347,6 +446,7 @@ class BlenderRenderer(object):
         is_background: bool = True,
         gpu_id: int = 0,
         mute: bool = False,
+        with_daemon: bool = True,
     ) -> Union[Process, None]:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::renderAroundObjaverseFolders]')
@@ -365,11 +465,12 @@ class BlenderRenderer(object):
         }
 
         process = runBlender(
-            python_file_path,
-            python_args_dict,
+            python_file_path=python_file_path,
+            python_args_dict=python_args_dict,
             is_background=is_background,
             gpu_id=gpu_id,
             mute=mute,
+            with_daemon=with_daemon,
         )
         if process is None:
             print('[ERROR][BlenderRenderer::renderAroundObjaverseFolders]')
@@ -377,3 +478,45 @@ class BlenderRenderer(object):
             return None
 
         return process
+
+    @staticmethod
+    def parallelRenderAroundObjaverseFolders(
+        shape_folder_path: str,
+        render_image_num: int,
+        save_image_folder_path: str,
+        use_gpu: bool = False,
+        overwrite: bool = False,
+        is_background: bool = True,
+        gpu_id_list: list = [0],
+        workers_per_gpu: int = 8,
+        mute: bool = False,
+    ) -> bool:
+        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
+            print('[ERROR][BlenderRenderer::parallelRenderAroundObjaverseFolders]')
+            print('\t git package not found!')
+            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
+            return False
+
+        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_around_objaverse_folders.py'
+
+        python_args_dict = {
+            'shape_folder_path': shape_folder_path,
+            'render_image_num': render_image_num,
+            'save_image_folder_path': save_image_folder_path,
+            'use_gpu': use_gpu,
+            'overwrite': overwrite,
+        }
+
+        if not parallelRunBlender(
+            python_file_path=python_file_path,
+            python_args_dict=python_args_dict,
+            is_background=is_background,
+            gpu_id_list=gpu_id_list,
+            workers_per_gpu=workers_per_gpu,
+            mute=mute,
+        ):
+            print('[ERROR][BlenderRenderer::parallelRenderAroundObjaverseFolders]')
+            print('\t runBlender failed!')
+            return False
+
+        return True

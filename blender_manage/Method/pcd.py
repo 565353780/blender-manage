@@ -1,7 +1,7 @@
 import os
 import bpy
 import numpy as np
-import open3d as o3d
+# import open3d as o3d
 
 
 def set_vertex_attr(
