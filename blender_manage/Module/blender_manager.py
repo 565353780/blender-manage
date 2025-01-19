@@ -31,8 +31,10 @@ class BlenderManager(object):
                     engine_name: str = 'CYCLES',
                     use_gpu: bool = False,
                     ) -> bool:
-        if not self.shading_manager.setRenderEngine(engine_name,
-                                                    use_gpu):
+        if not self.render_manager.setRenderEngine(
+            engine_name,
+            use_gpu
+        ):
             print('[ERROR][BlenderManager::setRenderer]')
             print('\t setRenderEngine failed!')
             return False

@@ -12,6 +12,37 @@ class RenderManager(object):
         self.object_manager = ObjectManager()
         return
 
+    def setRenderEngine(self, engine_name: str, use_gpu: bool = False) -> bool:
+        assert engine_name in ['EEVEE', 'WORKBENCH', 'CYCLES']
+
+        if engine_name == 'EEVEE':
+            engine_name = 'BLENDER_EEVEE_NEXT'
+        elif engine_name == 'WORKBENCH':
+            engine_name = 'BLENDER_WORKBENCH'
+
+        bpy.context.scene.render.engine = engine_name
+
+        if engine_name == 'CYCLES':
+            if use_gpu:
+                bpy.context.preferences.addons['cycles'].preferences.get_devices()
+
+                bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'
+
+                for device in bpy.context.preferences.addons['cycles'].preferences.devices:
+                    device.use = (device.type != 'CPU')
+
+                bpy.context.scene.cycles.device = 'GPU'
+            else:
+                bpy.context.preferences.addons['cycles'].preferences.get_devices()
+
+                bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'NONE'
+
+                for device in bpy.context.preferences.addons['cycles'].preferences.devices:
+                    device.use = (device.type == 'CPU')
+
+                bpy.context.scene.cycles.device = 'CPU'
+        return True
+
     def setUseBorder(self, is_use_border: bool) -> bool:
         bpy.context.scene.render.use_border = is_use_border
         bpy.context.scene.render.use_crop_to_border = is_use_border

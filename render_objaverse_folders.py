@@ -1,10 +1,32 @@
 import os
+import argparse
 from time import sleep
 
 from blender_manage.Module.blender_renderer import BlenderRenderer
 
 
 if __name__ == "__main__":
+    assert BlenderRenderer.isValid()
+
+    parser = argparse.ArgumentParser(description="Render Objaverse Folders")
+    parser.add_argument(
+        '--workers_per_device',
+        type=int,
+        default=1,
+    )
+    parser.add_argument(
+        '--use_gpu',
+        action='store_true',
+    )
+    parser.add_argument(
+        '--gpu_id_list',
+        type=int,
+        nargs='+',
+        default=[0],
+        help="List of GPU IDs to use, e.g., --gpu_ids 0 1 2"
+    )
+    args = parser.parse_args()
+
     dataset_folder_path_list = [
         '/home/chli/chLi/Dataset/Objaverse_82K/glbs/',
         '/mnt/d/chLi/Dataset/Objaverse_82K/glbs/',
@@ -21,30 +43,33 @@ if __name__ == "__main__":
         print('dataset not found!')
         exit()
 
-    # shape_folder_path = '/home/chli/chLi/Dataset/Objaverse_82K/glbs/'
     render_image_num = 12
     save_image_folder_path = shape_folder_path.replace('/glbs/', '/render_jpg_v2/')
-    use_gpu = True
-    overwrite = False
+    workers_per_device = args.workers_per_device
     is_background = True
-    gpu_id_list = [1, 2, 3]
-    workers_per_gpu = 6
     mute = True
+    use_gpu = args.use_gpu
+    gpu_id_list = args.gpu_id_list
+    overwrite = False
     keep_alive = False
 
+    blender_renderer = BlenderRenderer(
+        workers_per_device,
+        is_background,
+        mute,
+        use_gpu,
+        gpu_id_list,
+    )
+
     while True:
-        assert BlenderRenderer.isValid()
-        BlenderRenderer.parallelRenderAroundObjaverseFolders(
+        blender_renderer.renderAroundObjaverseFolders(
             shape_folder_path,
             render_image_num,
             save_image_folder_path,
-            use_gpu,
             overwrite,
-            is_background,
-            gpu_id_list,
-            workers_per_gpu,
-            mute,
         )
+
+        blender_renderer.waitWorkers()
 
         if not keep_alive:
             break

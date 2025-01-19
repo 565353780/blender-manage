@@ -4,6 +4,8 @@ from blender_manage.Module.blender_renderer import BlenderRenderer
 
 
 if __name__ == "__main__":
+    assert BlenderRenderer.isValid()
+
     shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/fixed/XiaomiSU7/'
     save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_render/fixed/XiaomiSU7/'
     shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/adaptive/'
@@ -26,7 +28,6 @@ if __name__ == "__main__":
     )
 
     while True:
-        assert blender_renderer.isValid()
         blender_renderer.renderFolders(
             shape_folder_path,
             save_image_folder_path,

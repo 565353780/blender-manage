@@ -24,7 +24,8 @@ class BlenderRenderer(object):
         )
         return
 
-    def isValid(self) -> bool:
+    @staticmethod
+    def isValid() -> bool:
         return BLENDER_BIN is not None
 
     def addTask(

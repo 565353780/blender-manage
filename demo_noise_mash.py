@@ -26,7 +26,7 @@ def demo(gauss_sigma: float = 0.01):
 
     object_manager.removeAll()
 
-    shading_manager.setRenderEngine('CYCLES')
+    render_manager.setRenderEngine('CYCLES')
 
     render_manager.setUseBorder(True)
     render_manager.setRenderResolution([1080, 1080])

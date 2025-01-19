@@ -105,29 +105,3 @@ class ShadingManager(ObjectManager):
         self.createColorMaterials(color_map_name)
         self.bindColorMaterialsForObjects(color_map_name)
         return True
-
-    def setRenderEngine(self, engine_name: str, use_gpu: bool = False) -> bool:
-        assert engine_name in ['EEVEE', 'WORKBENCH', 'CYCLES']
-
-        if engine_name == 'EEVEE':
-            engine_name = 'BLENDER_EEVEE_NEXT'
-        elif engine_name == 'WORKBENCH':
-            engine_name = 'BLENDER_WORKBENCH'
-
-        bpy.context.scene.render.engine = engine_name
-
-        if engine_name == 'CYCLES':
-            if use_gpu:
-                bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'
-                bpy.context.scene.cycles.device = 'GPU'
-
-                for device in bpy.context.preferences.addons['cycles'].preferences.devices:
-                    device.use = (device.type != 'CPU')
-
-            else:
-                bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'NONE'
-                bpy.context.scene.cycles.device = 'CPU'
-
-                for device in bpy.context.preferences.addons['cycles'].preferences.devices:
-                    device.use = (device.type == 'CPU')
-        return True
