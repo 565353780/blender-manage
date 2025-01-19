@@ -79,9 +79,14 @@ def renderFile(
         return True
 
     if save_image_file_basepath[-1] == '/':
-        save_image_file_basepath += object_name
+        save_image_file_basepath += object_name + '.jpg'
 
-    blender_manager.render_manager.renderImages(camera_name_list, save_image_file_basepath, overwrite)
+    blender_manager.render_manager.renderImages(
+        camera_name_list,
+        save_image_file_basepath,
+        overwrite,
+        background_color=[255, 255, 255],
+    )
 
     blender_manager.setObjectRenderable(object_name, False)
 

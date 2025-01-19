@@ -53,6 +53,28 @@ class RenderManager(object):
         bpy.context.scene.render.resolution_y = resolution[1]
         return True
 
+    def setBackgroundColor(self, background_color: list=[255, 255, 255]) -> bool:
+        bpy.context.scene.render.film_transparent = True
+
+        bpy.context.scene.use_nodes = True
+        tree = bpy.context.scene.node_tree
+
+        for node in tree.nodes:
+            tree.nodes.remove(node)
+
+        render_layers = tree.nodes.new(type="CompositorNodeRLayers")
+        composite = tree.nodes.new(type="CompositorNodeComposite")
+        alpha_over = tree.nodes.new(type="CompositorNodeAlphaOver")
+        white_color = tree.nodes.new(type="CompositorNodeRGB")
+
+        bg_color = np.array(background_color, dtype=float) / 255.0
+        white_color.outputs[0].default_value = (bg_color[0], bg_color[1], bg_color[2], 1.0)
+
+        tree.links.new(render_layers.outputs["Image"], alpha_over.inputs[2])
+        tree.links.new(white_color.outputs[0], alpha_over.inputs[1])
+        tree.links.new(alpha_over.outputs["Image"], composite.inputs["Image"])
+        return True
+
     def setObjectVisible(self, object_name: str, visible: bool) -> bool:
         if not self.object_manager.isObjectExist(object_name):
             return False
@@ -92,7 +114,12 @@ class RenderManager(object):
         bpy.context.scene.camera = bpy.data.objects[camera_name]
         return True
 
-    def renderImage(self, save_image_file_path: str, overwrite: bool = False) -> bool:
+    def renderImage(
+        self,
+        save_image_file_path: str,
+        overwrite: bool = False,
+        background_color: list = [255, 255, 255],
+    ) -> bool:
         if save_image_file_path.split('.')[-1] == 'png':
             bpy.context.scene.render.image_settings.file_format = 'PNG'
             bpy.context.scene.render.image_settings.color_mode = 'RGBA'
@@ -101,6 +128,7 @@ class RenderManager(object):
             bpy.context.scene.render.image_settings.file_format = 'JPEG'
             bpy.context.scene.render.image_settings.color_mode = 'RGB'
             bpy.context.scene.render.image_settings.color_depth = '8'
+            self.setBackgroundColor(background_color)
         else:
             print('[ERROR][RenderManager::renderImage]')
             print('\t save image file type not valid!')
@@ -125,7 +153,13 @@ class RenderManager(object):
         print('\t >>> [SUCCESS]')
         return True
 
-    def renderImages(self, camera_name_list: list, save_image_file_basepath: str, overwrite: bool = False):
+    def renderImages(
+        self,
+        camera_name_list: list,
+        save_image_file_basepath: str,
+        overwrite: bool = False,
+        background_color: list = [255, 255, 255],
+    ) -> bool:
         for camera_name in camera_name_list:
             if not self.activateCamera(camera_name):
                 continue
@@ -137,5 +171,5 @@ class RenderManager(object):
             else:
                 save_image_file_path = save_image_file_basepath + '_' + camera_name + '.png'
 
-            self.renderImage(save_image_file_path, overwrite)
+            self.renderImage(save_image_file_path, overwrite, background_color)
         return True

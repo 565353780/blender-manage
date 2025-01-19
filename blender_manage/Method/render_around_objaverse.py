@@ -138,7 +138,11 @@ def renderAroundObjaverseFile(
 
             removeFile(save_image_file_path)
 
-        blender_manager.render_manager.renderImage(save_image_file_path, overwrite)
+        blender_manager.render_manager.renderImage(
+            save_image_file_path,
+            overwrite,
+            background_color=[0, 0, 0],
+        )
 
     # blender_manager.removeCollection(collection_name)
     return True
