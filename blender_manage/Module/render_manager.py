@@ -54,7 +54,12 @@ class RenderManager(object):
         return True
 
     def setBackgroundColor(self, background_color: list=[255, 255, 255]) -> bool:
+        bpy.context.scene.view_settings.view_transform = 'Standard'
+
         bpy.context.scene.render.film_transparent = True
+
+        # bpy.context.scene.cycles.pixel_filter_type = 'BOX'
+        # bpy.context.scene.cycles.filter_width = 0.01
 
         bpy.context.scene.use_nodes = True
         tree = bpy.context.scene.node_tree
@@ -66,6 +71,8 @@ class RenderManager(object):
         composite = tree.nodes.new(type="CompositorNodeComposite")
         alpha_over = tree.nodes.new(type="CompositorNodeAlphaOver")
         white_color = tree.nodes.new(type="CompositorNodeRGB")
+
+        alpha_over.premul = 1.0
 
         bg_color = np.array(background_color, dtype=float) / 255.0
         white_color.outputs[0].default_value = (bg_color[0], bg_color[1], bg_color[2], 1.0)
@@ -149,6 +156,7 @@ class RenderManager(object):
         bpy.context.scene.render.filepath = save_image_file_path
         bpy.context.scene.render.image_settings.compression = 0
         bpy.context.scene.render.resolution_percentage = 100
+        bpy.context.scene.render.image_settings.quality = 100
         bpy.ops.render.render(write_still=True)
         print('\t >>> [SUCCESS]')
         return True
