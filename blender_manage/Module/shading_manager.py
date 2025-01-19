@@ -119,22 +119,15 @@ class ShadingManager(ObjectManager):
         if engine_name == 'CYCLES':
             if use_gpu:
                 bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'
-
-                bpy.context.preferences.addons['cycles'].preferences.get_devices()
-                for device in bpy.context.preferences.addons['cycles'].preferences.devices:
-                    device.use = True
-
                 bpy.context.scene.cycles.device = 'GPU'
+
+                for device in bpy.context.preferences.addons['cycles'].preferences.devices:
+                    device.use = (device.type != 'CPU')
+
             else:
                 bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'NONE'
-
-                bpy.context.preferences.addons['cycles'].preferences.get_devices()
-                for device in bpy.context.preferences.addons['cycles'].preferences.devices:
-                    if device.type != 'CPU':
-                        device.use = False
-                    else:
-                        device.use = True
-
                 bpy.context.scene.cycles.device = 'CPU'
 
+                for device in bpy.context.preferences.addons['cycles'].preferences.devices:
+                    device.use = (device.type == 'CPU')
         return True

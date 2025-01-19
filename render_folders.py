@@ -9,18 +9,19 @@ if __name__ == "__main__":
     parser.add_argument(
         "--gpu_id",
         type=int,
-        required=True,
+        default=0,
     )
 
     args = parser.parse_args()
 
-    shape_folder_path = '/home/chli/chLi/Dataset/Objaverse_82K/glbs/'
-    save_image_folder_path = '/home/chli/chLi/Dataset/Objaverse_82K/render_jpg_v2/'
-    use_gpu = True
-    overwrite = False
+    shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/fixed/XiaomiSU7/'
+    save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_render/fixed/XiaomiSU7/'
+    use_gpu = False
+    overwrite = True
     is_background = True
     gpu_id = args.gpu_id
     mute = True
+    with_daemon = True
     keep_alive = False
 
     while True:
@@ -33,6 +34,7 @@ if __name__ == "__main__":
             is_background,
             gpu_id,
             mute,
+            with_daemon,
         )
 
         if process is not None:

@@ -12,11 +12,11 @@ from blender_manage.Method.format import isFileTypeValid
 from blender_manage.Method.render import renderFile
 
 if __name__ == '__main__':
-    shape_folder_path = '/home/chli/chLi/Results/mash-diffusion/output/sample/20250116_18:27:04/'
+    shape_folder_path = '/home/chli/chLi/Results/mash-diffusion/output/sample/20250119_04:48:38/'
     save_image_file_path = '/home/chli/chLi/Results/test/test_render.png'
-    use_gpu = False
+    use_gpu = True
     overwrite = True
-    early_stop = False
+    early_stop = True
 
     for root, _, files in os.walk(shape_folder_path):
         for file in files:

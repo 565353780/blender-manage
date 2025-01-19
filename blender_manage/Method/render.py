@@ -61,7 +61,9 @@ def renderFile(
     blender_manager.loadObject(
         shape_file_path=shape_file_path,
         name=object_name,
-        collection_name=collection_name)
+        collection_name=collection_name,
+        # rotation_euler=[0, 0, 0],
+    )
 
     if 'LN3Diff' in shape_file_path:
         blender_manager.object_manager.setObjectRotationEuler(object_name, [180, 0, 0])
