@@ -5,28 +5,32 @@ from blender_manage.Module.blender_renderer import BlenderRenderer
 def demo():
     shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/adaptive/'
     save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_render/adaptive/'
-    use_gpu = False
-    overwrite = False
+    workers_per_device = 8
     is_background = True
-    gpu_id = 0
     mute = True
+    use_gpu = True
+    gpu_id_list = [0]
+    overwrite = False
+
     keep_alive = False
 
+    blender_renderer = BlenderRenderer(
+        workers_per_device,
+        is_background,
+        mute,
+        use_gpu,
+        gpu_id_list,
+    )
+
     while True:
-        assert BlenderRenderer.isValid()
-        process = BlenderRenderer.renderFolders(
+        assert blender_renderer.isValid()
+        blender_renderer.renderFolders(
             shape_folder_path,
             save_image_folder_path,
-            use_gpu,
             overwrite,
-            is_background,
-            gpu_id,
-            mute,
         )
 
-        if process is not None:
-            process.start()
-            process.join()
+        blender_renderer.waitWorkers()
 
         if not keep_alive:
             break

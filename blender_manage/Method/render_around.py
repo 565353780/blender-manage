@@ -1,7 +1,6 @@
 import os
 import bpy
 import math
-from typing import Union
 
 from blender_manage.Method.format import isFileTypeValid
 from blender_manage.Module.blender_manager import BlenderManager
@@ -105,71 +104,4 @@ def renderAroundFile(
     blender_manager.setObjectRenderable(object_name, False)
 
     # blender_manager.removeCollection(collection_name)
-    return True
-
-def renderAroundFolder(shape_folder_path: str,
-                       render_image_num: int,
-                       save_image_folder_path: Union[str, None] = None,
-                       use_gpu: bool = False,
-                       overwrite: bool = False) -> bool:
-    if save_image_folder_path is None:
-        save_image_folder_path = shape_folder_path + 'rendered/'
-        os.makedirs(save_image_folder_path, exist_ok=True)
-
-    shape_filename_list = os.listdir(shape_folder_path)
-    shape_filename_list.sort()
-
-    for shape_filename in shape_filename_list:
-        if not isFileTypeValid(shape_filename):
-            continue
-
-        shape_file_path = shape_folder_path + shape_filename
-
-        if not renderAroundFile(shape_file_path,
-                                render_image_num,
-                                save_image_folder_path,
-                                use_gpu,
-                                overwrite):
-            print('[ERROR][render::renderAroundFolder]')
-            print('\t renderAroundFile failed!')
-            continue
-
-    return True
-
-def renderAroundFolders(root_folder_path: str,
-                        render_image_num: int,
-                        save_image_root_folder_path: Union[str, None]=None,
-                        use_gpu: bool = False,
-                        overwrite: bool = False) -> bool:
-    if not os.path.exists(root_folder_path):
-        print('[ERROR][render::renderAroundFolders]')
-        print('\t root folder not exist!')
-        print('\t root_folder_path:', root_folder_path)
-        return False
-
-    shape_folder_path_list = []
-    save_image_folder_path_list = []
-    for root, _, files in os.walk(root_folder_path):
-        for file in files:
-            if not isFileTypeValid(file):
-                continue
-
-            if save_image_root_folder_path is None:
-                save_image_folder_path = root + '/rendered/'
-            else:
-                rel_shape_folder_path = os.path.relpath(root, root_folder_path)
-
-                save_image_folder_path = save_image_root_folder_path + rel_shape_folder_path + '/'
-
-            shape_folder_path_list.append(root + '/')
-            save_image_folder_path_list.append(save_image_folder_path)
-            break
-
-    for shape_folder_path, save_image_folder_path in zip(shape_folder_path_list, save_image_folder_path_list):
-        renderAroundFolder(shape_folder_path,
-                           render_image_num,
-                           save_image_folder_path,
-                           use_gpu,
-                           overwrite)
-
     return True

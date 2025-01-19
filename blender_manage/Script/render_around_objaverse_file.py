@@ -19,7 +19,7 @@ if __name__ == "__main__":
         required=True,
     )
     parser.add_argument(
-        "--save_image_file_path",
+        "--save_image_folder_path",
         type=str,
         required=True,
     )
@@ -38,6 +38,6 @@ if __name__ == "__main__":
     renderAroundObjaverseFile(
         args.shape_file_path,
         args.render_image_num,
-        args.save_image_file_path,
+        args.save_image_folder_path,
         args.use_gpu,
         args.overwrite)

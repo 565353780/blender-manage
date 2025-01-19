@@ -1,522 +1,315 @@
 import os
-from typing import Union
-from multiprocessing import Process
 
 from blender_manage.Config.path import GIT_ROOT_FOLDER_PATH, BLENDER_BIN
-from blender_manage.Method.run import runBlender
-from blender_manage.Method.parallel_run import parallelRunBlender
+from blender_manage.Method.io import getFolderTaskList, getFoldersTaskList
+from blender_manage.Module.worker_manager import WorkerManager
 
 
 class BlenderRenderer(object):
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        workers_per_device: int = 1,
+        is_background: bool = True,
+        mute: bool = False,
+        use_gpu: bool = False,
+        gpu_id_list: list = [0],
+    ) -> None:
+        self.is_background = is_background
+        self.mute = mute
+        self.use_gpu = use_gpu
+
+        self.worker_manager = WorkerManager(
+            workers_per_device,
+            gpu_id_list,
+        )
         return
 
-    @staticmethod
-    def isValid() -> bool:
+    def isValid(self) -> bool:
         return BLENDER_BIN is not None
 
-    @staticmethod
-    def renderFile(
-        shape_file_path: str,
-        save_image_file_path: str,
-        use_gpu: bool = False,
-        overwrite: bool = False,
-        is_background: bool = True,
-        gpu_id: int = 0,
-        mute: bool = False,
-        with_daemon: bool = True,
-    ) -> Union[Process, None]:
+    def addTask(
+        self,
+        python_file_path: str,
+        python_args_dict: dict,
+    ) -> bool:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::renderFile]')
+            print('[ERROR][BlenderRenderer::addTask]')
             print('\t git package not found!')
             print('\t GIT_ROOT_FOLDER_PATH:', GIT_ROOT_FOLDER_PATH)
-            return None
+            return False
 
+        if not self.worker_manager.addTask(
+            python_file_path=python_file_path,
+            python_args_dict=python_args_dict,
+            is_background=self.is_background,
+            mute=self.mute,
+        ):
+            print('[ERROR][BlenderRenderer::addTask]')
+            print('\t addTask failed!')
+            return False
+
+        return True
+
+    def getFinishedTaskNum(self) -> int:
+        return self.worker_manager.getFinishedTaskNum()
+
+    def waitWorkers(self) -> bool:
+        return self.worker_manager.waitWorkers()
+
+    def renderFile(
+        self,
+        shape_file_path: str,
+        save_image_file_path: str,
+        overwrite: bool = False,
+    ) -> bool:
         python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_file.py'
 
         python_args_dict = {
             'shape_file_path': shape_file_path,
             'save_image_file_path': save_image_file_path,
-            'use_gpu': use_gpu,
+            'use_gpu': self.use_gpu,
             'overwrite': overwrite,
-            'mute': mute,
         }
 
-        process = runBlender(
+        return self.addTask(
             python_file_path=python_file_path,
             python_args_dict=python_args_dict,
-            is_background=is_background,
-            gpu_id=gpu_id,
-            mute=mute,
-            with_daemon=with_daemon,
         )
-        if process is None:
-            print('[ERROR][BlenderRenderer::renderFile]')
-            print('\t runBlender failed!')
-            return None
 
-        return process
-
-    @staticmethod
-    def renderFolder(
-        shape_folder_path: str,
-        save_image_folder_path: str,
-        use_gpu: bool = False,
-        overwrite: bool = False,
-        is_background: bool = True,
-        gpu_id: int = 0,
-        mute: bool = False,
-        with_daemon: bool = True,
-    ) -> Union[Process, None]:
-        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::renderFolder]')
-            print('\t git package not found!')
-            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
-            return None
-
-        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_folder.py'
-
-        python_args_dict = {
-            'shape_folder_path': shape_folder_path,
-            'save_image_folder_path': save_image_folder_path,
-            'use_gpu': use_gpu,
-            'overwrite': overwrite,
-        }
-
-        process = runBlender(
-            python_file_path=python_file_path,
-            python_args_dict=python_args_dict,
-            is_background=is_background,
-            gpu_id=gpu_id,
-            mute=mute,
-            with_daemon=with_daemon,
-        )
-        if process is None:
-            print('[ERROR][BlenderRenderer::renderFolder]')
-            print('\t runBlender failed!')
-            return None
-
-        return process
-
-    @staticmethod
-    def renderFolders(
-        shape_folder_path: str,
-        save_image_folder_path: str,
-        use_gpu: bool = False,
-        overwrite: bool = False,
-        is_background: bool = True,
-        gpu_id: int = 0,
-        mute: bool = False,
-        with_daemon: bool = True,
-    ) -> Union[Process, None]:
-        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::renderFolders]')
-            print('\t git package not found!')
-            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
-            return None
-
-        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_folders.py'
-
-        python_args_dict = {
-            'shape_folder_path': shape_folder_path,
-            'save_image_folder_path': save_image_folder_path,
-            'use_gpu': use_gpu,
-            'overwrite': overwrite,
-        }
-
-        process = runBlender(
-            python_file_path=python_file_path,
-            python_args_dict=python_args_dict,
-            is_background=is_background,
-            gpu_id=gpu_id,
-            mute=mute,
-            with_daemon=with_daemon,
-        )
-        if process is None:
-            print('[ERROR][BlenderRenderer::renderFolders]')
-            print('\t runBlender failed!')
-            return None
-
-        return process
-
-    @staticmethod
-    def parallelRenderFolders(
-        shape_folder_path: str,
-        save_image_folder_path: str,
-        use_gpu: bool = False,
-        overwrite: bool = False,
-        is_background: bool = True,
-        gpu_id_list: list = [0],
-        workers_per_gpu: int = 8,
-        mute: bool = False,
-    ) -> bool:
-        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::parallelRenderFolders]')
-            print('\t git package not found!')
-            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
-            return False
-
-        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_folders.py'
-
-        python_args_dict = {
-            'shape_folder_path': shape_folder_path,
-            'save_image_folder_path': save_image_folder_path,
-            'use_gpu': use_gpu,
-            'overwrite': overwrite,
-        }
-
-        if not parallelRunBlender(
-            python_file_path=python_file_path,
-            python_args_dict=python_args_dict,
-            is_background=is_background,
-            gpu_id_list=gpu_id_list,
-            workers_per_gpu=workers_per_gpu,
-            mute=mute,
-        ):
-            print('[ERROR][BlenderRenderer::parallelRenderFolders]')
-            print('\t parallelRunBlender failed!')
-            return False
-
-        return True
-
-    @staticmethod
     def renderAroundFile(
+        self,
         shape_file_path: str,
         render_image_num: int,
-        save_image_file_path: str,
-        use_gpu: bool = False,
+        save_image_folder_path: str,
         overwrite: bool = False,
-        is_background: bool = True,
-        gpu_id: int = 0,
-        mute: bool = False,
-        with_daemon: bool = True,
-    ) -> Union[Process, None]:
-        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::renderAroundFile]')
-            print('\t git package not found!')
-            print('\t GIT_ROOT_FOLDER_PATH:', GIT_ROOT_FOLDER_PATH)
-            return None
-
+    ) -> bool:
         python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_around_file.py'
 
         python_args_dict = {
             'shape_file_path': shape_file_path,
             'render_image_num': render_image_num,
-            'save_image_file_path': save_image_file_path,
-            'use_gpu': use_gpu,
-            'overwrite': overwrite,
-        }
-
-        process = runBlender(
-            python_file_path=python_file_path,
-            python_args_dict=python_args_dict,
-            is_background=is_background,
-            gpu_id=gpu_id,
-            mute=mute,
-            with_daemon=with_daemon,
-        )
-        if process is None:
-            print('[ERROR][BlenderRenderer::renderAroundFile]')
-            print('\t runBlender failed!')
-            return None
-
-        return process
-
-    @staticmethod
-    def renderAroundFolder(
-        shape_folder_path: str,
-        render_image_num: int,
-        save_image_folder_path: str,
-        use_gpu: bool = False,
-        overwrite: bool = False,
-        is_background: bool = True,
-        gpu_id: int = 0,
-        mute: bool = False,
-        with_daemon: bool = True,
-    ) -> Union[Process, None]:
-        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::renderAroundFolder]')
-            print('\t git package not found!')
-            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
-            return None
-
-        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_around_folder.py'
-
-        python_args_dict = {
-            'shape_folder_path': shape_folder_path,
-            'render_image_num': render_image_num,
             'save_image_folder_path': save_image_folder_path,
-            'use_gpu': use_gpu,
+            'use_gpu': self.use_gpu,
             'overwrite': overwrite,
         }
 
-        process = runBlender(
+        return self.addTask(
             python_file_path=python_file_path,
             python_args_dict=python_args_dict,
-            is_background=is_background,
-            gpu_id=gpu_id,
-            mute=mute,
-            with_daemon=with_daemon,
         )
-        if process is None:
-            print('[ERROR][BlenderRenderer::renderAroundFolder]')
-            print('\t runBlender failed!')
-            return None
 
-        return process
-
-    @staticmethod
-    def renderAroundFolders(
-        shape_folder_path: str,
-        render_image_num: int,
-        save_image_folder_path: str,
-        use_gpu: bool = False,
-        overwrite: bool = False,
-        is_background: bool = True,
-        gpu_id: int = 0,
-        mute: bool = False,
-        with_daemon: bool = True,
-    ) -> Union[Process, None]:
-        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::renderAroundFolders]')
-            print('\t git package not found!')
-            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
-            return None
-
-        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_around_folders.py'
-
-        python_args_dict = {
-            'shape_folder_path': shape_folder_path,
-            'render_image_num': render_image_num,
-            'save_image_folder_path': save_image_folder_path,
-            'use_gpu': use_gpu,
-            'overwrite': overwrite,
-        }
-
-        process = runBlender(
-            python_file_path=python_file_path,
-            python_args_dict=python_args_dict,
-            is_background=is_background,
-            gpu_id=gpu_id,
-            mute=mute,
-            with_daemon=with_daemon,
-        )
-        if process is None:
-            print('[ERROR][BlenderRenderer::renderAroundFolders]')
-            print('\t runBlender failed!')
-            return None
-
-        return process
-
-    @staticmethod
-    def parallelRenderAroundFolders(
-        shape_folder_path: str,
-        render_image_num: int,
-        save_image_folder_path: str,
-        use_gpu: bool = False,
-        overwrite: bool = False,
-        is_background: bool = True,
-        gpu_id_list: list = [0],
-        workers_per_gpu: int = 8,
-        mute: bool = False,
-    ) -> bool:
-        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::parallelRenderAroundFolders]')
-            print('\t git package not found!')
-            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
-            return False
-
-        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_around_folders.py'
-
-        python_args_dict = {
-            'shape_folder_path': shape_folder_path,
-            'render_image_num': render_image_num,
-            'save_image_folder_path': save_image_folder_path,
-            'use_gpu': use_gpu,
-            'overwrite': overwrite,
-        }
-
-        if not parallelRunBlender(
-            python_file_path=python_file_path,
-            python_args_dict=python_args_dict,
-            is_background=is_background,
-            gpu_id_list=gpu_id_list,
-            workers_per_gpu=workers_per_gpu,
-            mute=mute,
-        ):
-            print('[ERROR][BlenderRenderer::parallelRenderAroundFolders]')
-            print('\t parallelRunBlender failed!')
-            return False
-
-        return True
-
-    @staticmethod
     def renderAroundObjaverseFile(
+        self,
         shape_file_path: str,
         render_image_num: int,
-        save_image_file_path: str,
-        use_gpu: bool = False,
+        save_image_folder_path: str,
         overwrite: bool = False,
-        is_background: bool = True,
-        gpu_id: int = 0,
-        mute: bool = False,
-        with_daemon: bool = True,
-    ) -> Union[Process, None]:
-        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::renderAroundObjaverseFile]')
-            print('\t git package not found!')
-            print('\t GIT_ROOT_FOLDER_PATH:', GIT_ROOT_FOLDER_PATH)
-            return None
-
+    ) -> bool:
         python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_around_objaverse_file.py'
 
         python_args_dict = {
             'shape_file_path': shape_file_path,
             'render_image_num': render_image_num,
-            'save_image_file_path': save_image_file_path,
-            'use_gpu': use_gpu,
-            'overwrite': overwrite,
-        }
-
-        process = runBlender(
-            python_file_path=python_file_path,
-            python_args_dict=python_args_dict,
-            is_background=is_background,
-            gpu_id=gpu_id,
-            mute=mute,
-            with_daemon=with_daemon,
-        )
-        if process is None:
-            print('[ERROR][BlenderRenderer::renderAroundObjaverseFile]')
-            print('\t runBlender failed!')
-            return None
-
-        return process
-
-    @staticmethod
-    def renderAroundObjaverseFolder(
-        shape_folder_path: str,
-        render_image_num: int,
-        save_image_folder_path: str,
-        use_gpu: bool = False,
-        overwrite: bool = False,
-        is_background: bool = True,
-        gpu_id: int = 0,
-        mute: bool = False,
-        with_daemon: bool = True,
-    ) -> Union[Process, None]:
-        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::renderAroundObjaverseFolder]')
-            print('\t git package not found!')
-            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
-            return None
-
-        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_around_objaverse_folder.py'
-
-        python_args_dict = {
-            'shape_folder_path': shape_folder_path,
-            'render_image_num': render_image_num,
             'save_image_folder_path': save_image_folder_path,
-            'use_gpu': use_gpu,
+            'use_gpu': self.use_gpu,
             'overwrite': overwrite,
         }
 
-        process = runBlender(
+        return self.addTask(
             python_file_path=python_file_path,
             python_args_dict=python_args_dict,
-            is_background=is_background,
-            gpu_id=gpu_id,
-            mute=mute,
-            with_daemon=with_daemon,
         )
-        if process is None:
-            print('[ERROR][BlenderRenderer::renderAroundObjaverseFolder]')
-            print('\t runBlender failed!')
-            return None
 
-        return process
-
-    @staticmethod
-    def renderAroundObjaverseFolders(
+    def renderFolder(
+        self,
         shape_folder_path: str,
-        render_image_num: int,
         save_image_folder_path: str,
-        use_gpu: bool = False,
         overwrite: bool = False,
-        is_background: bool = True,
-        gpu_id: int = 0,
-        mute: bool = False,
-        with_daemon: bool = True,
-    ) -> Union[Process, None]:
-        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::renderAroundObjaverseFolders]')
-            print('\t git package not found!')
-            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
-            return None
-
-        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_around_objaverse_folders.py'
-
-        python_args_dict = {
-            'shape_folder_path': shape_folder_path,
-            'render_image_num': render_image_num,
-            'save_image_folder_path': save_image_folder_path,
-            'use_gpu': use_gpu,
-            'overwrite': overwrite,
-        }
-
-        process = runBlender(
-            python_file_path=python_file_path,
-            python_args_dict=python_args_dict,
-            is_background=is_background,
-            gpu_id=gpu_id,
-            mute=mute,
-            with_daemon=with_daemon,
-        )
-        if process is None:
-            print('[ERROR][BlenderRenderer::renderAroundObjaverseFolders]')
-            print('\t runBlender failed!')
-            return None
-
-        return process
-
-    @staticmethod
-    def parallelRenderAroundObjaverseFolders(
-        shape_folder_path: str,
-        render_image_num: int,
-        save_image_folder_path: str,
-        use_gpu: bool = False,
-        overwrite: bool = False,
-        is_background: bool = True,
-        gpu_id_list: list = [0],
-        workers_per_gpu: int = 8,
-        mute: bool = False,
     ) -> bool:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::parallelRenderAroundObjaverseFolders]')
+            print('[ERROR][BlenderRenderer::renderFolder]')
             print('\t git package not found!')
             print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
             return False
 
-        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_around_objaverse_folders.py'
+        folder_task_list = getFolderTaskList(
+            shape_folder_path,
+            save_image_folder_path,
+        )
 
-        python_args_dict = {
-            'shape_folder_path': shape_folder_path,
-            'render_image_num': render_image_num,
-            'save_image_folder_path': save_image_folder_path,
-            'use_gpu': use_gpu,
-            'overwrite': overwrite,
-        }
+        for folder_task in folder_task_list:
+            shape_file_path, save_image_file_path = folder_task
 
-        if not parallelRunBlender(
-            python_file_path=python_file_path,
-            python_args_dict=python_args_dict,
-            is_background=is_background,
-            gpu_id_list=gpu_id_list,
-            workers_per_gpu=workers_per_gpu,
-            mute=mute,
-        ):
-            print('[ERROR][BlenderRenderer::parallelRenderAroundObjaverseFolders]')
-            print('\t runBlender failed!')
+            if not self.renderFile(
+                shape_file_path,
+                save_image_file_path,
+                overwrite,
+            ):
+                print('[ERROR][BlenderRenderer::renderFolder]')
+                print('\t renderFile failed!')
+                continue
+
+        return True
+
+    def renderFolders(
+        self,
+        shape_folder_path: str,
+        save_image_folder_path: str,
+        overwrite: bool = False,
+    ) -> bool:
+        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
+            print('[ERROR][BlenderRenderer::renderFolders]')
+            print('\t git package not found!')
+            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
             return False
+
+        folders_task_list = getFoldersTaskList(
+            shape_folder_path,
+            save_image_folder_path,
+        )
+
+        for folders_task in folders_task_list:
+            shape_file_path, save_image_file_path = folders_task
+
+            if not self.renderFile(
+                shape_file_path,
+                save_image_file_path,
+                overwrite,
+            ):
+                print('[ERROR][BlenderRenderer::renderFolder]')
+                print('\t renderFile failed!')
+                continue
+
+        return True
+
+    def renderAroundFolder(
+        self,
+        shape_folder_path: str,
+        render_image_num: int,
+        save_image_folder_path: str,
+        overwrite: bool = False,
+    ) -> bool:
+        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
+            print('[ERROR][BlenderRenderer::renderAroundFolder]')
+            print('\t git package not found!')
+            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
+            return False
+
+        folder_task_list = getFolderTaskList(
+            shape_folder_path,
+            save_image_folder_path,
+        )
+
+        for folder_task in folder_task_list:
+            shape_file_path, save_image_folder_path = folder_task
+
+            if not self.renderAroundFile(
+                shape_file_path,
+                render_image_num,
+                save_image_folder_path,
+                overwrite,
+            ):
+                print('[ERROR][BlenderRenderer::renderAroundFolder]')
+                print('\t renderFile failed!')
+                continue
+
+        return True
+
+    def renderAroundFolders(
+        self,
+        shape_folder_path: str,
+        render_image_num: int,
+        save_image_folder_path: str,
+        overwrite: bool = False,
+    ) -> bool:
+        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
+            print('[ERROR][BlenderRenderer::renderAroundFolders]')
+            print('\t git package not found!')
+            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
+            return False
+
+        folders_task_list = getFoldersTaskList(
+            shape_folder_path,
+            save_image_folder_path,
+        )
+
+        for folders_task in folders_task_list:
+            shape_file_path, save_image_folder_path = folders_task
+
+            if not self.renderAroundFile(
+                shape_file_path,
+                render_image_num,
+                save_image_folder_path,
+                overwrite,
+            ):
+                print('[ERROR][BlenderRenderer::renderAroundFolders]')
+                print('\t renderFile failed!')
+                continue
+
+        return True
+
+    def renderAroundObjaverseFolder(
+        self,
+        shape_folder_path: str,
+        render_image_num: int,
+        save_image_folder_path: str,
+        overwrite: bool = False,
+    ) -> bool:
+        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
+            print('[ERROR][BlenderRenderer::renderAroundObjaverseFolder]')
+            print('\t git package not found!')
+            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
+            return False
+
+        folder_task_list = getFolderTaskList(
+            shape_folder_path,
+            save_image_folder_path,
+        )
+
+        for folder_task in folder_task_list:
+            shape_file_path, save_image_folder_path = folder_task
+
+            if not self.renderAroundObjaverseFile(
+                shape_file_path,
+                render_image_num,
+                save_image_folder_path,
+                overwrite,
+            ):
+                print('[ERROR][BlenderRenderer::renderAroundFolder]')
+                print('\t renderFile failed!')
+                continue
+
+        return True
+
+    def renderAroundObjaverseFolders(
+        self,
+        shape_folder_path: str,
+        render_image_num: int,
+        save_image_folder_path: str,
+        overwrite: bool = False,
+    ) -> bool:
+        if not os.path.exists(GIT_ROOT_FOLDER_PATH):
+            print('[ERROR][BlenderRenderer::renderAroundObjaverseFolders]')
+            print('\t git package not found!')
+            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
+            return False
+
+        folders_task_list = getFoldersTaskList(
+            shape_folder_path,
+            save_image_folder_path,
+        )
+
+        for folders_task in folders_task_list:
+            shape_file_path, save_image_folder_path = folders_task
+
+            if not self.renderAroundObjaverseFile(
+                shape_file_path,
+                render_image_num,
+                save_image_folder_path,
+                overwrite,
+            ):
+                print('[ERROR][BlenderRenderer::renderAroundObjaverseFolders]')
+                print('\t renderFile failed!')
+                continue
 
         return True

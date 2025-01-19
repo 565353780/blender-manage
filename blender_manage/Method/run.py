@@ -88,7 +88,7 @@ def runBlender(
     gpu_id: int = 0,
     mute: bool = False,
     with_daemon: bool = True,
-) -> Union[Process, None]: 
+) -> Union[Process, None]:
     command = getRunCMD(
         python_file_path,
         python_args_dict,
@@ -110,9 +110,10 @@ def runBlender(
 
         return process
 
-    print('[INFO][parallel_run::runBlender]')
-    print('\t start run command:')
-    print('\t\t', command)
+    if not mute:
+        print('[INFO][parallel_run::runBlender]')
+        print('\t start run command:')
+        print('\t\t', command)
     if not runCMD(command, mute):
         print('[ERROR][parallel_run::runBlender]')
         print('\t runCMD failed!')
