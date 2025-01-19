@@ -50,7 +50,6 @@ if __name__ == "__main__":
     workers_per_gpu = args.workers_per_gpu
     is_background = True
     mute = True
-    use_gpu = True
     gpu_id_list = args.gpu_id_list
     overwrite = False
     keep_alive = False
@@ -60,7 +59,6 @@ if __name__ == "__main__":
         workers_per_gpu,
         is_background,
         mute,
-        use_gpu,
         gpu_id_list,
     )
 

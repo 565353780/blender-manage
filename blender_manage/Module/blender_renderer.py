@@ -13,12 +13,10 @@ class BlenderRenderer(object):
         workers_per_gpu: int = 8,
         is_background: bool = True,
         mute: bool = False,
-        use_gpu: bool = False,
         gpu_id_list: list = [0],
     ) -> None:
         self.is_background = is_background
         self.mute = mute
-        self.use_gpu = use_gpu
 
         self.worker_manager = WorkerManager(
             workers_per_cpu,
@@ -74,7 +72,6 @@ class BlenderRenderer(object):
         python_args_dict = {
             'shape_file_path': shape_file_path,
             'save_image_file_path': save_image_file_path,
-            'use_gpu': self.use_gpu,
             'overwrite': overwrite,
         }
 
@@ -98,7 +95,6 @@ class BlenderRenderer(object):
             'shape_file_path': shape_file_path,
             'render_image_num': render_image_num,
             'save_image_folder_path': save_image_folder_path,
-            'use_gpu': self.use_gpu,
             'overwrite': overwrite,
         }
 
@@ -122,7 +118,6 @@ class BlenderRenderer(object):
             'shape_file_path': shape_file_path,
             'render_image_num': render_image_num,
             'save_image_folder_path': save_image_folder_path,
-            'use_gpu': self.use_gpu,
             'overwrite': overwrite,
         }
 

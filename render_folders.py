@@ -10,20 +10,20 @@ if __name__ == "__main__":
     save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_render/fixed/XiaomiSU7/'
     shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/adaptive/'
     save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_render/adaptive/'
-    workers_per_device = 8
+    workers_per_cpu = 4
+    workers_per_gpu = 8
     is_background = True
     mute = True
-    use_gpu = True
     gpu_id_list = [0]
     overwrite = False
 
     keep_alive = False
 
     blender_renderer = BlenderRenderer(
-        workers_per_device,
+        workers_per_cpu,
+        workers_per_gpu,
         is_background,
         mute,
-        use_gpu,
         gpu_id_list,
     )
 

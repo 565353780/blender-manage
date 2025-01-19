@@ -66,8 +66,7 @@ def getRunCMD(
 
     if gpu_id >= 0:
         command += 'export CUDA_VISIBLE_DEVICES=' + str(gpu_id) + ' && '
-    else:
-        python_args_dict['use_gpu'] = False
+        python_args_dict['use_gpu'] = True
 
     command += BLENDER_BIN
 
