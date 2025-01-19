@@ -62,7 +62,13 @@ def getRunCMD(
         print('\t python_file_path:', python_file_path)
         return None
 
-    command = 'export CUDA_VISIBLE_DEVICES=' + str(gpu_id) + ' && '
+    command = ''
+
+    if gpu_id >= 0:
+        command += 'export CUDA_VISIBLE_DEVICES=' + str(gpu_id) + ' && '
+    else:
+        python_args_dict['use_gpu'] = False
+
     command += BLENDER_BIN
 
     if is_background:

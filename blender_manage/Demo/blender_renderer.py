@@ -5,7 +5,8 @@ from blender_manage.Module.blender_renderer import BlenderRenderer
 def demo():
     shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/adaptive/'
     save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_render/adaptive/'
-    workers_per_device = 8
+    workers_per_cpu = 8
+    workers_per_gpu = 8
     is_background = True
     mute = True
     use_gpu = True
@@ -15,7 +16,8 @@ def demo():
     keep_alive = False
 
     blender_renderer = BlenderRenderer(
-        workers_per_device,
+        workers_per_cpu,
+        workers_per_gpu,
         is_background,
         mute,
         use_gpu,

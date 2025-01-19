@@ -7,11 +7,13 @@ from blender_manage.Method.run import runBlender
 class WorkerManager(object):
     def __init__(
         self,
-        workers_per_device: int = 1,
+        workers_per_cpu: int = 1,
+        workers_per_gpu: int = 1,
         gpu_id_list: list = [0],
     ) -> None:
+        self.workers_per_cpu = workers_per_cpu
+        self.workers_per_gpu = workers_per_gpu
         self.gpu_id_list = gpu_id_list
-        self.workers_per_device = workers_per_device
 
         self.queue = JoinableQueue()
         self.total_task_num = 0
@@ -32,7 +34,16 @@ class WorkerManager(object):
             if item is None:
                 break
 
-            python_file_path, python_args_dict, is_background, mute = item
+            python_file_path, python_args_dict, is_background, mute, skip_func = item
+
+            if skip_func is not None:
+                if skip_func(python_args_dict):
+                    with finished_task_num.get_lock():
+                        finished_task_num.value += 1
+
+                    queue.task_done()
+
+                    continue
 
             runBlender(
                 python_file_path=python_file_path,
@@ -50,8 +61,16 @@ class WorkerManager(object):
         return True
 
     def createWorkers(self) -> bool:
+        for _ in range(self.workers_per_cpu):
+            process = Process(
+                target=self.worker,
+                args=(self.queue, self.finished_task_num, -1),
+                daemon=True
+            )
+            process.start()
+
         for gpu_id in self.gpu_id_list:
-            for _ in range(self.workers_per_device):
+            for _ in range(self.workers_per_gpu):
                 process = Process(
                     target=self.worker,
                     args=(self.queue, self.finished_task_num, gpu_id),
@@ -66,12 +85,14 @@ class WorkerManager(object):
         python_args_dict: dict,
         is_background: bool = True,
         mute: bool = False,
+        skip_func = None,
     ) -> bool:
         item = [
             python_file_path,
             python_args_dict,
             is_background,
             mute,
+            skip_func,
         ]
 
         self.queue.put(item)

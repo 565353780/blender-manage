@@ -2,13 +2,15 @@ import os
 
 from blender_manage.Config.path import GIT_ROOT_FOLDER_PATH, BLENDER_BIN
 from blender_manage.Method.io import getFolderTaskList, getFoldersTaskList
+from blender_manage.Method.skip import skip_func_renderAroundObjaverse
 from blender_manage.Module.worker_manager import WorkerManager
 
 
 class BlenderRenderer(object):
     def __init__(
         self,
-        workers_per_device: int = 1,
+        workers_per_cpu: int = 8,
+        workers_per_gpu: int = 8,
         is_background: bool = True,
         mute: bool = False,
         use_gpu: bool = False,
@@ -19,7 +21,8 @@ class BlenderRenderer(object):
         self.use_gpu = use_gpu
 
         self.worker_manager = WorkerManager(
-            workers_per_device,
+            workers_per_cpu,
+            workers_per_gpu,
             gpu_id_list,
         )
         return
@@ -32,6 +35,7 @@ class BlenderRenderer(object):
         self,
         python_file_path: str,
         python_args_dict: dict,
+        skip_func = None,
     ) -> bool:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
             print('[ERROR][BlenderRenderer::addTask]')
@@ -44,6 +48,7 @@ class BlenderRenderer(object):
             python_args_dict=python_args_dict,
             is_background=self.is_background,
             mute=self.mute,
+            skip_func=skip_func,
         ):
             print('[ERROR][BlenderRenderer::addTask]')
             print('\t addTask failed!')
@@ -62,6 +67,7 @@ class BlenderRenderer(object):
         shape_file_path: str,
         save_image_file_path: str,
         overwrite: bool = False,
+        skip_func = None,
     ) -> bool:
         python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_file.py'
 
@@ -75,6 +81,7 @@ class BlenderRenderer(object):
         return self.addTask(
             python_file_path=python_file_path,
             python_args_dict=python_args_dict,
+            skip_func=skip_func,
         )
 
     def renderAroundFile(
@@ -83,6 +90,7 @@ class BlenderRenderer(object):
         render_image_num: int,
         save_image_folder_path: str,
         overwrite: bool = False,
+        skip_func = None,
     ) -> bool:
         python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_around_file.py'
 
@@ -97,6 +105,7 @@ class BlenderRenderer(object):
         return self.addTask(
             python_file_path=python_file_path,
             python_args_dict=python_args_dict,
+            skip_func=skip_func,
         )
 
     def renderAroundObjaverseFile(
@@ -105,6 +114,7 @@ class BlenderRenderer(object):
         render_image_num: int,
         save_image_folder_path: str,
         overwrite: bool = False,
+        skip_func = None,
     ) -> bool:
         python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_around_objaverse_file.py'
 
@@ -119,6 +129,7 @@ class BlenderRenderer(object):
         return self.addTask(
             python_file_path=python_file_path,
             python_args_dict=python_args_dict,
+            skip_func=skip_func,
         )
 
     def renderFolder(
@@ -303,29 +314,12 @@ class BlenderRenderer(object):
         for folders_task in folders_task_list:
             shape_file_path, save_image_folder_path = folders_task
 
-            object_name = shape_file_path.split('/')[-1].split('.')[0]
-            new_save_image_folder_path = save_image_folder_path + object_name + '/'
-
-            start_tag_file_path = new_save_image_folder_path + 'start.txt'
-
-            if os.path.exists(start_tag_file_path):
-                continue
-
-            all_images_exist = True
-            for i in range(render_image_num):
-                save_image_file_path = new_save_image_folder_path + f"{i:03d}.jpg"
-                if not os.path.exists(save_image_file_path):
-                    all_images_exist = False
-                    break
-
-            if all_images_exist:
-                continue
-
             if not self.renderAroundObjaverseFile(
                 shape_file_path,
                 render_image_num,
                 save_image_folder_path,
                 overwrite,
+                skip_func_renderAroundObjaverse,
             ):
                 print('[ERROR][BlenderRenderer::renderAroundObjaverseFolders]')
                 print('\t renderFile failed!')

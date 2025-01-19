@@ -10,13 +10,14 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Render Objaverse Folders")
     parser.add_argument(
-        '--workers_per_device',
+        '--workers_per_cpu',
         type=int,
-        default=8,
+        default=4,
     )
     parser.add_argument(
-        '--use_gpu',
-        action='store_true',
+        '--workers_per_gpu',
+        type=int,
+        default=8,
     )
     parser.add_argument(
         '--gpu_id_list',
@@ -45,16 +46,18 @@ if __name__ == "__main__":
 
     render_image_num = 12
     save_image_folder_path = shape_folder_path.replace('/glbs/', '/render_jpg_v2/')
-    workers_per_device = args.workers_per_device
+    workers_per_cpu = args.workers_per_cpu
+    workers_per_gpu = args.workers_per_gpu
     is_background = True
     mute = True
-    use_gpu = args.use_gpu
+    use_gpu = True
     gpu_id_list = args.gpu_id_list
     overwrite = False
     keep_alive = False
 
     blender_renderer = BlenderRenderer(
-        workers_per_device,
+        workers_per_cpu,
+        workers_per_gpu,
         is_background,
         mute,
         use_gpu,
