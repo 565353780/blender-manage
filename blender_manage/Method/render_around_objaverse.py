@@ -2,6 +2,7 @@ import os
 import bpy
 import math
 
+from blender_manage.Method.path import removeFile
 from blender_manage.Method.format import isFileTypeValid
 from blender_manage.Module.blender_manager import BlenderManager
 
@@ -131,8 +132,11 @@ def renderAroundObjaverseFile(
         blender_manager.object_manager.setObjectPosition('camera_1', point)
 
         save_image_file_path = new_save_image_folder_path + f"{i:03d}.jpg"
-        if os.path.exists(save_image_file_path):
-            continue
+        if not overwrite:
+            if os.path.exists(save_image_file_path):
+                continue
+
+            removeFile(save_image_file_path)
 
         blender_manager.render_manager.renderImage(save_image_file_path, overwrite)
 

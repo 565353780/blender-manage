@@ -12,7 +12,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '--workers_per_device',
         type=int,
-        default=1,
+        default=8,
     )
     parser.add_argument(
         '--use_gpu',
