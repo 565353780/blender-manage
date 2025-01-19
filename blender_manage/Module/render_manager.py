@@ -152,6 +152,7 @@ class RenderManager(object):
 
         print('[INFO][RenderManager::renderImage]')
         print('\t start render image...')
+        bpy.context.scene.view_settings.view_transform = 'Standard'
         bpy.context.scene.render.film_transparent = True
         bpy.context.scene.render.filepath = save_image_file_path
         bpy.context.scene.render.image_settings.compression = 0
