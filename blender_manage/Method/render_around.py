@@ -73,7 +73,7 @@ def renderAroundFile(
     if 'LN3Diff' in shape_file_path:
         blender_manager.object_manager.setObjectRotationEuler(object_name, [180, 0, 0])
 
-    blender_manager.object_manager.normalizeAllObjects()
+    # blender_manager.object_manager.normalizeAllObjects()
 
     blender_manager.object_manager.addEmptyObject('Empty', collection_name)
     cam_constraint.target = bpy.data.objects['Empty']
