@@ -4,7 +4,6 @@ from blender_manage.Config.path import GIT_ROOT_FOLDER_PATH, BLENDER_BIN
 from blender_manage.Method.format import isFileTypeValid
 from blender_manage.Method.io import getFolderTaskList, getFoldersTaskList
 from blender_manage.Method.skip import skip_func_renderAroundObjaverse
-from blender_manage.Method.render import renderFile
 from blender_manage.Module.worker_manager import WorkerManager
 
 
@@ -62,16 +61,39 @@ class BlenderRenderer(object):
     def waitWorkers(self) -> bool:
         return self.worker_manager.waitWorkers()
 
+    def renderFile(
+        self,
+        shape_file_path: str,
+        save_image_file_path: str,
+        overwrite: bool = False,
+        early_stop: bool = False,
+        skip_func = None,
+    ) -> bool:
+        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_file.py'
+
+        python_args_dict = {
+            'shape_file_path': shape_file_path,
+            'save_image_file_path': save_image_file_path,
+            'overwrite': overwrite,
+            'early_stop': early_stop,
+        }
+
+        return self.addTask(
+            python_file_path=python_file_path,
+            python_args_dict=python_args_dict,
+            skip_func=skip_func,
+        )
+
     def checkFilePose(
         self,
         shape_file_path: str,
     ) -> bool:
-        renderFile(
+        self.renderFile(
             shape_file_path,
-            save_image_file_basepath='',
-            use_gpu=True,
+            save_image_file_path='None',
             overwrite=False,
             early_stop=True,
+            skip_func=None,
         )
         return True
 
@@ -97,33 +119,13 @@ class BlenderRenderer(object):
                 break
         return True
 
-    def renderFile(
-        self,
-        shape_file_path: str,
-        save_image_file_path: str,
-        overwrite: bool = False,
-        skip_func = None,
-    ) -> bool:
-        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_file.py'
-
-        python_args_dict = {
-            'shape_file_path': shape_file_path,
-            'save_image_file_path': save_image_file_path,
-            'overwrite': overwrite,
-        }
-
-        return self.addTask(
-            python_file_path=python_file_path,
-            python_args_dict=python_args_dict,
-            skip_func=skip_func,
-        )
-
     def renderAroundFile(
         self,
         shape_file_path: str,
         render_image_num: int,
         save_image_folder_path: str,
         overwrite: bool = False,
+        early_stop: bool = False,
         skip_func = None,
     ) -> bool:
         python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_around_file.py'
@@ -133,6 +135,7 @@ class BlenderRenderer(object):
             'render_image_num': render_image_num,
             'save_image_folder_path': save_image_folder_path,
             'overwrite': overwrite,
+            'early_stop': early_stop,
         }
 
         return self.addTask(
@@ -147,6 +150,7 @@ class BlenderRenderer(object):
         render_image_num: int,
         save_image_folder_path: str,
         overwrite: bool = False,
+        early_stop: bool = False,
         skip_func = None,
     ) -> bool:
         python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_around_objaverse_file.py'
@@ -156,6 +160,7 @@ class BlenderRenderer(object):
             'render_image_num': render_image_num,
             'save_image_folder_path': save_image_folder_path,
             'overwrite': overwrite,
+            'early_stop': early_stop,
         }
 
         return self.addTask(
@@ -351,7 +356,7 @@ class BlenderRenderer(object):
                 render_image_num,
                 save_image_folder_path,
                 overwrite,
-                skip_func_renderAroundObjaverse,
+                skip_func=skip_func_renderAroundObjaverse,
             ):
                 print('[ERROR][BlenderRenderer::renderAroundObjaverseFolders]')
                 print('\t renderFile failed!')

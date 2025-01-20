@@ -31,6 +31,10 @@ if __name__ == "__main__":
         "--overwrite",
         action='store_true',
     )
+    parser.add_argument(
+        "--early_stop",
+        action='store_true',
+    )
 
     argv = sys.argv[sys.argv.index("--") + 1 :]
     args = parser.parse_args(argv)
@@ -40,4 +44,6 @@ if __name__ == "__main__":
         args.render_image_num,
         args.save_image_folder_path,
         args.use_gpu,
-        args.overwrite)
+        args.overwrite,
+        args.early_stop,
+    )

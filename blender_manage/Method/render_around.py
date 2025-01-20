@@ -11,6 +11,7 @@ def renderAroundFile(
     save_image_folder_path: str,
     use_gpu: bool = False,
     overwrite: bool = False,
+    early_stop: bool = False,
 ) -> bool:
     camera_dist = 1.5
 
@@ -98,6 +99,10 @@ def renderAroundFile(
         save_image_file_path = save_image_folder_path + object_name + f"/{i:03d}.jpg"
         if os.path.exists(save_image_file_path):
             continue
+
+        if early_stop:
+            blender_manager.keepOpen()
+            return True
 
         blender_manager.render_manager.renderImage(
             save_image_file_path,

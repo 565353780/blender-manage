@@ -142,8 +142,8 @@ class RenderManager(object):
             print('\t save_image_file_path:', save_image_file_path)
             return False
 
-        if not overwrite:
-            if os.path.exists(save_image_file_path):
+        if os.path.exists(save_image_file_path):
+            if not overwrite:
                 return True
 
             removeFile(save_image_file_path)

@@ -12,6 +12,7 @@ def renderAroundObjaverseFile(
     save_image_folder_path: str,
     use_gpu: bool = False,
     overwrite: bool = False,
+    early_stop: bool = False,
 ) -> bool:
     object_name = shape_file_path.split('/')[-1].split('.')[0]
 
@@ -132,11 +133,15 @@ def renderAroundObjaverseFile(
         blender_manager.object_manager.setObjectPosition('camera_1', point)
 
         save_image_file_path = new_save_image_folder_path + f"{i:03d}.jpg"
-        if not overwrite:
-            if os.path.exists(save_image_file_path):
+        if os.path.exists(save_image_file_path):
+            if not overwrite:
                 continue
 
             removeFile(save_image_file_path)
+
+        if early_stop:
+            blender_manager.keepOpen()
+            return True
 
         blender_manager.render_manager.renderImage(
             save_image_file_path,
