@@ -1,3 +1,4 @@
+import bpy
 from typing import Union
 
 from blender_manage.Module.light_manager import LightManager
@@ -163,3 +164,9 @@ class BlenderManager(object):
     def removeCollection(self,
                          collection_name: str) -> bool:
         return self.object_manager.removeCollection(collection_name)
+
+    def keepOpen(self) -> bool:
+        def keep_open(dummy):
+            pass
+        bpy.app.handlers.load_post.append(keep_open)
+        return True

@@ -1,8 +1,10 @@
 import os
 
 from blender_manage.Config.path import GIT_ROOT_FOLDER_PATH, BLENDER_BIN
+from blender_manage.Method.format import isFileTypeValid
 from blender_manage.Method.io import getFolderTaskList, getFoldersTaskList
 from blender_manage.Method.skip import skip_func_renderAroundObjaverse
+from blender_manage.Method.render import renderFile
 from blender_manage.Module.worker_manager import WorkerManager
 
 
@@ -59,6 +61,41 @@ class BlenderRenderer(object):
 
     def waitWorkers(self) -> bool:
         return self.worker_manager.waitWorkers()
+
+    def checkFilePose(
+        self,
+        shape_file_path: str,
+    ) -> bool:
+        renderFile(
+            shape_file_path,
+            save_image_file_basepath='',
+            use_gpu=True,
+            overwrite=False,
+            early_stop=True,
+        )
+        return True
+
+    def checkFolderPose(
+        self,
+        shape_folder_path: str,
+    ) -> bool:
+        loaded_object = False
+
+        for root, _, files in os.walk(shape_folder_path):
+            for file in files:
+                if not isFileTypeValid(file):
+                    continue
+
+                shape_file_path = root + '/' + file
+
+                self.checkFilePose(shape_file_path)
+
+                loaded_object = True
+                break
+
+            if loaded_object:
+                break
+        return True
 
     def renderFile(
         self,

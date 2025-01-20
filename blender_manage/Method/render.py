@@ -59,7 +59,7 @@ def renderFile(
         shape_file_path=shape_file_path,
         name=object_name,
         collection_name=collection_name,
-        # rotation_euler=[0, 0, 0],
+        #rotation_euler=[-90, 0, 90],
     )
 
     if 'LN3Diff' in shape_file_path:
@@ -76,6 +76,7 @@ def renderFile(
     blender_manager.setObjectRenderable(object_name, True)
 
     if early_stop:
+        blender_manager.keepOpen()
         return True
 
     if save_image_file_basepath[-1] == '/':

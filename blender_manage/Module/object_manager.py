@@ -1,7 +1,7 @@
 import os
 import bpy
 import numpy as np
-# import open3d as o3d
+import open3d as o3d
 from typing import Union
 
 from blender_manage.Method.path import removeFile, createFileFolder
