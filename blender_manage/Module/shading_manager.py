@@ -18,21 +18,21 @@ class ShadingManager(ObjectManager):
         self.object_manager = ObjectManager()
         return
 
-    def getMaterialList(self):
+    def getMaterialList(self) -> dict:
         return bpy.data.materials
 
-    def getMaterialNameList(self):
-        return bpy.data.materials.keys()
+    def getMaterialNameList(self) -> list:
+        return list(bpy.data.materials.keys())
 
-    def setCollectionNameList(self, collection_name_list):
+    def setCollectionNameList(self, collection_name_list) -> bool:
         self.collection_name_list = collection_name_list
         return True
 
-    def setColorMapDict(self, color_map_dict):
+    def setColorMapDict(self, color_map_dict) -> bool:
         self.color_map_dict = color_map_dict
         return True
 
-    def createColorMaterials(self, color_map_name='morandi'):
+    def createColorMaterials(self, color_map_name='morandi') -> bool:
         assert color_map_name in self.color_map_dict.keys()
         color_map = COLOR_MAP_DICT[color_map_name]
 
@@ -64,6 +64,43 @@ class ShadingManager(ObjectManager):
                     return False
         return True
 
+    def useObjectColor(self, object_name: str, col_channel: str = 'Col') -> bool:
+        obj = self.object_manager.getObject(object_name)
+        if obj is None:
+            return False
+
+        print('start check object type:', obj.type)
+        if obj.type != 'MESH':
+            return False
+
+        if col_channel not in obj.data.color_attributes:
+            return False
+
+        col_attribute = obj.data.color_attributes['Col']
+
+        mat = bpy.data.materials.new(name="ColoredMaterial")
+        mat.use_nodes = True
+        nodes = mat.node_tree.nodes
+        links = mat.node_tree.links
+
+        for node in nodes:
+            nodes.remove(node)
+
+        bsdf = nodes.new(type='ShaderNodeBsdfPrincipled')
+        output = nodes.new(type='ShaderNodeOutputMaterial')
+        attr = nodes.new(type='ShaderNodeAttribute')
+        attr.attribute_name = col_channel
+
+        links.new(attr.outputs[0], bsdf.inputs['Base Color'])
+        links.new(bsdf.outputs[0], output.inputs['Surface'])
+
+        if obj.data.materials:
+            obj.data.materials[0] = mat
+        else:
+            obj.data.materials.append(mat)
+
+        return True
+
     def bindColorMaterialsForObject(self, object_name: str, color_map_name='morandi'):
         if not self.object_manager.isObjectExist(object_name):
             return False
@@ -93,7 +130,7 @@ class ShadingManager(ObjectManager):
                 continue
 
             for collection_object_name in collection_object_name_list:
-                self.bindColorMaterialsForObject(collection_object_name, color_map)
+                self.bindColorMaterialsForObject(collection_object_name, color_map_name)
         return True
 
     def paintColorMapForObject(self, object_name: str, color_map_name='morandi'):

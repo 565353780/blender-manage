@@ -59,16 +59,17 @@ def renderFile(
         shape_file_path=shape_file_path,
         name=object_name,
         collection_name=collection_name,
-        #rotation_euler=[-90, 0, 90],
+        rotation_euler=[-94, 26, 126],
     )
 
     if 'LN3Diff' in shape_file_path:
         blender_manager.object_manager.setObjectRotationEuler(object_name, [180, 0, 0])
 
-    blender_manager.shading_manager.paintColorMapForObject(object_name, 'pcd')
+    if not blender_manager.shading_manager.useObjectColor(object_name):
+        blender_manager.shading_manager.paintColorMapForObject(object_name, 'pcd')
 
-    if 'pcd' in object_name:
-        blender_manager.pointcloud_manager.createColor(object_name, 0.004, 'pcd_0', object_name)
+        if 'pcd' in object_name:
+            blender_manager.pointcloud_manager.createColor(object_name, 0.004, 'pcd_0', object_name)
 
     blender_manager.setCollectionVisible(collection_name, False)
     blender_manager.setCollectionRenderable(collection_name, False)

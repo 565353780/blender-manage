@@ -36,7 +36,7 @@ def smart_uv_project(obj_file_path: str,
 
     object_manager.loadObjectFile(obj_file_path, object_name, collection_name)
 
-    obj = object_manager.getObjectList()[object_name]
+    obj = object_manager.getObject(object_name)
 
     bpy.context.view_layer.objects.active = obj
     bpy.ops.object.mode_set(mode='EDIT')

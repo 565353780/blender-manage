@@ -89,11 +89,17 @@ class ObjectManager(object):
             bpy.data.collections[collection_name].objects.link(obj)
         return True
 
-    def getObjectList(self):
+    def getObjects(self) -> dict:
         return bpy.data.objects
 
-    def getObjectNameList(self):
-        return bpy.data.objects.keys()
+    def getObject(self, object_name: str):
+        if not self.isObjectExist(object_name):
+            return None
+
+        return self.getObjects()[object_name]
+
+    def getObjectNameList(self) -> list:
+        return list(bpy.data.objects.keys())
 
     def createNewCollection(self, collection_name: str) -> bool:
         if self.isCollectionExist(collection_name):
@@ -103,11 +109,11 @@ class ObjectManager(object):
         bpy.context.scene.collection.children.link(collection)
         return True
 
-    def getCollectionNameList(self):
-        return bpy.data.collections.keys()
-
-    def getCollectionList(self):
+    def getCollections(self) -> dict:
         return bpy.data.collections
+
+    def getCollectionNameList(self) -> list:
+        return list(bpy.data.collections.keys())
 
     def getCollectionObjectList(self, collection_name) -> dict:
         collection_name_list = self.getCollectionNameList()
@@ -212,7 +218,7 @@ class ObjectManager(object):
         return True
 
     def normalizeAllObjects(self) -> bool:
-        if len(list(self.getObjectNameList())) == 0:
+        if len(self.getObjectNameList()) == 0:
             return True
 
         bbox_min, bbox_max = scene_bbox()

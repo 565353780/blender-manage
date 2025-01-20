@@ -66,10 +66,11 @@ def renderAroundFile(
 
     blender_manager.loadObject(shape_file_path, object_name, collection_name)
 
-    blender_manager.shading_manager.paintColorMapForObject(object_name, 'pcd')
+    if not blender_manager.shading_manager.useObjectColor(object_name):
+        blender_manager.shading_manager.paintColorMapForObject(object_name, 'pcd')
 
-    if 'pcd' in object_name:
-        blender_manager.pointcloud_manager.createColor(object_name, 0.004, 'pcd_0', object_name)
+        if 'pcd' in object_name:
+            blender_manager.pointcloud_manager.createColor(object_name, 0.004, 'pcd_0', object_name)
 
     if 'LN3Diff' in shape_file_path:
         blender_manager.object_manager.setObjectRotationEuler(object_name, [180, 0, 0])
