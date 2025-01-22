@@ -185,7 +185,7 @@ class ObjectManager(object):
             obj.rotation_euler[i] = object_rotation_euler[i] * np.pi / 180.0
         return True
 
-    def normalizeObject(self, object_name: str) -> bool:
+    def normalizeObject(self, object_name: str, max_length: float = 1.0) -> bool:
         if not self.isObjectExist(object_name):
             return True
 
@@ -193,16 +193,15 @@ class ObjectManager(object):
 
         bbox_min, bbox_max = scene_bbox(obj)
 
-        scale = 1.0 / max(bbox_max - bbox_min)
+        scale = max_length / max(bbox_max - bbox_min)
 
         obj.scale = obj.scale * scale
         bpy.context.view_layer.update()
 
         bbox_min, bbox_max = scene_bbox()
-        offset = -(bbox_min + bbox_max) / 2.0
+        offset = -0.5 * (bbox_min + bbox_max)
 
         obj.matrix_world.translation += offset
-
         return True
 
     def normalizeCollection(self, collection_name: str) -> bool:
@@ -226,13 +225,13 @@ class ObjectManager(object):
 
         return True
 
-    def normalizeAllObjects(self) -> bool:
+    def normalizeAllObjects(self, max_length: float = 1.0) -> bool:
         if len(self.getObjectNameList()) == 0:
             return True
 
         bbox_min, bbox_max = scene_bbox()
 
-        scale = 1.0 / max(bbox_max - bbox_min)
+        scale = max_length / max(bbox_max - bbox_min)
         for obj in bpy.context.scene.objects.values():
             if obj.parent:
                 continue
@@ -240,13 +239,12 @@ class ObjectManager(object):
         bpy.context.view_layer.update()
 
         bbox_min, bbox_max = scene_bbox()
-        offset = -(bbox_min + bbox_max) / 2.0
+        offset = - 0.5 * (bbox_min + bbox_max)
 
         for obj in bpy.context.scene.objects.values():
             if obj.parent:
                 continue
             obj.matrix_world.translation += offset
-
         return True
 
     def removeObject(self, object_name: str, clear_data: bool = True) -> bool:

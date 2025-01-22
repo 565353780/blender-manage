@@ -61,6 +61,8 @@ def checkFilePose(
         #rotation_euler=[90, 0, 148], # Washer
     )
 
+    blender_manager.object_manager.normalizeObject(object_name)
+
     if 'LN3Diff' in shape_file_path:
         blender_manager.object_manager.setObjectRotationEuler(object_name, [180, 0, 0])
 
@@ -69,6 +71,10 @@ def checkFilePose(
 
         if 'pcd' in object_name:
             blender_manager.pointcloud_manager.createColor(object_name, 0.004, 'pcd_0', object_name)
+
+    #FIXME: to force set color for compare with other methods only
+    # user can remove this line to auto load object colors
+    blender_manager.shading_manager.paintColorMapForObject(object_name, 'pcd')
 
     # blender_manager.setCollectionVisible(collection_name, False)
     # blender_manager.setCollectionRenderable(collection_name, False)
