@@ -153,7 +153,7 @@ class RenderManager(object):
         overwrite: bool = False,
         background_color: list = [255, 255, 255],
     ) -> bool:
-        save_image_file_format = save_image_file_path.split('.')[-1]
+        save_image_file_type = save_image_file_path.split('.')[-1]
 
         if not self.setRenderSettings(save_image_file_type):
             print('[ERROR][RenderManager::renderImage]')
