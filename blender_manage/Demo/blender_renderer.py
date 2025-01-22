@@ -7,7 +7,7 @@ def demo():
 
     shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/adaptive/'
     save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_render/adaptive/'
-    workers_per_cpu = 8
+    workers_per_cpu = 4
     workers_per_gpu = 8
     is_background = True
     mute = True

@@ -6,6 +6,8 @@ if __name__ == '__main__':
 
     shape_file_path = '/home/chli/chLi/Results/ma-sh/output/fit/fixed/bunny/anchor-200/pcd/400_train_pcd.ply'
     shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_error_mesh/'
+    shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/clip/XiaomiSU7/anc-1500/'
+    shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_error_mesh/RobotArm/'
 
     blender_renderer = BlenderRenderer(
         workers_per_cpu=1,

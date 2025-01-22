@@ -59,7 +59,9 @@ def renderFile(
         shape_file_path=shape_file_path,
         name=object_name,
         collection_name=collection_name,
-        rotation_euler=[-94, 26, 126],
+        #rotation_euler=[-94, 26, 126], # bunny
+        #rotation_euler=[2, -2, -18], # XiaomiSU7
+        #rotation_euler=[94, 0, 108], # RobotArm
     )
 
     if 'LN3Diff' in shape_file_path:

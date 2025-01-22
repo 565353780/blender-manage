@@ -6,20 +6,24 @@ from blender_manage.Module.blender_renderer import BlenderRenderer
 if __name__ == "__main__":
     assert BlenderRenderer.isValid()
 
-    shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/fixed/bunny/anchor-50/'
-    save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_render/fixed/bunny/anchor-50/'
+    # shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/fixed/bunny/anchor-50/'
+    # save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_render/fixed/bunny/anchor-50/'
 
-    shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_error_mesh/'
-    save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_error_mesh_render/'
+    #shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_error_mesh/'
+    #save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_error_mesh_render/'
 
-    # shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/fixed/'
-    # save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_render/fixed/'
-    workers_per_cpu = 1
-    workers_per_gpu = 2
+    shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/fixed/RobotArm/'
+    save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_render/fixed/RobotArm/'
+
+    # shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/clip/'
+    # save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/render_clip/'
+
+    workers_per_cpu = 4
+    workers_per_gpu = 8
     is_background = True
     mute = True
     gpu_id_list = [0]
-    overwrite = True
+    overwrite = False
 
     keep_alive = False
 

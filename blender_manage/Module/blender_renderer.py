@@ -10,7 +10,7 @@ from blender_manage.Module.worker_manager import WorkerManager
 class BlenderRenderer(object):
     def __init__(
         self,
-        workers_per_cpu: int = 8,
+        workers_per_cpu: int = 4,
         workers_per_gpu: int = 8,
         is_background: bool = True,
         mute: bool = False,
