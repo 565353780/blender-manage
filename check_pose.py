@@ -8,6 +8,7 @@ if __name__ == '__main__':
     shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_error_mesh/'
     shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/clip/XiaomiSU7/anc-1500/'
     shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_error_mesh/RobotArm/'
+    shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/clip/Washer/'
 
     blender_renderer = BlenderRenderer(
         workers_per_cpu=1,

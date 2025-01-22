@@ -15,8 +15,8 @@ if __name__ == "__main__":
     shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/fixed/RobotArm/'
     save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_render/fixed/RobotArm/'
 
-    # shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/clip/'
-    # save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/render_clip/'
+    shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/clip/'
+    save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/render_clip/'
 
     workers_per_cpu = 4
     workers_per_gpu = 8
