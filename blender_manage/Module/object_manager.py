@@ -153,7 +153,16 @@ class ObjectManager(object):
     def selectObject(self, object_name: str, additive: bool = False) -> bool:
         if not additive:
             bpy.ops.object.select_all(action='DESELECT')
-            bpy.data.objects[object_name].select = True
+
+        obj = self.getObject(object_name)
+        if obj is None:
+            print('[ERROR][ObjectManager::selectObject]')
+            print('\t object not found!')
+            print('\t object_name:', object_name)
+            return False
+
+        obj.select_set(True)
+        bpy.context.view_layer.objects.active = obj
         return True
 
     def setObjectPosition(self, object_name: str, object_position: Union[np.ndarray, list]) -> bool:

@@ -78,14 +78,11 @@ def checkFilePose(
     camera_name_list = blender_manager.object_manager.getCollectionObjectNameList('Cameras')
     camera_name = camera_name_list[0]
 
-    camera = blender_manager.object_manager.getObject(camera_name)
+    blender_manager.camera_manager.changeToCameraView(camera_name)
 
-    camera.select_set(True)
-    bpy.context.view_layer.objects.active = camera
-    bpy.context.scene.camera = camera
-    for area in bpy.context.screen.areas:
-        if area.type == 'VIEW_3D':
-            area.spaces[0].region_3d.view_perspective = 'CAMERA'
+    blender_manager.object_manager.selectObject(object_name)
+
+    blender_manager.render_manager.setRenderSettings('png')
 
     blender_manager.keepOpen()
 

@@ -37,3 +37,18 @@ class CameraManager(object):
         assert hasattr(camera_data, camera_key)
         setattr(camera_data, camera_key, camera_value)
         return True
+
+    def changeToCameraView(self, camera_name: str) -> bool:
+        camera = self.object_manager.getObject(camera_name)
+        if camera is None:
+            print('[ERROR][CameraManager::changeToCameraView]')
+            print('\t camera not found!')
+            print('\t camera_name:', camera_name)
+            return False
+
+        bpy.context.view_layer.objects.active = camera
+        bpy.context.scene.camera = camera
+        for area in bpy.context.screen.areas:
+            if area.type == 'VIEW_3D':
+                area.spaces[0].region_3d.view_perspective = 'CAMERA'
+        return True

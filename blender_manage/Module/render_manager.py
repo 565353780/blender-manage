@@ -121,25 +121,43 @@ class RenderManager(object):
         bpy.context.scene.camera = bpy.data.objects[camera_name]
         return True
 
+    def setRenderSettings(
+        self,
+        save_image_file_type: str = 'png',
+    ) -> bool:
+        if save_image_file_type == 'png':
+            bpy.context.scene.render.image_settings.file_format = 'PNG'
+            bpy.context.scene.render.image_settings.color_mode = 'RGBA'
+            bpy.context.scene.render.image_settings.color_depth = '16'
+        elif save_image_file_type in ['jpg', 'jpeg']:
+            bpy.context.scene.render.image_settings.file_format = 'JPEG'
+            bpy.context.scene.render.image_settings.color_mode = 'RGB'
+            bpy.context.scene.render.image_settings.color_depth = '8'
+            self.setBackgroundColor(background_color)
+        else:
+            print('[ERROR][RenderManager::setRenderSettings]')
+            print('\t save image file type not valid!')
+            print('\t save_image_file_type:', save_image_file_type)
+            return False
+
+        bpy.context.scene.view_settings.view_transform = 'Standard'
+        bpy.context.scene.render.film_transparent = True
+        bpy.context.scene.render.image_settings.compression = 0
+        bpy.context.scene.render.resolution_percentage = 100
+        bpy.context.scene.render.image_settings.quality = 100
+        return True
+
     def renderImage(
         self,
         save_image_file_path: str,
         overwrite: bool = False,
         background_color: list = [255, 255, 255],
     ) -> bool:
-        if save_image_file_path.split('.')[-1] == 'png':
-            bpy.context.scene.render.image_settings.file_format = 'PNG'
-            bpy.context.scene.render.image_settings.color_mode = 'RGBA'
-            bpy.context.scene.render.image_settings.color_depth = '16'
-        elif save_image_file_path.split('.')[-1] in ['jpg', 'jpeg']:
-            bpy.context.scene.render.image_settings.file_format = 'JPEG'
-            bpy.context.scene.render.image_settings.color_mode = 'RGB'
-            bpy.context.scene.render.image_settings.color_depth = '8'
-            self.setBackgroundColor(background_color)
-        else:
+        save_image_file_format = save_image_file_path.split('.')[-1]
+
+        if not self.setRenderSettings(save_image_file_type):
             print('[ERROR][RenderManager::renderImage]')
-            print('\t save image file type not valid!')
-            print('\t save_image_file_path:', save_image_file_path)
+            print('\t setRenderSettings faild!')
             return False
 
         if os.path.exists(save_image_file_path):
@@ -152,12 +170,7 @@ class RenderManager(object):
 
         print('[INFO][RenderManager::renderImage]')
         print('\t start render image...')
-        bpy.context.scene.view_settings.view_transform = 'Standard'
-        bpy.context.scene.render.film_transparent = True
         bpy.context.scene.render.filepath = save_image_file_path
-        bpy.context.scene.render.image_settings.compression = 0
-        bpy.context.scene.render.resolution_percentage = 100
-        bpy.context.scene.render.image_settings.quality = 100
         bpy.ops.render.render(write_still=True)
         print('\t >>> [SUCCESS]')
         return True
