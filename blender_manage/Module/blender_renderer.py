@@ -61,6 +61,23 @@ class BlenderRenderer(object):
     def waitWorkers(self) -> bool:
         return self.worker_manager.waitWorkers()
 
+    def checkFilePose(
+        self,
+        shape_file_path: str,
+        skip_func = None,
+    ) -> bool:
+        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/check_file_pose.py'
+
+        python_args_dict = {
+            'shape_file_path': shape_file_path,
+        }
+
+        return self.addTask(
+            python_file_path=python_file_path,
+            python_args_dict=python_args_dict,
+            skip_func=skip_func,
+        )
+
     def renderFile(
         self,
         shape_file_path: str,
@@ -83,41 +100,6 @@ class BlenderRenderer(object):
             python_args_dict=python_args_dict,
             skip_func=skip_func,
         )
-
-    def checkFilePose(
-        self,
-        shape_file_path: str,
-    ) -> bool:
-        self.renderFile(
-            shape_file_path,
-            save_image_file_path='None',
-            overwrite=False,
-            early_stop=True,
-            skip_func=None,
-        )
-        return True
-
-    def checkFolderPose(
-        self,
-        shape_folder_path: str,
-    ) -> bool:
-        loaded_object = False
-
-        for root, _, files in os.walk(shape_folder_path):
-            for file in files:
-                if not isFileTypeValid(file):
-                    continue
-
-                shape_file_path = root + '/' + file
-
-                self.checkFilePose(shape_file_path)
-
-                loaded_object = True
-                break
-
-            if loaded_object:
-                break
-        return True
 
     def renderAroundFile(
         self,
@@ -168,6 +150,28 @@ class BlenderRenderer(object):
             python_args_dict=python_args_dict,
             skip_func=skip_func,
         )
+
+    def checkFolderPose(
+        self,
+        shape_folder_path: str,
+    ) -> bool:
+        loaded_object = False
+
+        for root, _, files in os.walk(shape_folder_path):
+            for file in files:
+                if not isFileTypeValid(file):
+                    continue
+
+                shape_file_path = root + '/' + file
+
+                self.checkFilePose(shape_file_path)
+
+                loaded_object = True
+                break
+
+            if loaded_object:
+                break
+        return True
 
     def renderFolder(
         self,
