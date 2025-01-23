@@ -36,10 +36,33 @@ def checkFilePose():
     shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250122_15:00:12/dino/000-002/dacdcecd681f47898164085ec1eb5ef3/010/iter_1/occ_smooth/sample_3_mesh.ply'
     shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250122_17:39:42/dino/000-000/1c5b59a3e74b468d875d670d8f3fe7d0/007/iter_1/occ_smooth/sample_3_mesh.ply'
     shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250122_17:39:42/dino/000-000/04c27525c52748b8a0dead78a14e2f58/011/iter_1/pcd/sample_4_pcd.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-001/5b5a102914d940099b89dd787f2a6ef8/005/iter_1/occ_smooth/sample_4_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-001/2e106aee209545f0b79eb3618ab29ed0/010/iter_1/occ_smooth/sample_4_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-001/6fb99a87667c4bd0849c641f2fdcbf30/005/iter_1/occ_smooth/sample_3_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-001/7a46167ec0534c00ab14c8d73f186618/004/iter_1/occ_smooth/sample_1_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-001/9caaa68869454b21b75e92bc12762acf/005/iter_1/occ_smooth/sample_4_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-001/19a3321b01224d20bfe06b210b74e79a/002/iter_1/occ_smooth/sample_4_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-001/457e039fa457408dbf666a60e6ba8cbc/010/iter_1/occ_smooth/sample_3_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-001/685b601b57554410b2050acbc04e226f/005/iter_1/occ_smooth/sample_2_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-001/8613078b95364c29b9d54db6d641ad27/007/iter_1/occ_smooth/sample_2_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-001/c2e195b7c1aa49c792a9051ec62ba2a2/009/iter_1/occ_smooth/sample_4_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-002/6c2662fe52584bceab560f0bd9efcf51/005/iter_1/occ_smooth/sample_4_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-002/66c065a0cf3f4fc881e00607a86b0f69/009/iter_1/occ_smooth/sample_1_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-002/357d38c4a6344c518a5e01687dbcd84b/010/iter_1/occ_smooth/sample_3_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-002/812ab586264e463dafc7072a8ab47779/010/iter_1/occ_smooth/sample_4_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-002/078912b3b27747e5bad669a82e2c02ac/007/iter_1/occ_smooth/sample_3_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-002/b00db85422d248f38bb17ae9a6af59f0/010/iter_1/occ_smooth/sample_1_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-002/b3b722d4664b474c9da13e87e0d0c598/003/iter_1/occ_smooth/sample_3_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-002/e1a2232644da48978fddf39544596f42/005/iter_1/occ_smooth/sample_1_mesh.ply'
+    shape_file_path = '/Users/fufu/Downloads/Dataset/MashDiffusion/sample/20250123_10:07:02/dino/000-002/f8af9ffc678e40c5b38908f690a555a8/005/iter_1/occ_smooth/sample_2_mesh.ply'
 
+    shape_file_path = '/Users/fufu/Downloads/0121_1/Hunyuan3D-1_compare/01/mesh_vertex_colors.obj'
 
-    shape_file_path = '/Users/fufu/Downloads/compare/compare_part/InstantMesh_compare/40/instant-mesh-large/meshes/40.obj'
     #shape_file_path = ''
+    #shape_file_path = '/Users/fufu/Downloads/bunny/anchor-50/mash/0_train_anc-50_mash.ply'
+
+
+    #shape_file_path = '/Users/fufu/Downloads/parts/02691156/a75a/sample_73_mesh.ply'
 
     blender_renderer = BlenderRenderer(
         workers_per_cpu=1,
