@@ -161,7 +161,7 @@ def renderAroundObjaverseFile(
         blender_manager.render_manager.renderImage(
             save_image_file_path,
             overwrite,
-            background_color=[0, 0, 0],
+            background_color=[255, 255, 255],
         )
 
     # blender_manager.setObjectRenderable(object_name, False)
