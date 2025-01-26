@@ -1,5 +1,4 @@
 import os
-import argparse
 from time import sleep
 
 from blender_manage.Module.blender_renderer import BlenderRenderer
@@ -7,26 +6,6 @@ from blender_manage.Module.blender_renderer import BlenderRenderer
 
 if __name__ == "__main__":
     assert BlenderRenderer.isValid()
-
-    parser = argparse.ArgumentParser(description="Render Objaverse Folders")
-    parser.add_argument(
-        '--workers_per_cpu',
-        type=int,
-        default=4,
-    )
-    parser.add_argument(
-        '--workers_per_gpu',
-        type=int,
-        default=8,
-    )
-    parser.add_argument(
-        '--gpu_id_list',
-        type=int,
-        nargs='+',
-        default=[0],
-        help="List of GPU IDs to use, e.g., --gpu_ids 0 1 2"
-    )
-    args = parser.parse_args()
 
     dataset_folder_path_list = [
         '/home/chli/chLi/Dataset/Objaverse_82K/glbs/',
@@ -44,14 +23,16 @@ if __name__ == "__main__":
         print('dataset not found!')
         exit()
 
+    save_image_folder_path = '/home/chli/chLi/Dataset/Objaverse_82K/render_jpg_v2/'
+
     render_image_num = 12
-    save_image_folder_path = shape_folder_path.replace('/glbs/', '/render_jpg_v2/')
-    workers_per_cpu = args.workers_per_cpu
-    workers_per_gpu = args.workers_per_gpu
+    workers_per_cpu = 4
+    workers_per_gpu = 8
     is_background = True
     mute = True
-    gpu_id_list = args.gpu_id_list
+    gpu_id_list = [0]
     overwrite = False
+
     keep_alive = False
 
     blender_renderer = BlenderRenderer(
