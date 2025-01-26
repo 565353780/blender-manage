@@ -1,6 +1,7 @@
 import os
 from time import sleep
 
+from blender_manage.Method.tag import clearTag
 from blender_manage.Module.blender_renderer import BlenderRenderer
 
 
@@ -23,7 +24,7 @@ if __name__ == "__main__":
         print('dataset not found!')
         exit()
 
-    save_image_folder_path = '/home/chli/chLi/Dataset/Objaverse_82K/render_jpg_v2/'
+    save_image_folder_path = '/home/chli/chLi/Dataset/Objaverse_82K/render_jpg_test/'
 
     render_image_num = 12
     workers_per_cpu = 4
@@ -34,7 +35,17 @@ if __name__ == "__main__":
     early_stop = False
     overwrite = False
 
+    clear_tag = False
+
     keep_alive = False
+
+    if clear_tag:
+        clearTag(
+            tag_folder_path=save_image_folder_path,
+            file_format='.jpg',
+            dry_run=False,
+            worker_num=os.cpu_count(),
+        )
 
     blender_renderer = BlenderRenderer(
         workers_per_cpu,
