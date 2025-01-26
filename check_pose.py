@@ -72,7 +72,11 @@ def checkFilePose():
         gpu_id_list=[0],
     )
 
-    blender_renderer.checkFilePose(shape_file_path)
+    blender_renderer.renderFile(
+        shape_file_path,
+        'None',
+        False,
+    )
 
     blender_renderer.waitWorkers()
     return True
@@ -93,12 +97,14 @@ def checkFolderPose():
         gpu_id_list=[0],
     )
 
-    blender_renderer.checkFolderPose(shape_folder_path)
+    blender_renderer.renderFile(
+        shape_folder_path,
+        'None',
+        False,
+    )
 
     blender_renderer.waitWorkers()
     return True
-
-
 
 if __name__ == '__main__':
     checkFilePose()

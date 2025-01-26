@@ -40,7 +40,7 @@ def renderFile(
         rotation_euler=[-90, 0, 0],
         energy=50,
         size=5)
-    blender_manager.setCollectionVisible('Lights', False)
+    # blender_manager.setCollectionVisible('Lights', False)
 
     blender_manager.createCamera(
         name='camera_1',
@@ -48,7 +48,7 @@ def renderFile(
         collection_name='Cameras',
         position=[-1.0581, 1.7608, 0.83803],
         rotation_euler=[65.161, 0, -148.51])
-    blender_manager.setCollectionVisible('Cameras', False)
+    # blender_manager.setCollectionVisible('Cameras', False)
 
     camera_name_list = blender_manager.object_manager.getCollectionObjectNameList('Cameras')
 
@@ -74,13 +74,27 @@ def renderFile(
         if 'pcd' in object_name:
             blender_manager.pointcloud_manager.createColor(object_name, 0.004, 'pcd_0', object_name)
 
-    blender_manager.setCollectionVisible(collection_name, False)
-    blender_manager.setCollectionRenderable(collection_name, False)
+    #FIXME: to force set color for compare with other methods only
+    # user can remove this line to auto load object colors
+    blender_manager.shading_manager.paintColorMapForObject(object_name, 'pcd')
+
+    # blender_manager.setCollectionVisible(collection_name, False)
+    # blender_manager.setCollectionRenderable(collection_name, False)
 
     blender_manager.setObjectRenderable(object_name, True)
 
     if early_stop:
+        camera_name_list = blender_manager.object_manager.getCollectionObjectNameList('Cameras')
+        camera_name = camera_name_list[0]
+
+        blender_manager.camera_manager.changeToCameraView(camera_name)
+
+        blender_manager.object_manager.selectObject(object_name)
+
+        blender_manager.render_manager.setRenderSettings('png')
+
         blender_manager.keepOpen()
+
         return True
 
     if save_image_file_basepath[-1] == '/':
@@ -93,7 +107,7 @@ def renderFile(
         background_color=[255, 255, 255],
     )
 
-    blender_manager.setObjectRenderable(object_name, False)
+    # blender_manager.setObjectRenderable(object_name, False)
 
     # blender_manager.removeCollection(collection_name)
     return True

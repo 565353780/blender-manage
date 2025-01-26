@@ -93,7 +93,7 @@ def renderAroundObjaverseFile(
         rotation_euler=[0, -90, 0],
         energy=3000,
         size=100)
-    blender_manager.setCollectionVisible('Lights', False)
+    # blender_manager.setCollectionVisible('Lights', False)
 
     blender_manager.createCamera(
         name='camera_1',
@@ -105,7 +105,7 @@ def renderAroundObjaverseFile(
     blender_manager.camera_manager.setCameraData('camera_1', 'lens', 35)
     blender_manager.camera_manager.setCameraData('camera_1', 'sensor_width', 32)
 
-    blender_manager.setCollectionVisible('Cameras', False)
+    # blender_manager.setCollectionVisible('Cameras', False)
 
     cam = bpy.context.scene.objects['camera_1']
     cam_constraint = cam.constraints.new(type="TRACK_TO")
@@ -114,7 +114,12 @@ def renderAroundObjaverseFile(
 
     collection_name = 'shapes'
 
-    blender_manager.loadObject(shape_file_path, object_name, collection_name)
+    blender_manager.loadObject(
+        shape_file_path,
+        object_name,
+        collection_name,
+    )
+
     blender_manager.object_manager.normalizeAllObjects()
 
     blender_manager.object_manager.addEmptyObject('Empty', collection_name)
@@ -140,14 +145,26 @@ def renderAroundObjaverseFile(
             removeFile(save_image_file_path)
 
         if early_stop:
+            camera_name_list = blender_manager.object_manager.getCollectionObjectNameList('Cameras')
+            camera_name = camera_name_list[0]
+
+            blender_manager.camera_manager.changeToCameraView(camera_name)
+
+            blender_manager.object_manager.selectObject(object_name)
+
+            blender_manager.render_manager.setRenderSettings('png')
+
             blender_manager.keepOpen()
-            return True
+
+            continue
 
         blender_manager.render_manager.renderImage(
             save_image_file_path,
             overwrite,
             background_color=[0, 0, 0],
         )
+
+    # blender_manager.setObjectRenderable(object_name, False)
 
     # blender_manager.removeCollection(collection_name)
     return True

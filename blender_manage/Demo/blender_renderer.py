@@ -12,6 +12,7 @@ def demo():
     is_background = True
     mute = True
     gpu_id_list = [0]
+    early_stop = False
     overwrite = False
 
     keep_alive = False
@@ -22,6 +23,7 @@ def demo():
         is_background,
         mute,
         gpu_id_list,
+        early_stop,
     )
 
     while True:

@@ -46,7 +46,7 @@ def renderAroundFile(
         rotation_euler=[-90, 0, 0],
         energy=50,
         size=5)
-    blender_manager.setCollectionVisible('Lights', False)
+    # blender_manager.setCollectionVisible('Lights', False)
 
     blender_manager.createCamera(
         name='camera_1',
@@ -54,7 +54,7 @@ def renderAroundFile(
         collection_name='Cameras',
         position=[0, 1.2, 0],
         rotation_euler=[0, 0, 0])
-    blender_manager.setCollectionVisible('Cameras', False)
+    # blender_manager.setCollectionVisible('Cameras', False)
 
     cam = bpy.context.scene.objects['camera_1']
     cam_constraint = cam.constraints.new(type="TRACK_TO")
@@ -64,7 +64,17 @@ def renderAroundFile(
     collection_name = 'shapes'
     object_name = shape_file_path.split('/')[-1].split('.')[0]
 
-    blender_manager.loadObject(shape_file_path, object_name, collection_name)
+    blender_manager.loadObject(
+        shape_file_path=shape_file_path,
+        name=object_name,
+        collection_name=collection_name,
+        #rotation_euler=[-94, 26, 126], # bunny
+        #rotation_euler=[2, -2, -18], # XiaomiSU7
+        #rotation_euler=[94, 0, 108], # RobotArm
+        #rotation_euler=[90, 0, 148], # Washer
+    )
+
+    blender_manager.object_manager.normalizeObject(object_name)
 
     if not blender_manager.shading_manager.useObjectColor(object_name):
         blender_manager.shading_manager.paintColorMapForObject(object_name, 'pcd')
@@ -72,18 +82,17 @@ def renderAroundFile(
         if 'pcd' in object_name:
             blender_manager.pointcloud_manager.createColor(object_name, 0.004, 'pcd_0', object_name)
 
-    if 'LN3Diff' in shape_file_path:
-        blender_manager.object_manager.setObjectRotationEuler(object_name, [180, 0, 0])
+    #FIXME: to force set color for compare with other methods only
+    # user can remove this line to auto load object colors
+    blender_manager.shading_manager.paintColorMapForObject(object_name, 'pcd')
 
-    # blender_manager.object_manager.normalizeAllObjects()
+    # blender_manager.setCollectionVisible(collection_name, False)
+    # blender_manager.setCollectionRenderable(collection_name, False)
+
+    blender_manager.setObjectRenderable(object_name, True)
 
     blender_manager.object_manager.addEmptyObject('Empty', collection_name)
     cam_constraint.target = bpy.data.objects['Empty']
-
-    blender_manager.setCollectionVisible(collection_name, False)
-    blender_manager.setCollectionRenderable(collection_name, False)
-
-    blender_manager.setObjectRenderable(object_name, True)
 
     blender_manager.render_manager.activateCamera('camera_1')
 
@@ -102,8 +111,18 @@ def renderAroundFile(
             continue
 
         if early_stop:
+            camera_name_list = blender_manager.object_manager.getCollectionObjectNameList('Cameras')
+            camera_name = camera_name_list[0]
+
+            blender_manager.camera_manager.changeToCameraView(camera_name)
+
+            blender_manager.object_manager.selectObject(object_name)
+
+            blender_manager.render_manager.setRenderSettings('png')
+
             blender_manager.keepOpen()
-            return True
+
+            continue
 
         blender_manager.render_manager.renderImage(
             save_image_file_path,
@@ -111,7 +130,7 @@ def renderAroundFile(
             background_color=[255, 255, 255],
         )
 
-    blender_manager.setObjectRenderable(object_name, False)
+    # blender_manager.setObjectRenderable(object_name, False)
 
     # blender_manager.removeCollection(collection_name)
     return True
