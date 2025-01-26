@@ -124,6 +124,7 @@ class RenderManager(object):
     def setRenderSettings(
         self,
         save_image_file_type: str = 'png',
+        background_color: list = [255, 255, 255],
     ) -> bool:
         if save_image_file_type == 'png':
             bpy.context.scene.render.image_settings.file_format = 'PNG'
@@ -155,7 +156,10 @@ class RenderManager(object):
     ) -> bool:
         save_image_file_type = save_image_file_path.split('.')[-1]
 
-        if not self.setRenderSettings(save_image_file_type):
+        if not self.setRenderSettings(
+            save_image_file_type,
+            background_color,
+        ):
             print('[ERROR][RenderManager::renderImage]')
             print('\t setRenderSettings faild!')
             return False
