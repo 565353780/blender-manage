@@ -13,7 +13,7 @@ def renderAroundFile(
     overwrite: bool = False,
     early_stop: bool = False,
 ) -> bool:
-    camera_dist = 1.5
+    camera_dist = 2.0
 
     if not isFileTypeValid(shape_file_path):
         print('[ERROR][render::renderAroundFile]')
@@ -79,7 +79,7 @@ def renderAroundFile(
     if not blender_manager.shading_manager.useObjectColor(object_name):
         blender_manager.shading_manager.paintColorMapForObject(object_name, 'pcd')
 
-        if 'pcd' in object_name:
+        if 'pcd' in object_name or 'xyz' in object_name:
             blender_manager.pointcloud_manager.createColor(object_name, 0.004, 'pcd_0', object_name)
 
     #FIXME: to force set color for compare with other methods only

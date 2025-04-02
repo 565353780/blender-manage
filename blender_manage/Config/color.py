@@ -77,9 +77,9 @@ mash_color_list = [
 ]
 
 pcd_color_list = [
-    #'#18D2E7', # blue-green
+    '#18D2E7', # blue-green
     #'#FF8901', # orange-v1
-    '#E8872333', # orange-v2
+    #'#E8872333', # orange-v2
 ]
 
 gray_color_list = [

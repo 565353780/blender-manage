@@ -1,7 +1,6 @@
 import os
 
 from blender_manage.Config.path import GIT_ROOT_FOLDER_PATH, BLENDER_BIN
-from blender_manage.Method.format import isFileTypeValid
 from blender_manage.Method.io import getFolderTaskList, getFoldersTaskList
 from blender_manage.Method.skip import skip_func_renderAroundObjaverse
 from blender_manage.Module.worker_manager import WorkerManager

@@ -1,9 +1,11 @@
 import os
 import bpy
+import trimesh
 import numpy as np
 import open3d as o3d
 from typing import Union
 
+from blender_manage.Config.path import GIT_ROOT_FOLDER_PATH
 from blender_manage.Method.path import removeFile, createFileFolder
 from blender_manage.Method.bound import scene_bbox
 
@@ -34,11 +36,13 @@ class ObjectManager(object):
 
         object_file_type = object_file_path.split('.')[-1]
         if object_file_type == 'xyz':
-            tmp_obj_file_path = './output/tmp_xyz.obj'
+            tmp_obj_file_path = GIT_ROOT_FOLDER_PATH + 'output/tmp_xyz.obj'
             removeFile(tmp_obj_file_path)
             createFileFolder(tmp_obj_file_path)
             pcd = o3d.io.read_point_cloud(object_file_path)
-            o3d.io.write_point_cloud(tmp_obj_file_path, pcd, write_ascii=True)
+            points = np.asarray(pcd.points)
+            mesh = trimesh.Trimesh(vertices=points, faces=[])
+            mesh.export(tmp_obj_file_path, file_type="obj")
 
             return self.loadObjectFile(tmp_obj_file_path, object_name, collection_name)
 
