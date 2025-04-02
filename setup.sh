@@ -17,3 +17,5 @@ fi
 ${PYTHON_BIN} -m pip install pip --upgrade
 
 ${PYTHON_BIN} -m pip install open3d gradio-client opencv-python trimesh
+
+pip install -U tqdm opencv-python numpy moviepy imageio imageio-ffmpeg

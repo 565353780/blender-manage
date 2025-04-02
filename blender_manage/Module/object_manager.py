@@ -1,5 +1,6 @@
 import os
 import bpy
+import uuid
 import trimesh
 import numpy as np
 import open3d as o3d
@@ -36,13 +37,21 @@ class ObjectManager(object):
 
         object_file_type = object_file_path.split('.')[-1]
         if object_file_type == 'xyz':
-            tmp_obj_file_path = GIT_ROOT_FOLDER_PATH + 'output/tmp_xyz.obj'
+            tmp_obj_file_path = GIT_ROOT_FOLDER_PATH + 'output/tmp_xyz_' + object_name + '.obj'
             removeFile(tmp_obj_file_path)
             createFileFolder(tmp_obj_file_path)
             pcd = o3d.io.read_point_cloud(object_file_path)
             points = np.asarray(pcd.points)
             mesh = trimesh.Trimesh(vertices=points, faces=[])
-            mesh.export(tmp_obj_file_path, file_type="obj")
+
+            tmp_obj_file_basepath = tmp_obj_file_path[:-4] + '_'
+            while True:
+                tmp_obj_file_path = tmp_obj_file_basepath + str(uuid.uuid4()) + '.obj'
+                if os.path.exists(tmp_obj_file_path):
+                    continue
+
+                mesh.export(tmp_obj_file_path, file_type="obj")
+                break
 
             return self.loadObjectFile(tmp_obj_file_path, object_name, collection_name)
 

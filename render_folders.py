@@ -18,6 +18,12 @@ if __name__ == "__main__":
     shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/clip/'
     save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/render_clip/'
 
+    shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/test/'
+    save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/render_fit_test/'
+
+    shape_folder_path = '/home/chli/chLi/Dataset/Thingi10K/mesh/'
+    save_image_folder_path = '/home/chli/chLi/Dataset/Thingi10K/mesh_render/'
+
     workers_per_cpu = 4
     workers_per_gpu = 8
     is_background = True

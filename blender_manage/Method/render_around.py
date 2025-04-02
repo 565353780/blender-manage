@@ -106,7 +106,7 @@ def renderAroundFile(
         ]
         blender_manager.object_manager.setObjectPosition('camera_1', point)
 
-        save_image_file_path = save_image_folder_path + object_name + f"/{i:03d}.jpg"
+        save_image_file_path = save_image_folder_path + object_name + f"/{i:03d}.png"
         if os.path.exists(save_image_file_path):
             continue
 
