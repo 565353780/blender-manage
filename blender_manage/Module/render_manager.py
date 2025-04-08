@@ -1,9 +1,10 @@
 import os
+from blender_manage.Method.io import isImageValid
 import bpy
 import numpy as np
 from typing import Union
 
-from blender_manage.Method.path import createFileFolder, removeFile
+from blender_manage.Method.path import createFileFolder, removeFile, renameFile
 from blender_manage.Module.object_manager import ObjectManager
 
 
@@ -154,6 +155,12 @@ class RenderManager(object):
         overwrite: bool = False,
         background_color: list = [255, 255, 255],
     ) -> bool:
+        if os.path.exists(save_image_file_path):
+            if not overwrite:
+                return True
+
+            removeFile(save_image_file_path)
+
         save_image_file_type = save_image_file_path.split('.')[-1]
 
         if not self.setRenderSettings(
@@ -164,18 +171,24 @@ class RenderManager(object):
             print('\t setRenderSettings faild!')
             return False
 
-        if os.path.exists(save_image_file_path):
-            if not overwrite:
-                return True
-
-            removeFile(save_image_file_path)
-
         createFileFolder(save_image_file_path)
+
+        tmp_save_image_file_path = save_image_file_path[:-len(save_image_file_type) - 1] + '_tmp.' + save_image_file_type
 
         print('[INFO][RenderManager::renderImage]')
         print('\t start render image...')
-        bpy.context.scene.render.filepath = save_image_file_path
+        bpy.context.scene.render.filepath = tmp_save_image_file_path
         bpy.ops.render.render(write_still=True)
+
+        renameFile(tmp_save_image_file_path, save_image_file_path)
+
+        if not isImageValid(save_image_file_path):
+            print('[ERROR][RenderManager::renderImage]')
+            print('\t isImageValid faild!')
+            print('\t save_image_file_path:', save_image_file_path)
+            removeFile(save_image_file_path)
+            return False
+
         print('\t >>> [SUCCESS]')
         return True
 

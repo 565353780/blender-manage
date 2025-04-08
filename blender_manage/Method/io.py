@@ -1,9 +1,18 @@
 import os
 from time import time
+from PIL import Image
 from typing import Union
 
 from blender_manage.Method.format import isFileTypeValid
 
+
+def isImageValid(image_file_path: str) -> bool:
+    try:
+        with Image.open(image_file_path) as img:
+            img.verify()
+        return True
+    except:
+        return False
 
 def getFolderTaskList(
     shape_folder_path: str,
