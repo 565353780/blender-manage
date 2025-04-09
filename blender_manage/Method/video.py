@@ -57,6 +57,7 @@ def toVideo(
     image_folder_path: str,
     save_video_file_path: str,
     fps: int = 30,
+    repeat_tag_list: list = [1],
     overwrite: bool = False,
 ) -> bool:
     if os.path.exists(save_video_file_path):
@@ -70,8 +71,16 @@ def toVideo(
     os.makedirs(save_video_folder_path, exist_ok=True)
 
     image_files = getSortedImageFilePathList(image_folder_path)
+    inverse_image_files = image_files[::-1]
 
-    frame = cv2.imread(image_files[0], cv2.IMREAD_UNCHANGED)
+    repeat_image_files = []
+    for repeat_tag in repeat_tag_list:
+        if repeat_tag == 1:
+            repeat_image_files += image_files
+        else:
+            repeat_image_files += inverse_image_files
+
+    frame = cv2.imread(repeat_image_files[0], cv2.IMREAD_UNCHANGED)
     if frame.dtype == np.uint16:
         frame = (frame / 256).astype('uint8')
 
@@ -85,7 +94,7 @@ def toVideo(
 
     print('[INFO][image_to_video::toVideo]')
     print('\t start convert images to video...')
-    for img_file in tqdm(image_files):
+    for img_file in tqdm(repeat_image_files):
         img = cv2.imread(img_file, cv2.IMREAD_UNCHANGED)
         if img.dtype == np.uint16:
             img = (img / 256).astype('uint8')
@@ -110,6 +119,7 @@ def toAvi(
     image_folder_path: str,
     save_video_file_path: str,
     fps: int = 30,
+    repeat_tag_list: list = [1],
     overwrite: bool = False,
 ) -> bool:
     if os.path.exists(save_video_file_path):
@@ -123,8 +133,16 @@ def toAvi(
     os.makedirs(save_video_folder_path, exist_ok=True)
 
     image_files = getSortedImageFilePathList(image_folder_path)
+    inverse_image_files = image_files[::-1]
 
-    clip = ImageSequenceClip(image_files, fps=fps)
+    repeat_image_files = []
+    for repeat_tag in repeat_tag_list:
+        if repeat_tag == 1:
+            repeat_image_files += image_files
+        else:
+            repeat_image_files += inverse_image_files
+
+    clip = ImageSequenceClip(repeat_image_files, fps=fps)
     clip.write_videofile(save_video_file_path, codec="png", fps=fps)
     return True
 
@@ -132,6 +150,7 @@ def toGif(
     image_folder_path: str,
     save_video_file_path: str,
     fps: int = 30,
+    repeat_tag_list: list = [1],
     overwrite: bool = False,
 ) -> bool:
     if os.path.exists(save_video_file_path):
@@ -145,9 +164,17 @@ def toGif(
     os.makedirs(save_video_folder_path, exist_ok=True)
 
     image_files = getSortedImageFilePathList(image_folder_path)
+    inverse_image_files = image_files[::-1]
+
+    repeat_image_files = []
+    for repeat_tag in repeat_tag_list:
+        if repeat_tag == 1:
+            repeat_image_files += image_files
+        else:
+            repeat_image_files += inverse_image_files
 
     images = []
-    for f in image_files:
+    for f in repeat_image_files:
         img = imageio.imread(f)
         images.append(img)
 
