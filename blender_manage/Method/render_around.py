@@ -1,4 +1,5 @@
 import os
+from blender_manage.Method.path import removeFile
 import bpy
 import math
 
@@ -20,6 +21,22 @@ def renderAroundFile(
         print('\t shape file not valid!')
         print('\t shape_file_path:', shape_file_path)
         return False
+
+    object_name = shape_file_path.split('/')[-1].split('.')[0]
+
+    save_image_file_path_list = []
+    for i in range(render_image_num):
+        save_image_file_path = save_image_folder_path + object_name + f"/{i:03d}.png"
+        if os.path.exists(save_image_file_path):
+            if not overwrite:
+                continue
+
+            removeFile(save_image_file_path)
+
+            save_image_file_path_list.append([i, save_image_file_path])
+
+    if len(save_image_file_path_list) == 0:
+        return True
 
     blender_manager = BlenderManager()
 
@@ -62,7 +79,6 @@ def renderAroundFile(
     cam_constraint.up_axis = "UP_Y"
 
     collection_name = 'shapes'
-    object_name = shape_file_path.split('/')[-1].split('.')[0]
 
     blender_manager.loadObject(
         shape_file_path=shape_file_path,
@@ -96,7 +112,7 @@ def renderAroundFile(
 
     blender_manager.render_manager.activateCamera('camera_1')
 
-    for i in range(render_image_num):
+    for i, save_image_file_path in save_image_file_path_list:
         theta = (i / render_image_num) * math.pi * 2
         phi = math.radians(60)
         point = [
@@ -105,10 +121,6 @@ def renderAroundFile(
             camera_dist * math.cos(phi),
         ]
         blender_manager.object_manager.setObjectPosition('camera_1', point)
-
-        save_image_file_path = save_image_folder_path + object_name + f"/{i:03d}.png"
-        if os.path.exists(save_image_file_path):
-            continue
 
         if early_stop:
             camera_name_list = blender_manager.object_manager.getCollectionObjectNameList('Cameras')

@@ -1,4 +1,6 @@
+import os
 from blender_manage.Method.format import isFileTypeValid
+from blender_manage.Method.path import removeFile
 from blender_manage.Module.blender_manager import BlenderManager
 
 
@@ -15,12 +17,23 @@ def renderFile(
         print('\t shape_file_path:', shape_file_path)
         return False
 
+    object_name = shape_file_path.split('/')[-1].split('.')[0]
+
+    if save_image_file_basepath[-1] == '/':
+        save_image_file_basepath += object_name + '.jpg'
+
+    if os.path.exists(save_image_file_basepath):
+        if not overwrite:
+            return True
+
+        removeFile(save_image_file_basepath)
+
     blender_manager = BlenderManager()
 
     blender_manager.removeAll()
 
     blender_manager.setRenderer(
-        resolution=[518, 518],
+        resolution=[1000, 1000],
         engine_name='CYCLES',
         use_gpu=use_gpu)
 
@@ -53,13 +66,12 @@ def renderFile(
     camera_name_list = blender_manager.object_manager.getCollectionObjectNameList('Cameras')
 
     collection_name = 'shapes'
-    object_name = shape_file_path.split('/')[-1].split('.')[0]
 
     blender_manager.loadObject(
         shape_file_path=shape_file_path,
         name=object_name,
         collection_name=collection_name,
-        #rotation_euler=[-94, 26, 126], # bunny
+        rotation_euler=[-94, 26, 126], # bunny
         #rotation_euler=[2, -2, -18], # XiaomiSU7
         #rotation_euler=[94, 0, 108], # RobotArm
         #rotation_euler=[90, 0, 148], # Washer
@@ -91,14 +103,11 @@ def renderFile(
 
         blender_manager.object_manager.selectObject(object_name)
 
-        blender_manager.render_manager.setRenderSettings('png')
+        blender_manager.render_manager.setRenderSettings('jpg')
 
         blender_manager.keepOpen()
 
         return True
-
-    if save_image_file_basepath[-1] == '/':
-        save_image_file_basepath += object_name + '.jpg'
 
     blender_manager.render_manager.renderImages(
         camera_name_list,

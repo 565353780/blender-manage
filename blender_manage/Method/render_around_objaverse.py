@@ -35,6 +35,20 @@ def renderAroundObjaverseFile(
         print('\t shape_file_path:', shape_file_path)
         return False
 
+    save_image_file_path_list = []
+    for i in range(render_image_num):
+        save_image_file_path = new_save_image_folder_path + f"/{i:03d}.png"
+        if os.path.exists(save_image_file_path):
+            if not overwrite:
+                continue
+
+            removeFile(save_image_file_path)
+
+            save_image_file_path_list.append([i, save_image_file_path])
+
+    if len(save_image_file_path_list) == 0:
+        return True
+
     blender_manager = BlenderManager()
 
     blender_manager.removeAll()
@@ -127,7 +141,7 @@ def renderAroundObjaverseFile(
 
     blender_manager.render_manager.activateCamera('camera_1')
 
-    for i in range(render_image_num):
+    for i, save_image_file_path in save_image_file_path_list:
         theta = (i / render_image_num) * math.pi * 2
         phi = math.radians(60)
         point = [
@@ -136,13 +150,6 @@ def renderAroundObjaverseFile(
             camera_dist * math.cos(phi),
         ]
         blender_manager.object_manager.setObjectPosition('camera_1', point)
-
-        save_image_file_path = new_save_image_folder_path + f"{i:03d}.jpg"
-        if os.path.exists(save_image_file_path):
-            if not overwrite:
-                continue
-
-            removeFile(save_image_file_path)
 
         if early_stop:
             camera_name_list = blender_manager.object_manager.getCollectionObjectNameList('Cameras')
