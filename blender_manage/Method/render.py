@@ -11,6 +11,8 @@ def renderFile(
     overwrite: bool = False,
     early_stop: bool = False,
 ) -> bool:
+    image_format = 'jpg'
+
     if not isFileTypeValid(shape_file_path):
         print('[ERROR][render::renderFile]')
         print('\t shape file not valid!')
@@ -20,7 +22,7 @@ def renderFile(
     object_name = shape_file_path.split('/')[-1].split('.')[0]
 
     if save_image_file_basepath[-1] == '/':
-        save_image_file_basepath += object_name + '.jpg'
+        save_image_file_basepath += object_name + '.' + image_format
 
     if os.path.exists(save_image_file_basepath):
         if not overwrite:
@@ -71,7 +73,7 @@ def renderFile(
         shape_file_path=shape_file_path,
         name=object_name,
         collection_name=collection_name,
-        rotation_euler=[-94, 26, 126], # bunny
+        #rotation_euler=[-94, 26, 126], # bunny
         #rotation_euler=[2, -2, -18], # XiaomiSU7
         #rotation_euler=[94, 0, 108], # RobotArm
         #rotation_euler=[90, 0, 148], # Washer
@@ -103,7 +105,7 @@ def renderFile(
 
         blender_manager.object_manager.selectObject(object_name)
 
-        blender_manager.render_manager.setRenderSettings('jpg')
+        blender_manager.render_manager.setRenderSettings(image_format)
 
         blender_manager.keepOpen()
 

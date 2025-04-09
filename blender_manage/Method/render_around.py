@@ -15,6 +15,7 @@ def renderAroundFile(
     early_stop: bool = False,
 ) -> bool:
     camera_dist = 2.0
+    image_format = 'png'
 
     if not isFileTypeValid(shape_file_path):
         print('[ERROR][render::renderAroundFile]')
@@ -26,14 +27,14 @@ def renderAroundFile(
 
     save_image_file_path_list = []
     for i in range(render_image_num):
-        save_image_file_path = save_image_folder_path + object_name + f"/{i:03d}.png"
+        save_image_file_path = save_image_folder_path + object_name + f"/{i:03d}." + image_format
         if os.path.exists(save_image_file_path):
             if not overwrite:
                 continue
 
             removeFile(save_image_file_path)
 
-            save_image_file_path_list.append([i, save_image_file_path])
+        save_image_file_path_list.append([i, save_image_file_path])
 
     if len(save_image_file_path_list) == 0:
         return True
@@ -130,7 +131,7 @@ def renderAroundFile(
 
             blender_manager.object_manager.selectObject(object_name)
 
-            blender_manager.render_manager.setRenderSettings('png')
+            blender_manager.render_manager.setRenderSettings(image_format)
 
             blender_manager.keepOpen()
 

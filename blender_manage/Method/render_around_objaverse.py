@@ -14,6 +14,8 @@ def renderAroundObjaverseFile(
     overwrite: bool = False,
     early_stop: bool = False,
 ) -> bool:
+    image_format = 'png'
+
     object_name = shape_file_path.split('/')[-1].split('.')[0]
 
     new_save_image_folder_path = save_image_folder_path + object_name + '/'
@@ -37,14 +39,14 @@ def renderAroundObjaverseFile(
 
     save_image_file_path_list = []
     for i in range(render_image_num):
-        save_image_file_path = new_save_image_folder_path + f"/{i:03d}.png"
+        save_image_file_path = new_save_image_folder_path + f"/{i:03d}." + image_format
         if os.path.exists(save_image_file_path):
             if not overwrite:
                 continue
 
             removeFile(save_image_file_path)
 
-            save_image_file_path_list.append([i, save_image_file_path])
+        save_image_file_path_list.append([i, save_image_file_path])
 
     if len(save_image_file_path_list) == 0:
         return True
@@ -159,7 +161,7 @@ def renderAroundObjaverseFile(
 
             blender_manager.object_manager.selectObject(object_name)
 
-            blender_manager.render_manager.setRenderSettings('png')
+            blender_manager.render_manager.setRenderSettings(image_format)
 
             blender_manager.keepOpen()
 

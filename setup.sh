@@ -1,4 +1,4 @@
-BLENDER_VERSION=4.3
+BLENDER_VERSION=4.4
 PYTHON_VERSION=3.11
 
 sudo apt install libxkbcommon-x11-dev -y
