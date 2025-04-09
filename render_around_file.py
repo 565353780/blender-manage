@@ -25,28 +25,6 @@ if __name__ == "__main__":
         early_stop,
     )
 
-    '''
-    blender_renderer.renderFile(
-        shape_file_path,
-        save_image_file_path,
-        overwrite,
-    )
-
-    blender_renderer.renderAroundFile(
-        shape_file_path_11,
-        60,
-        save_image_file_path_1,
-        overwrite,
-    )
-
-    blender_renderer.renderAroundFile(
-        shape_file_path_12,
-        60,
-        save_image_file_path_1,
-        overwrite,
-    )
-    '''
-
     for shape_id in shape_id_list:
         shape_file_path = data_dict[shape_id][0]
         save_image_folder_path = data_dict[shape_id][1]
