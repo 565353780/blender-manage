@@ -6,9 +6,7 @@ from blender_manage.Module.blender_renderer import BlenderRenderer
 if __name__ == "__main__":
     assert BlenderRenderer.isValid()
 
-    from custom_path import data_dict, chair_fit_shape_id_list
-
-    shape_id_list = chair_fit_shape_id_list
+    from custom_path import data_dict, s2v_gen_shape_id_list as shape_id_list
 
     shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/fixed/RobotArm/'
     save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_render/fixed/RobotArm/'
@@ -33,7 +31,7 @@ if __name__ == "__main__":
     early_stop = False
     overwrite = False
 
-    keep_alive = False
+    keep_alive = True
 
     blender_renderer = BlenderRenderer(
         workers_per_cpu,
