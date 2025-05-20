@@ -11,8 +11,14 @@ if __name__ == "__main__":
     shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit/fixed/RobotArm/'
     save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_render/fixed/RobotArm/'
 
-    shape_folder_path = '/home/chli/chLi/Dataset/Thingi10K/mesh/'
-    save_image_folder_path = '/home/chli/chLi/Dataset/Thingi10K/mesh_render/'
+    shape_folder_path = '/home/chli/chLi/Results/render/Thingi10K/46602/'
+    save_image_folder_path = '/home/chli/chLi/Results/render/Thingi10K/render/46602/'
+
+    shape_folder_path = '/home/chli/chLi/Results/render/Thingi10K/61258/'
+    save_image_folder_path = '/home/chli/chLi/Results/render/Thingi10K/render/61258/'
+
+    shape_folder_path = '/home/chli/chLi/Results/render/KITTI/'
+    save_image_folder_path = '/home/chli/chLi/Results/render/KITTI_render/'
 
     #shape_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_error_mesh/bunny/anchor-50/'
     #save_image_folder_path = '/home/chli/chLi/Results/ma-sh/output/fit_error_mesh_render/bunny/anchor-50_1000x1000/'
@@ -28,10 +34,10 @@ if __name__ == "__main__":
     is_background = True
     mute = True
     gpu_id_list = [0]
-    early_stop = False
+    early_stop = True
     overwrite = False
 
-    keep_alive = True
+    keep_alive = False
 
     blender_renderer = BlenderRenderer(
         workers_per_cpu,
@@ -41,6 +47,15 @@ if __name__ == "__main__":
         gpu_id_list,
         early_stop,
     )
+
+    blender_renderer.renderFolders(
+        shape_folder_path,
+        save_image_folder_path,
+        overwrite,
+    )
+
+    blender_renderer.waitWorkers()
+    exit()
 
     while True:
         for shape_id in shape_id_list:

@@ -1,3 +1,5 @@
+import os
+
 from blender_manage.Method.video import toVideo, toGif
 
 
@@ -17,6 +19,17 @@ def toBunnyFitErrorVideo():
         toVideo(
             '/home/chli/chLi/Results/ma-sh/output/fit_error_mesh_render/bunny/anchor-' + str(anchor_num) + '_1000x1000/mash/',
             '/home/chli/chLi/Results/ma-sh/output/video/bunny_' + str(anchor_num) + 'anc_error_1000x1000.mp4',
+            fps=90,
+            repeat_tag_list=[1],
+            overwrite=True,
+        )
+    return
+
+def toChairFitVideo():
+    for anchor_num in [10, 20, 50, 100, 200, 400]:
+        toVideo(
+            '/home/chli/chLi/Results/ma-sh/output/render/chair-' + str(anchor_num) + 'anc_1000x1000/',
+            '/home/chli/chLi/Results/ma-sh/output/video/chair-' + str(anchor_num) + 'anc_1000x1000.mp4',
             fps=90,
             repeat_tag_list=[1],
             overwrite=True,
@@ -58,8 +71,25 @@ def toThingi10KGif():
 
     return
 
+def toS2VGenVideo():
+    render_gen_folder_path = '/home/chli/chLi/Results/3DShape2VecSet/render/Gen_chair/'
+    video_gen_folder_path = '/home/chli/chLi/Results/3DShape2VecSet/video/Gen_chair/'
+    shape_id_list = os.listdir(render_gen_folder_path)
+
+    for shape_id in shape_id_list:
+        toVideo(
+            render_gen_folder_path + shape_id + '/',
+            video_gen_folder_path + shape_id + '/',
+            fps=90,
+            repeat_tag_list=[1],
+            overwrite=True,
+        )
+    return
+
 if __name__ == '__main__':
     # toBunnyFitVideo()
     # toBunnyFitErrorVideo()
+    # toChairFitVideo()
     # toCropVideo()
-    toThingi10KGif()
+    # toThingi10KGif()
+    toS2VGenVideo()
