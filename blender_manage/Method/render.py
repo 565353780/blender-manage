@@ -11,7 +11,7 @@ def renderFile(
     overwrite: bool = False,
     early_stop: bool = False,
 ) -> bool:
-    image_format = 'jpg'
+    image_format = 'png'
 
     if not isFileTypeValid(shape_file_path):
         print('[ERROR][render::renderFile]')
@@ -35,7 +35,7 @@ def renderFile(
     blender_manager.removeAll()
 
     blender_manager.setRenderer(
-        resolution=[1000, 1000],
+        resolution=[518, 518],
         engine_name='CYCLES',
         use_gpu=use_gpu)
 
@@ -77,6 +77,9 @@ def renderFile(
         #rotation_euler=[2, -2, -18], # XiaomiSU7
         #rotation_euler=[94, 0, 108], # RobotArm
         #rotation_euler=[90, 0, 148], # Washer
+        #rotation_euler=[25.208, -2.5156, -155.94], # KITTI mash
+        rotation_euler=[-18.126, -4.5996, -8.7924], # KITTI others
+        scale=[0.008, 0.008, 0.008], # KITTI
     )
 
     if 'LN3Diff' in shape_file_path:

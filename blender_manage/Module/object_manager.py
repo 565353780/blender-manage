@@ -198,6 +198,16 @@ class ObjectManager(object):
             obj.rotation_euler[i] = object_rotation_euler[i] * np.pi / 180.0
         return True
 
+    def setObjectScale(self, object_name: str, object_scale: Union[np.ndarray, list]) -> bool:
+        if not self.isObjectExist(object_name):
+            return False
+
+        obj = bpy.data.objects[object_name]
+
+        for i in range(3):
+            obj.scale[i] = object_scale[i]
+        return True
+
     def normalizeObject(self, object_name: str, max_length: float = 1.0) -> bool:
         if not self.isObjectExist(object_name):
             return True

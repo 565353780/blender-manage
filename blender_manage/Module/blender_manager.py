@@ -141,6 +141,7 @@ class BlenderManager(object):
                    collection_name: str,
                    position: Union[list, None] = None,
                    rotation_euler: Union[list, None] = None,
+                   scale: Union[list, None] = None,
                    ) -> bool:
         if not self.object_manager.loadObjectFile(shape_file_path, name, collection_name):
             print('[ERROR][BlenderManager::loadObject]')
@@ -157,6 +158,12 @@ class BlenderManager(object):
             if not self.object_manager.setObjectRotationEuler(name, rotation_euler):
                 print('[ERROR][BlenderManager::loadObject]')
                 print('\t setObjectRotationEuler failed!')
+                return False
+
+        if scale is not None:
+            if not self.object_manager.setObjectScale(name, scale):
+                print('[ERROR][BlenderManager::loadObject]')
+                print('\t setObjectScale failed!')
                 return False
 
         return True
