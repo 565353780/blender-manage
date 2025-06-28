@@ -5,11 +5,11 @@ if __name__ == "__main__":
     assert BlenderRenderer.isValid()
 
     workers_per_cpu = 1
-    workers_per_gpu = 6
+    workers_per_gpu = 0
     is_background = True
-    mute = False
+    mute = True
     gpu_id_list = [0]
-    early_stop = True
+    early_stop = False
     overwrite = False
 
     blender_renderer = BlenderRenderer(

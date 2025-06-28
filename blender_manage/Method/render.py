@@ -84,6 +84,8 @@ def renderFile(
         # rotation_euler=[25.208, -2.5156, -155.94], # KITTI mash
         # rotation_euler=[-18.126, -4.5996, -8.7924],  # KITTI others
         # scale=[0.008, 0.008, 0.008],  # KITTI
+        rotation_euler=[90, 0, 180],  # TRELLIS
+        scale=[0.8, 0.8, 0.8],  # TRELLIS
     )
 
     # blender_manager.object_manager.normalizeObject(object_name)
