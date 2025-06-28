@@ -1,7 +1,9 @@
 BLENDER_VERSION=4.4
 PYTHON_VERSION=3.11
 
-sudo apt install libxkbcommon-x11-dev -y
+if [ "$(uname)" = "Linux" ]; then
+  sudo apt install libxkbcommon-x11-dev -y
+fi
 
 PYTHON_MACOS=/Applications/Blender.app/Contents/Resources/${BLENDER_VERSION}/python/bin/python${PYTHON_VERSION}
 PYTHON_LINUX=$HOME/Install/blender/${BLENDER_VERSION}/python/bin/python${PYTHON_VERSION}

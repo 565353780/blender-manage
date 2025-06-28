@@ -4,16 +4,12 @@ from blender_manage.Module.blender_renderer import BlenderRenderer
 if __name__ == "__main__":
     assert BlenderRenderer.isValid()
 
-    from custom_path import data_dict, thingi10k_fit_shape_id_list
-
-    shape_id_list = thingi10k_fit_shape_id_list
-
     workers_per_cpu = 1
     workers_per_gpu = 6
     is_background = True
-    mute = True
+    mute = False
     gpu_id_list = [0]
-    early_stop = False
+    early_stop = True
     overwrite = False
 
     blender_renderer = BlenderRenderer(
@@ -25,37 +21,13 @@ if __name__ == "__main__":
         early_stop,
     )
 
-    '''
+    shape_file_path = "/Users/chli/chLi/Dataset/TRELLIS/mash_gen_process/000b76f2b03e44e8ab44e1a1614be0f4/20_train_pcd.ply"
+    save_image_file_path = "/Users/chli/chLi/Dataset/TRELLIS/render_mash_gen_process/000b76f2b03e44e8ab44e1a1614be0f4/20_train_pcd.png"
+
     blender_renderer.renderFile(
         shape_file_path,
         save_image_file_path,
         overwrite,
     )
-
-    blender_renderer.renderAroundFile(
-        shape_file_path_11,
-        60,
-        save_image_file_path_1,
-        overwrite,
-    )
-
-    blender_renderer.renderAroundFile(
-        shape_file_path_12,
-        60,
-        save_image_file_path_1,
-        overwrite,
-    )
-    '''
-
-    for shape_id in shape_id_list:
-        shape_file_path = data_dict[shape_id][0]
-        save_image_folder_path = data_dict[shape_id][1]
-
-        blender_renderer.renderAroundFile(
-            shape_file_path,
-            60,
-            save_image_folder_path,
-            overwrite,
-        )
 
     blender_renderer.waitWorkers()
