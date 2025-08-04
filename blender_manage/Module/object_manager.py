@@ -15,7 +15,9 @@ class ObjectManager(object):
     def __init__(self):
         return
 
-    def addEmptyObject(self, object_name: str, collection_name: Union[str, None]=None) -> bool:
+    def addEmptyObject(
+        self, object_name: str, collection_name: Union[str, None] = None
+    ) -> bool:
         obj = bpy.data.objects.new(object_name, None)
 
         if collection_name is None:
@@ -28,25 +30,32 @@ class ObjectManager(object):
             bpy.data.collections[collection_name].objects.link(obj)
         return True
 
-    def loadObjectFile(self, object_file_path: str, object_name: str, collection_name: Union[str, None]=None) -> bool:
+    def loadObjectFile(
+        self,
+        object_file_path: str,
+        object_name: str,
+        collection_name: Union[str, None] = None,
+    ) -> bool:
         if not os.path.exists(object_file_path):
             print("[ERROR][ObjectManager::loadObjectFile]")
             print("\t object file not exist!")
             print("\t object_file_path:", object_file_path)
             return False
 
-        object_file_type = object_file_path.split('.')[-1]
-        if object_file_type == 'xyz':
-            tmp_obj_file_path = GIT_ROOT_FOLDER_PATH + 'output/tmp_xyz_' + object_name + '.obj'
+        object_file_type = object_file_path.split(".")[-1]
+        if object_file_type == "xyz":
+            tmp_obj_file_path = (
+                GIT_ROOT_FOLDER_PATH + "output/tmp_xyz_" + object_name + ".obj"
+            )
             removeFile(tmp_obj_file_path)
             createFileFolder(tmp_obj_file_path)
             pcd = o3d.io.read_point_cloud(object_file_path)
             points = np.asarray(pcd.points)
             mesh = trimesh.Trimesh(vertices=points, faces=[])
 
-            tmp_obj_file_basepath = tmp_obj_file_path[:-4] + '_'
+            tmp_obj_file_basepath = tmp_obj_file_path[:-4] + "_"
             while True:
-                tmp_obj_file_path = tmp_obj_file_basepath + str(uuid.uuid4()) + '.obj'
+                tmp_obj_file_path = tmp_obj_file_basepath + str(uuid.uuid4()) + ".obj"
                 if os.path.exists(tmp_obj_file_path):
                     continue
 
@@ -55,40 +64,44 @@ class ObjectManager(object):
 
             return self.loadObjectFile(tmp_obj_file_path, object_name, collection_name)
 
-        if object_file_type == 'ply':
+        if object_file_type == "ply":
             try:
-                bpy.ops.wm.ply_import(filepath=object_file_path, forward_axis='NEGATIVE_Z', up_axis='Y')
+                bpy.ops.wm.ply_import(
+                    filepath=object_file_path, forward_axis="NEGATIVE_Z", up_axis="Y"
+                )
             except:
-                print('[ERROR][ObjectManager::loadObjectFile]')
-                print('\t ply_import failed!')
-                print('\t object_file_path:', object_file_path)
+                print("[ERROR][ObjectManager::loadObjectFile]")
+                print("\t ply_import failed!")
+                print("\t object_file_path:", object_file_path)
                 return False
 
-        elif object_file_type == 'obj':
+        elif object_file_type == "obj":
             try:
                 bpy.ops.wm.obj_import(filepath=object_file_path)
             except:
-                print('[ERROR][ObjectManager::loadObjectFile]')
-                print('\t obj_import failed!')
-                print('\t object_file_path:', object_file_path)
+                print("[ERROR][ObjectManager::loadObjectFile]")
+                print("\t obj_import failed!")
+                print("\t object_file_path:", object_file_path)
                 return False
 
-        elif object_file_type == 'glb':
+        elif object_file_type == "glb":
             try:
-                bpy.ops.import_scene.gltf(filepath=object_file_path, merge_vertices=True)
+                bpy.ops.import_scene.gltf(
+                    filepath=object_file_path, merge_vertices=True
+                )
             except:
-                print('[ERROR][ObjectManager::loadObjectFile]')
-                print('\t gltf failed!')
-                print('\t object_file_path:', object_file_path)
+                print("[ERROR][ObjectManager::loadObjectFile]")
+                print("\t gltf failed!")
+                print("\t object_file_path:", object_file_path)
                 return False
 
-        elif object_file_type == 'fbx':
+        elif object_file_type == "fbx":
             try:
                 bpy.ops.import_scene.fbx(filepath=object_file_path)
             except:
-                print('[ERROR][ObjectManager::loadObjectFile]')
-                print('\t fbx failed!')
-                print('\t object_file_path:', object_file_path)
+                print("[ERROR][ObjectManager::loadObjectFile]")
+                print("\t fbx failed!")
+                print("\t object_file_path:", object_file_path)
                 return False
 
         obj = bpy.context.selected_objects[0]
@@ -165,20 +178,22 @@ class ObjectManager(object):
 
     def selectObject(self, object_name: str, additive: bool = False) -> bool:
         if not additive:
-            bpy.ops.object.select_all(action='DESELECT')
+            bpy.ops.object.select_all(action="DESELECT")
 
         obj = self.getObject(object_name)
         if obj is None:
-            print('[ERROR][ObjectManager::selectObject]')
-            print('\t object not found!')
-            print('\t object_name:', object_name)
+            print("[ERROR][ObjectManager::selectObject]")
+            print("\t object not found!")
+            print("\t object_name:", object_name)
             return False
 
         obj.select_set(True)
         bpy.context.view_layer.objects.active = obj
         return True
 
-    def setObjectPosition(self, object_name: str, object_position: Union[np.ndarray, list]) -> bool:
+    def setObjectPosition(
+        self, object_name: str, object_position: Union[np.ndarray, list]
+    ) -> bool:
         if not self.isObjectExist(object_name):
             return False
 
@@ -188,7 +203,9 @@ class ObjectManager(object):
             obj.location[i] = object_position[i]
         return True
 
-    def setObjectRotationEuler(self, object_name: str, object_rotation_euler: Union[np.ndarray, list]) -> bool:
+    def setObjectRotationEuler(
+        self, object_name: str, object_rotation_euler: Union[np.ndarray, list]
+    ) -> bool:
         if not self.isObjectExist(object_name):
             return False
 
@@ -198,7 +215,9 @@ class ObjectManager(object):
             obj.rotation_euler[i] = object_rotation_euler[i] * np.pi / 180.0
         return True
 
-    def setObjectScale(self, object_name: str, object_scale: Union[np.ndarray, list]) -> bool:
+    def setObjectScale(
+        self, object_name: str, object_scale: Union[np.ndarray, list]
+    ) -> bool:
         if not self.isObjectExist(object_name):
             return False
 
@@ -262,7 +281,7 @@ class ObjectManager(object):
         bpy.context.view_layer.update()
 
         bbox_min, bbox_max = scene_bbox()
-        offset = - 0.5 * (bbox_min + bbox_max)
+        offset = -0.5 * (bbox_min + bbox_max)
 
         for obj in bpy.context.scene.objects.values():
             if obj.parent:
