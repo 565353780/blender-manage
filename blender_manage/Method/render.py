@@ -11,7 +11,7 @@ def renderFile(
     overwrite: bool = False,
     early_stop: bool = False,
 ) -> bool:
-    image_format = "png"
+    image_format = "jpg"
 
     if not isFileTypeValid(shape_file_path):
         print("[ERROR][render::renderFile]")
@@ -35,7 +35,7 @@ def renderFile(
     blender_manager.removeAll()
 
     blender_manager.setRenderer(
-        resolution=[1000, 1000], engine_name="CYCLES", use_gpu=use_gpu
+        resolution=[256, 256], engine_name="CYCLES", use_gpu=use_gpu
     )
 
     blender_manager.createLight(
@@ -84,8 +84,8 @@ def renderFile(
         # rotation_euler=[25.208, -2.5156, -155.94], # KITTI mash
         # rotation_euler=[-18.126, -4.5996, -8.7924],  # KITTI others
         # scale=[0.008, 0.008, 0.008],  # KITTI
-        rotation_euler=[90, 0, 180],  # TRELLIS
-        scale=[0.8, 0.8, 0.8],  # TRELLIS
+        # rotation_euler=[90, 0, 180],  # TRELLIS
+        # scale=[0.8, 0.8, 0.8],  # TRELLIS
     )
 
     # blender_manager.object_manager.normalizeObject(object_name)
