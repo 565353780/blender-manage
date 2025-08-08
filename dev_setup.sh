@@ -1,4 +1,4 @@
-BLENDER_VERSION=4.4
+BLENDER_VERSION=4.5
 PYTHON_VERSION=3.11
 
 if [ "$(uname)" = "Linux" ]; then
