@@ -44,12 +44,12 @@ class BlenderRenderer(object):
         self,
         python_file_path: str,
         python_args_dict: dict,
-        skip_func = None,
+        skip_func=None,
     ) -> bool:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::addTask]')
-            print('\t git package not found!')
-            print('\t GIT_ROOT_FOLDER_PATH:', GIT_ROOT_FOLDER_PATH)
+            print("[ERROR][BlenderRenderer::addTask]")
+            print("\t git package not found!")
+            print("\t GIT_ROOT_FOLDER_PATH:", GIT_ROOT_FOLDER_PATH)
             return False
 
         if not self.worker_manager.addTask(
@@ -59,8 +59,8 @@ class BlenderRenderer(object):
             mute=self.mute,
             skip_func=skip_func,
         ):
-            print('[ERROR][BlenderRenderer::addTask]')
-            print('\t addTask failed!')
+            print("[ERROR][BlenderRenderer::addTask]")
+            print("\t addTask failed!")
             return False
 
         return True
@@ -76,15 +76,15 @@ class BlenderRenderer(object):
         shape_file_path: str,
         save_image_file_path: str,
         overwrite: bool = False,
-        skip_func = None,
+        skip_func=None,
     ) -> bool:
-        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_file.py'
+        python_file_path = GIT_ROOT_FOLDER_PATH + "blender_manage/Script/render_file.py"
 
         python_args_dict = {
-            'shape_file_path': shape_file_path,
-            'save_image_file_path': save_image_file_path,
-            'overwrite': overwrite,
-            'early_stop': self.early_stop,
+            "shape_file_path": shape_file_path,
+            "save_image_file_path": save_image_file_path,
+            "overwrite": overwrite,
+            "early_stop": self.early_stop,
         }
 
         return self.addTask(
@@ -99,16 +99,18 @@ class BlenderRenderer(object):
         render_image_num: int,
         save_image_folder_path: str,
         overwrite: bool = False,
-        skip_func = None,
+        skip_func=None,
     ) -> bool:
-        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_around_file.py'
+        python_file_path = (
+            GIT_ROOT_FOLDER_PATH + "blender_manage/Script/render_around_file.py"
+        )
 
         python_args_dict = {
-            'shape_file_path': shape_file_path,
-            'render_image_num': render_image_num,
-            'save_image_folder_path': save_image_folder_path,
-            'overwrite': overwrite,
-            'early_stop': self.early_stop,
+            "shape_file_path": shape_file_path,
+            "render_image_num": render_image_num,
+            "save_image_folder_path": save_image_folder_path,
+            "overwrite": overwrite,
+            "early_stop": self.early_stop,
         }
 
         return self.addTask(
@@ -123,16 +125,19 @@ class BlenderRenderer(object):
         render_image_num: int,
         save_image_folder_path: str,
         overwrite: bool = False,
-        skip_func = None,
+        skip_func=None,
     ) -> bool:
-        python_file_path = GIT_ROOT_FOLDER_PATH + 'blender_manage/Script/render_around_objaverse_file.py'
+        python_file_path = (
+            GIT_ROOT_FOLDER_PATH
+            + "blender_manage/Script/render_around_objaverse_file.py"
+        )
 
         python_args_dict = {
-            'shape_file_path': shape_file_path,
-            'render_image_num': render_image_num,
-            'save_image_folder_path': save_image_folder_path,
-            'overwrite': overwrite,
-            'early_stop': self.early_stop,
+            "shape_file_path": shape_file_path,
+            "render_image_num": render_image_num,
+            "save_image_folder_path": save_image_folder_path,
+            "overwrite": overwrite,
+            "early_stop": self.early_stop,
         }
 
         return self.addTask(
@@ -148,9 +153,9 @@ class BlenderRenderer(object):
         overwrite: bool = False,
     ) -> bool:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::renderFolder]')
-            print('\t git package not found!')
-            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
+            print("[ERROR][BlenderRenderer::renderFolder]")
+            print("\t git package not found!")
+            print("\t git_root_folder_path:", GIT_ROOT_FOLDER_PATH)
             return False
 
         folder_task_list = getFolderTaskList(
@@ -166,8 +171,8 @@ class BlenderRenderer(object):
                 save_image_file_path,
                 overwrite,
             ):
-                print('[ERROR][BlenderRenderer::renderFolder]')
-                print('\t renderFile failed!')
+                print("[ERROR][BlenderRenderer::renderFolder]")
+                print("\t renderFile failed!")
                 continue
 
         return True
@@ -179,9 +184,9 @@ class BlenderRenderer(object):
         overwrite: bool = False,
     ) -> bool:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::renderFolders]')
-            print('\t git package not found!')
-            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
+            print("[ERROR][BlenderRenderer::renderFolders]")
+            print("\t git package not found!")
+            print("\t git_root_folder_path:", GIT_ROOT_FOLDER_PATH)
             return False
 
         folders_task_list = getFoldersTaskList(
@@ -197,8 +202,8 @@ class BlenderRenderer(object):
                 save_image_file_path,
                 overwrite,
             ):
-                print('[ERROR][BlenderRenderer::renderFolder]')
-                print('\t renderFile failed!')
+                print("[ERROR][BlenderRenderer::renderFolder]")
+                print("\t renderFile failed!")
                 continue
 
         return True
@@ -211,9 +216,9 @@ class BlenderRenderer(object):
         overwrite: bool = False,
     ) -> bool:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::renderAroundFolder]')
-            print('\t git package not found!')
-            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
+            print("[ERROR][BlenderRenderer::renderAroundFolder]")
+            print("\t git package not found!")
+            print("\t git_root_folder_path:", GIT_ROOT_FOLDER_PATH)
             return False
 
         folder_task_list = getFolderTaskList(
@@ -230,8 +235,8 @@ class BlenderRenderer(object):
                 save_image_folder_path,
                 overwrite,
             ):
-                print('[ERROR][BlenderRenderer::renderAroundFolder]')
-                print('\t renderFile failed!')
+                print("[ERROR][BlenderRenderer::renderAroundFolder]")
+                print("\t renderFile failed!")
                 continue
 
         return True
@@ -244,9 +249,9 @@ class BlenderRenderer(object):
         overwrite: bool = False,
     ) -> bool:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::renderAroundFolders]')
-            print('\t git package not found!')
-            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
+            print("[ERROR][BlenderRenderer::renderAroundFolders]")
+            print("\t git package not found!")
+            print("\t git_root_folder_path:", GIT_ROOT_FOLDER_PATH)
             return False
 
         folders_task_list = getFoldersTaskList(
@@ -263,8 +268,8 @@ class BlenderRenderer(object):
                 save_image_folder_path,
                 overwrite,
             ):
-                print('[ERROR][BlenderRenderer::renderAroundFolders]')
-                print('\t renderFile failed!')
+                print("[ERROR][BlenderRenderer::renderAroundFolders]")
+                print("\t renderFile failed!")
                 continue
 
         return True
@@ -277,9 +282,9 @@ class BlenderRenderer(object):
         overwrite: bool = False,
     ) -> bool:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::renderAroundObjaverseFolder]')
-            print('\t git package not found!')
-            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
+            print("[ERROR][BlenderRenderer::renderAroundObjaverseFolder]")
+            print("\t git package not found!")
+            print("\t git_root_folder_path:", GIT_ROOT_FOLDER_PATH)
             return False
 
         folder_task_list = getFolderTaskList(
@@ -296,8 +301,8 @@ class BlenderRenderer(object):
                 save_image_folder_path,
                 overwrite,
             ):
-                print('[ERROR][BlenderRenderer::renderAroundFolder]')
-                print('\t renderFile failed!')
+                print("[ERROR][BlenderRenderer::renderAroundFolder]")
+                print("\t renderFile failed!")
                 continue
 
         return True
@@ -310,9 +315,9 @@ class BlenderRenderer(object):
         overwrite: bool = False,
     ) -> bool:
         if not os.path.exists(GIT_ROOT_FOLDER_PATH):
-            print('[ERROR][BlenderRenderer::renderAroundObjaverseFolders]')
-            print('\t git package not found!')
-            print('\t git_root_folder_path:', GIT_ROOT_FOLDER_PATH)
+            print("[ERROR][BlenderRenderer::renderAroundObjaverseFolders]")
+            print("\t git package not found!")
+            print("\t git_root_folder_path:", GIT_ROOT_FOLDER_PATH)
             return False
 
         folders_task_list = getFoldersTaskList(
@@ -330,8 +335,8 @@ class BlenderRenderer(object):
                 overwrite,
                 skip_func_renderAroundObjaverse,
             ):
-                print('[ERROR][BlenderRenderer::renderAroundObjaverseFolders]')
-                print('\t renderFile failed!')
+                print("[ERROR][BlenderRenderer::renderAroundObjaverseFolders]")
+                print("\t renderFile failed!")
                 continue
 
         return True

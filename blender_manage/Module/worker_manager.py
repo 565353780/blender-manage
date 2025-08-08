@@ -65,7 +65,7 @@ class WorkerManager(object):
             process = Process(
                 target=self.worker,
                 args=(self.queue, self.finished_task_num, -1),
-                daemon=True
+                daemon=True,
             )
             process.start()
 
@@ -74,7 +74,7 @@ class WorkerManager(object):
                 process = Process(
                     target=self.worker,
                     args=(self.queue, self.finished_task_num, gpu_id),
-                    daemon=True
+                    daemon=True,
                 )
                 process.start()
         return True
@@ -85,7 +85,7 @@ class WorkerManager(object):
         python_args_dict: dict,
         is_background: bool = True,
         mute: bool = False,
-        skip_func = None,
+        skip_func=None,
     ) -> bool:
         item = [
             python_file_path,
@@ -112,7 +112,13 @@ class WorkerManager(object):
             with self.finished_task_num.get_lock():
                 finished_task_num = self.finished_task_num.value
 
-            print('\rFinished Tasks:', finished_task_num, '/', self.total_task_num, end='    ')
+            print(
+                "\rFinished Tasks:",
+                finished_task_num,
+                "/",
+                self.total_task_num,
+                end="    ",
+            )
 
             if finished_task_num == self.total_task_num:
                 break
